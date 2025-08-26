@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="style.css">
     <script src="models/drawable-object.class.js"></script>
     <script src="models/movable-object.class.js"></script>
+    <script src="models/world.class.js"></script>
     <script src="models/character.class.js"></script>
     <script src="models/chicken.class.js"></script>
     <script src="models/small-chicken.class.js"></script>
@@ -17,7 +18,6 @@
     <script src="models/health-status-bar.class.js"></script>
     <script src="models/coin-bar.class.js"></script>
     <script src="models/bottle-bar.class.js"></script>
-    <script src="models/world.class.js"></script>
     <script src="models/background-object.class.js"></script>
     <script src="models/keyboard.class.js"></script>
     <script src="models/level.class.js"></script>
@@ -31,20 +31,20 @@
     <script src="script.js"></script>
 </head>
 
-<body>
+<body onload="init()">
 
     <h1>El Pollo Loco</h1>
 
 
-    <div id="overlay" class="start-screen">
+    <!-- <div id="overlay" class="start-screen">
         <div class="game-buttons">
             <button onclick="startGame()" class="start-button">Start Game</button>
             <button onclick="" class="fullscreen">Fullscreen</button>
         </div>
-    </div>
+    </div> -->
 
 
-    <canvas id="canvas" width="720" height="480" class="dNone">
+    <canvas id="canvas" width="720" height="480">
     </canvas>
 
 
