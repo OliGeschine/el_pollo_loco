@@ -110,7 +110,9 @@ class World {
                     enemy.hit();
                     this.throwableObjects.splice(bottleIndex, 1);
                     setTimeout(() => {
-                        this.level.enemies.splice(enemyIndex, 1);
+                        if (this.level.enemies.energy == 0) {
+                            this.level.enemies.splice(enemyIndex, 1);
+                        }
                     }, 300)
                 }
             });

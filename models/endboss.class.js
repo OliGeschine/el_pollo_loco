@@ -3,7 +3,7 @@ class Endboss extends MovableObject {
     width = 250;
     y = 60;
     // hadFirstContact = false;
-    energy = 5;
+    energy = 10;
 
     IMAGES_ANGRY = [
         'img/4_enemie_boss_chicken/2_alert/G5.png',
@@ -65,6 +65,12 @@ class Endboss extends MovableObject {
                 this.playAnimation(this.IMAGES_ATTACKING);
             } else {
                 this.playAnimation(this.IMAGES_ANGRY);
+            }
+            if (this.isHurt()) {
+                this.playAnimation(this.IMAGES_HURT);
+            }
+            if (this.isDead()) {
+                this.playAnimation(this.IMAGES_DEAD);
             }
         }, 200);
     }
