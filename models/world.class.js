@@ -110,8 +110,13 @@ class World {
                     enemy.hit();
                     this.throwableObjects.splice(bottleIndex, 1);
                     setTimeout(() => {
-                        if (this.level.enemies.energy == 0) {
-                            this.level.enemies.splice(enemyIndex, 1);
+                        if (enemy.energy <= 0) {
+                            if (enemy instanceof Endboss) {
+                                setTimeout(() => {
+                                    this.level.enemies.splice(enemyIndex, 1)
+                                }, 3000)
+                            } else
+                                this.level.enemies.splice(enemyIndex, 1);
                         }
                     }, 300)
                 }

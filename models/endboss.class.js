@@ -3,7 +3,7 @@ class Endboss extends MovableObject {
     width = 250;
     y = 60;
     // hadFirstContact = false;
-    energy = 10;
+    energy = 5;
 
     IMAGES_ANGRY = [
         'img/4_enemie_boss_chicken/2_alert/G5.png',
@@ -61,16 +61,18 @@ class Endboss extends MovableObject {
             if (!this.world || !this.world.character) return;
             let playerX = this.world.character.x;
 
+            if (this.isDead()) {
+                this.playAnimation(this.IMAGES_DEAD);
+                return;
+            }
+            if (this.isHurt()) {
+                this.playAnimation(this.IMAGES_HURT);
+                return;
+            }
             if (playerX >= 2160) {
                 this.playAnimation(this.IMAGES_ATTACKING);
             } else {
                 this.playAnimation(this.IMAGES_ANGRY);
-            }
-            if (this.isHurt()) {
-                this.playAnimation(this.IMAGES_HURT);
-            }
-            if (this.isDead()) {
-                this.playAnimation(this.IMAGES_DEAD);
             }
         }, 200);
     }
