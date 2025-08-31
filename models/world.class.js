@@ -146,8 +146,8 @@ class World {
     //     }
     // }
 
-    //variante 2
 
+    //variante 2
 
     setBottles() {
         this.setNextBottle();
@@ -185,6 +185,8 @@ class World {
             let bottle = new ThrowableObject(this.character.x + 50, this.character.y + 100);
             this.throwableObjects.push(bottle);
             this.currentBottleCount--;
+            this.bottleBar.setPercentageBottle(this.currentBottleCount);
+            this.setNextBottle();
         }
     }
 
