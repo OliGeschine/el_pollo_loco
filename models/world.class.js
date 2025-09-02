@@ -8,6 +8,7 @@ class World {
     ctx; // kurzform für context
     keyboard;
     cameraX = 0;
+    endbossHealthBar = new EndbossHealth();
     statusBar = new Statusbar();
     coinBar = new Coinbar();
     bottleBar = new Bottlebar();
@@ -225,6 +226,7 @@ class World {
         this.ctx.translate(this.cameraX, 0);
         this.addObjectsToMap(this.level.backgroundObjects);
         this.addObjectsToMap(this.level.clouds);
+        this.addToMap(this.endbossHealthBar);
 
         this.ctx.translate(-this.cameraX, 0); // Back
         // ----- space for fixed objects ----- //
