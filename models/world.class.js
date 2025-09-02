@@ -186,8 +186,22 @@ class World {
             this.throwableObjects.push(bottle);
             this.currentBottleCount--;
             this.bottleBar.setPercentageBottle(this.currentBottleCount);
-            this.setNextBottle();
         }
+        // if (this.currentBottleCount < 5) {
+        //     this.setBottles();
+        // }
+    }
+
+    checkCollectedBottles() {
+        this.collectedBottles.forEach((mo, index) => {
+            if (this.character.isColliding(mo)) {
+                mo.collectBottle(this);
+                this.bottleBar.setPercentageBottle(this.currentBottleCount);
+                this.collectedBottles.splice(index, 1);
+                console.log('Collected Bottles! Total:', this.currentBottleCount);
+                this.setNextBottle();
+            }
+        });
     }
 
     checkCollectableCollisions() {
@@ -202,18 +216,6 @@ class World {
                 this.coinBar.setPercentageCoin(this.character.coins);
                 this.collectedCoins.splice(index, 1);
                 // console.log('Collected coin! Total:', this.character.coins);
-            }
-        });
-    }
-
-    checkCollectedBottles() {
-        this.collectedBottles.forEach((mo, index) => {
-            if (this.character.isColliding(mo)) {
-                mo.collectBottle(this);
-                this.bottleBar.setPercentageBottle(this.currentBottleCount); // optional
-                this.collectedBottles.splice(index, 1);
-                console.log('Collected Bottles! Total:', this.currentBottleCount);
-                this.setNextBottle();
             }
         });
     }
