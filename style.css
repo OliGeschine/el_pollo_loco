@@ -1,8 +1,15 @@
 body {
+    height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: flex-start;
     font-family: 'zabars', Arial, Helvetica, sans-serif;
+    background-image: url('img/5_background/game_background/game_background.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
 }
 
 @font-face {
@@ -11,6 +18,7 @@ body {
 }
 
 canvas {
+    margin-top: 10px;
     background-color: black;
     border: 2px solid black;
     display: block;
@@ -41,11 +49,12 @@ h1 {
 }
 
 .start-button {
-    width: 100px;
+    width: 150px;
     cursor: pointer;
 }
 
 .start-screen {
+    margin-top: 10px;
     height: 480px;
     width: 720px;
     background-image: url('img/9_intro_outro_screens/start/startscreen_1.png');
@@ -58,4 +67,55 @@ h1 {
     display: flex;
     justify-content: space-between;
     padding: 12px;
+}
+
+button {
+    cursor: pointer;
+    font-family: 'zabars';
+    font-size: 32px;
+    background-image: linear-gradient(#ffdf00, #ff9d00);
+    color: #ff9d00;
+    text-shadow: 2px 2px #9a3a16;
+    letter-spacing: 2px;
+    border-radius: 10px;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: #9a3a16;
+}
+
+.instructions_box {
+    width: 640px;
+    height: 48px;
+    margin-left: 5px;
+    margin-top: 8px;
+    border: 2px solid black;
+    display: flex;
+    align-items: center;
+    background-image: linear-gradient(#ffdf00, #ff9d00);
+    color: #ff9d00;
+    text-shadow: 2px 2px #9a3a16;
+    letter-spacing: 2px;
+    border-radius: 10px;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: #9a3a16;
+}
+
+.instructions_box h2 {
+    padding-left: 16px;
+}
+
+.instructions {
+    padding-left: 8px;
+    display: flex;
+    flex-direction: row;
+
+}
+
+.instructions p {
+    padding: 8px;
+    color: #ff9d00;
+    text-shadow: 2px 2px #9a3a16;
+    letter-spacing: 2px;
+    border-radius: 10px;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: #9a3a16;
 }

@@ -32,32 +32,34 @@
     <script src="script.js"></script>
 </head>
 
-<body onload="init()">
+<body>
 
     <h1>El Pollo Loco</h1>
 
+    <button onclick="window.location.reload()">Reload Screen</button>
 
-    <!-- <div id="overlay" class="start-screen">
+
+    <div id="overlay" class="start-screen">
         <div class="game-buttons">
             <button onclick="startGame()" class="start-button">Start Game</button>
             <button onclick="" class="fullscreen">Fullscreen</button>
         </div>
-    </div> -->
+    </div>
 
 
-    <canvas id="canvas" width="720" height="480">
+    <canvas id="canvas" width="720" height="480" class="dNone">
     </canvas>
 
-
-    <div class="instructions">
-        <h2>Instructions</h2>
-        <div>
-            <p>Right: move right</p>
-            <p>Left: move left</p>
-            <p>Up: jump</p>
-            <p>Space: throw bottle</p>
+    <div class="instructions_box">
+        <h2>Instructions :</h2>
+        <div class="instructions">
+            <p>Right : move right</p>
+            <p>Left : move left</p>
+            <p>Up : jump</p>
+            <p>Space : throw bottle</p>
         </div>
     </div>
+
 
 
 
