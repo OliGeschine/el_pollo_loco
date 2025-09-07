@@ -20,10 +20,17 @@ class World {
     maxBottles = 5;
     currentBottleCount = 0;
 
+    killedEndboss = new Audio('audio/endboss_fainting.mp3');
+    killedChicken = new Audio('audio/chicken_fainting.mp3');
+    killedSmallChicken = new Audio('audio/small_chicken_fainting.mp3');
+
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
+        sounds.push(this.killedEndboss);
+        sounds.push(this.killedChicken);
+        sounds.push(this.killedSmallChicken);
         this.draw();
         this.setWorld();
         this.run();
@@ -68,15 +75,19 @@ class World {
         }
     }
 
-    checkJumpCollisions(enemy, i) {
-        if (this.character.isStomping(enemy)) {
+    checkJumpCollisions(enemy, enemyIndex) {
+        if (this.character.isStomping(enemy, enemyIndex)) {
             enemy.hit();
             this.stompedEnemies.push(enemy);
-            // console.log('hit enemy count:', this.stompedEnemies);
-            this.level.enemies.splice(i, 1);
+            this.killedChicken.play();
+            setTimeout(() => {
+                if (enemy.energy <= 0) {
+                    this.level.enemies.splice(enemyIndex, 1);
+                }
+            }, 500)
             this.character.speedY = 15;
             this.character.justStomped = true;
-            setTimeout(() => (this.character.justStomped = false), 200);
+            setTimeout(() => (this.character.justStomped = false), 500);
         }
     }
 
