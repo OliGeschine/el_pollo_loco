@@ -3,9 +3,14 @@ let world;
 let keyboard = new Keyboard();
 let sounds = [];
 
+backgroundSound = new Audio('audio/background_music.mp3');
+backgroundSound.loop = true;
+
 function init() {
     canvas = document.getElementById('canvas');
     world = new World(canvas, keyboard);
+    this.backgroundSound.play();
+    sounds.push(backgroundSound);
 }
 
 window.addEventListener("keydown", (e) => {

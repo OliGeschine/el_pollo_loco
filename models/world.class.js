@@ -121,9 +121,11 @@ class World {
                     console.log('Kollision!', bottle.x, bottle.y, enemy.x, enemy.y);
                     enemy.hit();
                     this.throwableObjects.splice(bottleIndex, 1);
+                    this.killedChicken.play();
                     setTimeout(() => {
                         if (enemy.energy <= 0) {
                             if (enemy instanceof Endboss) {
+                                this.killedEndboss.play();
                                 setTimeout(() => {
                                     this.level.enemies.splice(enemyIndex, 1)
                                 }, 3000)
