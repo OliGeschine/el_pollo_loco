@@ -23,6 +23,7 @@ class World {
     killedEndboss = new Audio('audio/endboss_fainting.mp3');
     killedChicken = new Audio('audio/chicken_fainting.mp3');
     killedSmallChicken = new Audio('audio/small_chicken_fainting.mp3');
+    getHurt = new Audio('audio/get_hurt.mp3');
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -94,6 +95,7 @@ class World {
     checkEnemyCollisions(enemy) {
         if (!this.character.justStomped && this.character.isColliding(enemy)) {
             this.character.hit();
+            this.getHurt.play();
             this.statusBar.setPercentageHealth(this.character.energy);
         }
     }
