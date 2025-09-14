@@ -13,7 +13,7 @@ class EndbossHealth extends DrawableObjcet {
     constructor() {
         super();
         this.loadImages(this.IMAGES_ENDBOSSHEALTH);
-        this.x = 2550;
+        this.x = 500;
         this.y = -10;
         this.height = 60;
         this.width = 200;

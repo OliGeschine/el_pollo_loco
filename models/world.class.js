@@ -241,13 +241,13 @@ class World {
         this.ctx.translate(this.cameraX, 0);
         this.addObjectsToMap(this.level.backgroundObjects);
         this.addObjectsToMap(this.level.clouds);
-        this.addToMap(this.endbossHealthBar);
 
         this.ctx.translate(-this.cameraX, 0); // Back
         // ----- space for fixed objects ----- //
         this.addToMap(this.coinBar);
         this.addToMap(this.statusBar);
         this.addToMap(this.bottleBar);
+        this.abbEndbossBarToMap();
         this.ctx.translate(this.cameraX, 0); // Forwards
 
         this.addToMap(this.character);
@@ -262,6 +262,15 @@ class World {
         requestAnimationFrame(function () {
             self.draw();
         });
+    }
+
+    abbEndbossBarToMap() {
+        if (this.character.x >= 2160) {
+            this.endbossHealthBar.hadFirstContact = true;
+        }
+        if (this.endbossHealthBar.hadFirstContact == true) {
+            this.addToMap(this.endbossHealthBar);
+        }
     }
 
     addObjectsToMap(objects) {

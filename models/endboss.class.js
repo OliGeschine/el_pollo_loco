@@ -2,7 +2,7 @@ class Endboss extends MovableObject {
     height = 400;
     width = 250;
     y = 60;
-    // hadFirstContact = false;
+    hadFirstContact = false;
     energy = 5;
 
     IMAGES_ANGRY = [
@@ -51,14 +51,18 @@ class Endboss extends MovableObject {
         this.loadImages(this.IMAGES_HURT);
         this.loadImages(this.IMAGES_DEAD);
         this.x = 2550;
-        this.speed = 0.3;
+        this.speed = 0.9;
         this.animate();
     }
 
 
     animate() {
         this.walkInterval = setInterval(() => {
-            if (!this.isDead()) {
+            let playerX = this.world.character.x;
+            if (playerX >= 2160) {
+                this.hadFirstContact = true
+            }
+            if (!this.isDead() && this.hadFirstContact == true) {
                 this.moveLeft();
             }
         }, 1000 / 60)
