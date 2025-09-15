@@ -1,5 +1,6 @@
 class World {
     character = new Character();
+    endboss = new Endboss();
     level = level1;
     enemies = level1.enemies;
     clouds = level1.clouds;
@@ -19,6 +20,7 @@ class World {
     stompedEnemies = [];
     maxBottles = 5;
     currentBottleCount = 0;
+    endbossIsDead = false;
 
     killedEndboss = new Audio('audio/endboss_fainting.mp3');
     killedChicken = new Audio('audio/chicken_fainting.mp3');
@@ -64,6 +66,7 @@ class World {
         setInterval(() => {
             this.checkBottleHitsEnemies();
             this.checkCharacterEnemyInteractions();
+            this.checkCharacterEndbossInteractions();
         }, 10);
     }
 
@@ -73,6 +76,13 @@ class World {
             if (enemy.isDead()) continue;
             this.checkJumpCollisions(enemy, i);
             this.checkEnemyCollisions(enemy);
+        }
+    }
+
+    checkCharacterEndbossInteractions() {
+        if (!this.endboss.isDead()) {
+            this.checkJumpEndbossCollision(this.endboss);
+            this.checkEndbossCollisions(this.endboss);
         }
     }
 
@@ -92,8 +102,31 @@ class World {
         }
     }
 
+    checkJumpEndbossCollision() {
+        if (this.character.isStomping(this.endboss)) {
+            this.endboss.hit();
+            this.killedChicken.play();
+            setTimeout(() => {
+                if (this.endboss.energy <= 0) {
+                    this.endbossIsDead = true;
+                }
+            }, 3000)
+            this.character.speedY = 15;
+            this.character.justStomped = true;
+            setTimeout(() => (this.character.justStomped = false), 500);
+        }
+    }
+
     checkEnemyCollisions(enemy) {
         if (!this.character.justStomped && this.character.isColliding(enemy)) {
+            this.character.hit();
+            this.getHurt.play();
+            this.statusBar.setPercentageHealth(this.character.energy);
+        }
+    }
+
+    checkEndbossCollisions() {
+        if (!this.character.justStomped && this.character.isColliding(this.endboss)) {
             this.character.hit();
             this.getHurt.play();
             this.statusBar.setPercentageHealth(this.character.energy);
@@ -126,18 +159,31 @@ class World {
                     this.killedChicken.play();
                     setTimeout(() => {
                         if (enemy.energy <= 0) {
-                            if (enemy instanceof Endboss) {
-                                this.killedEndboss.play();
-                                setTimeout(() => {
-                                    this.level.enemies.splice(enemyIndex, 1)
-                                }, 3000)
-                            } else
-                                this.level.enemies.splice(enemyIndex, 1);
+                            this.level.enemies.splice(enemyIndex, 1);
                         }
                     }, 300)
                 }
             });
         });
+    }
+
+    checkBottleHitsEndboss() {
+        this.throwableObjects.forEach((bottle, bottleIndex) => {
+            if (!this.endboss.isDead() && bottle.isColliding(this.endboss)) {
+                console.log('kollision!', bottle.x, bottle.y, this.endboss.x, this.endboss.y);
+                this.endboss.hit();
+                this.throwableObjects.splice(bottleIndex, 1);
+                this.killedChicken.play();
+                setTimeout(() => {
+                    if (this.endboss.energy <= 0) {
+                        this.killedEndboss.play();
+                        setTimeout(() => {
+                            this.endboss.splice(this.endboss, 1);
+                        }, 3000);
+                    }
+                })
+            }
+        })
     }
 
 
@@ -251,6 +297,7 @@ class World {
         this.ctx.translate(this.cameraX, 0); // Forwards
 
         this.addToMap(this.character);
+        this.addEndbossToMap();
         this.addObjectsToMap(this.level.enemies);
         this.addObjectsToMap(this.throwableObjects);
         this.addObjectsToMap(this.collectedCoins);
@@ -262,6 +309,12 @@ class World {
         requestAnimationFrame(function () {
             self.draw();
         });
+    }
+
+    addEndbossToMap() {
+        if (this.endboss && !this.endbossIsDead) {
+            this.addToMap(this.endboss);
+        }
     }
 
     abbEndbossBarToMap() {
