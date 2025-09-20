@@ -42,6 +42,7 @@ class World {
 
     setWorld() {
         this.character.world = this;
+        this.endboss.world = this;
         this.level.enemies.forEach(e => e.world = this);
         this.setCollectableObjects();
     }
@@ -65,6 +66,7 @@ class World {
     collisions() {
         setInterval(() => {
             this.checkBottleHitsEnemies();
+            this.checkBottleHitsEndboss();
             this.checkCharacterEnemyInteractions();
             this.checkCharacterEndbossInteractions();
         }, 10);
@@ -108,9 +110,12 @@ class World {
             this.killedChicken.play();
             setTimeout(() => {
                 if (this.endboss.energy <= 0) {
-                    this.endbossIsDead = true;
+                    this.killedEndboss.play();
+                    setTimeout(() => {
+                        this.endbossIsDead = true;
+                    }, 3000);
                 }
-            }, 3000)
+            })
             this.character.speedY = 15;
             this.character.justStomped = true;
             setTimeout(() => (this.character.justStomped = false), 500);
@@ -178,7 +183,7 @@ class World {
                     if (this.endboss.energy <= 0) {
                         this.killedEndboss.play();
                         setTimeout(() => {
-                            this.endboss.splice(this.endboss, 1);
+                            this.endbossIsDead = true;
                         }, 3000);
                     }
                 })
@@ -293,7 +298,7 @@ class World {
         this.addToMap(this.coinBar);
         this.addToMap(this.statusBar);
         this.addToMap(this.bottleBar);
-        this.abbEndbossBarToMap();
+        this.addEndbossBarToMap();
         this.ctx.translate(this.cameraX, 0); // Forwards
 
         this.addToMap(this.character);
@@ -317,7 +322,7 @@ class World {
         }
     }
 
-    abbEndbossBarToMap() {
+    addEndbossBarToMap() {
         if (this.character.x >= 2160) {
             this.endbossHealthBar.hadFirstContact = true;
         }
