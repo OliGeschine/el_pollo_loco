@@ -107,6 +107,7 @@ class World {
     checkJumpEndbossCollision() {
         if (this.character.isStomping(this.endboss)) {
             this.endboss.hit();
+            this.endbossHealthBar.setPercentageHealth(this.endboss.energy);
             this.killedChicken.play();
             setTimeout(() => {
                 if (this.endboss.energy <= 0) {
@@ -177,6 +178,7 @@ class World {
             if (!this.endboss.isDead() && bottle.isColliding(this.endboss)) {
                 console.log('kollision!', bottle.x, bottle.y, this.endboss.x, this.endboss.y);
                 this.endboss.hit();
+                this.endbossHealthBar.setPercentageHealth(this.endboss.energy);
                 this.throwableObjects.splice(bottleIndex, 1);
                 this.killedChicken.play();
                 setTimeout(() => {

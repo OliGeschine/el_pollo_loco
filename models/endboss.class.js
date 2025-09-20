@@ -3,7 +3,7 @@ class Endboss extends MovableObject {
     width = 250;
     y = 60;
     hadFirstContact = false;
-    energy = 5;
+    energy = 10;
 
     IMAGES_ANGRY = [
         'img/4_enemie_boss_chicken/2_alert/G5.png',
@@ -58,7 +58,7 @@ class Endboss extends MovableObject {
 
     animate() {
         this.walkInterval = setInterval(() => {
-            let playerX = world.character.x;
+            let playerX = this.world.character.x;
             if (playerX >= 2160) {
                 this.hadFirstContact = true
             }
@@ -69,7 +69,7 @@ class Endboss extends MovableObject {
 
         setInterval(() => {
             if (!this.world || !world.character.x) return;
-            let playerX = world.character.x;
+            let playerX = this.world.character.x;
 
             if (this.isDead()) {
                 this.playAnimation(this.IMAGES_DEAD);
