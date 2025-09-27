@@ -5,6 +5,7 @@ let sounds = [];
 
 backgroundSound = new Audio('audio/background_music.mp3');
 backgroundSound.loop = true;
+victorySound = new Audio('audio/victory.mp3');
 
 function init() {
     canvas = document.getElementById('canvas');
