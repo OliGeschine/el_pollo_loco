@@ -121,6 +121,7 @@ class World {
             this.character.justStomped = true;
             setTimeout(() => (this.character.justStomped = false), 500);
         }
+        this.handleEndbossIsDeadAnimation();
     }
 
     checkEnemyCollisions(enemy) {
@@ -181,14 +182,21 @@ class World {
                 this.endbossHealthBar.setPercentageHealth(this.endboss.energy);
                 this.throwableObjects.splice(bottleIndex, 1);
                 this.killedChicken.play();
+                this.handleEndbossIsDeadAnimation();
+            }
+        })
+    }
+
+    handleEndbossIsDeadAnimation() {
+        setTimeout(() => {
+            if (this.endboss.energy <= 0) {
+                this.killedEndboss.play();
                 setTimeout(() => {
-                    if (this.endboss.energy <= 0) {
-                        this.killedEndboss.play();
-                        setTimeout(() => {
-                            this.endbossIsDead = true;
-                        }, 3000);
-                    }
-                })
+                    this.endbossIsDead = true;
+                }, 3000);
+                setTimeout(() => {
+                    showEndScreen();
+                }, 3000);
             }
         })
     }

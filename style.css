@@ -82,6 +82,18 @@ button {
     -webkit-text-stroke-color: #9a3a16;
 }
 
+
+.end-screen {
+    margin-top: 10px;
+    height: 480px;
+    width: 720px;
+    background-color: black;
+    background-image: url('img/You won, you lost/You won A.png');
+    background-position: center;
+    background-size: cover;
+    border: 2px solid black;
+}
+
 .instructions_box {
     width: 640px;
     height: 48px;
