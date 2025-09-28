@@ -48,7 +48,7 @@ class World {
     }
 
     run() {
-        setInterval(() => {
+        startInterval(() => {
             // this.checkEnemyCollisions();
             this.checkThrowObjects();
             this.checkCollectableCollisions();
@@ -64,7 +64,7 @@ class World {
     // }
 
     collisions() {
-        setInterval(() => {
+        startInterval(() => {
             this.checkBottleHitsEnemies();
             this.checkBottleHitsEndboss();
             this.checkCharacterEnemyInteractions();

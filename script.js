@@ -1,4 +1,4 @@
-// let intervalIDs = [];
+let intervalIds = [];
 
 function startGame() {
     document.getElementById('overlay').classList.add('dNone');
@@ -10,16 +10,19 @@ function startGame() {
 function showEndScreen() {
     document.getElementById('canvas').classList.add('dNone');
     document.getElementById('end_overlay').classList.remove('dNone');
-    for (let i = 1; i < 99999; i++) window.clearInterval(i);
+    clearAllIntervals();
+    // for (let i = 1; i < 99999; i++) window.clearInterval(i);
     this.backgroundSound.pause();
     this.victorySound.play();
 }
 
-// function setStoppableInterval(fn, time) {
-//     let id = setInterval(fn, time);
-//     intervalIDs.push(id);
-// }
+function startInterval(callback, delay) {
+    let id = setInterval(callback, delay);
+    intervalIds.push(id);
+    return id;
+}
 
-// function stopGame() {
-//     intervalIDs.forEach(clearInterval);
-// }
+function clearAllIntervals() {
+    intervalIds.forEach(clearInterval);
+    intervalIds.length = 0;
+}

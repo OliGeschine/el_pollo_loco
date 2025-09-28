@@ -57,7 +57,7 @@ class Endboss extends MovableObject {
 
 
     animate() {
-        this.walkInterval = setInterval(() => {
+        this.walkInterval = startInterval(() => {
             let playerX = this.world.character.x;
             if (playerX >= 2160) {
                 this.hadFirstContact = true
@@ -67,7 +67,7 @@ class Endboss extends MovableObject {
             }
         }, 1000 / 60)
 
-        setInterval(() => {
+        startInterval(() => {
             if (!this.world || !world.character.x) return;
             let playerX = this.world.character.x;
 
