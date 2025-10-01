@@ -11,7 +11,6 @@ function showEndScreen() {
     document.getElementById('canvas').classList.add('dNone');
     document.getElementById('end_overlay').classList.remove('dNone');
     clearAllIntervals();
-    // for (let i = 1; i < 99999; i++) window.clearInterval(i);
     this.backgroundSound.pause();
     this.victorySound.play();
 }

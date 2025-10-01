@@ -7,10 +7,10 @@ class Coin extends CollectableObject {
     ];
 
 
-    constructor() {
+    constructor(x) {
         super().loadImage(this.IMAGES_MOVING[0]);
         this.loadImages(this.IMAGES_MOVING);
-        this.x = 400 + Math.random() * 1000;
+        this.x = x;
         this.y = 200 + Math.random() * 150;
         this.animate();
     }

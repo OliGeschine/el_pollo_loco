@@ -203,16 +203,16 @@ class World {
 
 
     setCollectableObjects() {
-        this.setCoins();
-        this.setBottles();
+        // this.setCoins();
+        // this.setBottles();
     };
 
-    setCoins() {
-        for (let i = 0; i < 5; i++) {
-            let coins = new Coin();
-            this.collectedCoins.push(coins);
-        }
-    }
+    // setCoins() {
+    //     for (let i = 0; i < 5; i++) {
+    //         let coins = new Coin();
+    //         this.collectedCoins.push(coins);
+    //     }
+    // }
 
     // varainte 1
 
@@ -226,35 +226,15 @@ class World {
 
     //variante 2
 
-    setBottles() {
-        this.setNextBottle();
-    }
-
-    setNextBottle() {
-        if (this.currentBottleCount < this.maxBottles) {
-            let bottle = new Bottle();
-            this.collectedBottles.push(bottle);
-        }
-    }
-
-    // varainte 3
-
     // setBottles() {
-    //     let bottleCounter = 0;
-    //     let maxBottles = 5;
+    //     this.setNextBottle();
+    // }
 
-    //     let intervallId = setInterval(() => {
-
+    // setNextBottle() {
+    //     if (this.currentBottleCount < this.maxBottles) {
     //         let bottle = new Bottle();
     //         this.collectedBottles.push(bottle);
-    //         bottleCounter++;
-
-    //         if (bottleCounter >= maxBottles) {
-    //             clearInterval(intervallId);
-    //             console.log('Finished setting Bottles.');
-    //         }
-    //     }, 2000);
-
+    //     }
     // }
 
     checkThrowObjects() {
@@ -314,6 +294,8 @@ class World {
         this.addToMap(this.character);
         this.addEndbossToMap();
         this.addObjectsToMap(this.level.enemies);
+        this.addObjectsToMap(this.level.bottles);
+        this.addObjectsToMap(this.level.coins);
         this.addObjectsToMap(this.throwableObjects);
         this.addObjectsToMap(this.collectedCoins);
         this.addObjectsToMap(this.collectedBottles);
