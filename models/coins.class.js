@@ -13,6 +13,7 @@ class Coin extends CollectableObject {
         this.x = x;
         this.y = 200 + Math.random() * 150;
         this.animate();
+        this.collected = false;
     }
 
     animate() {

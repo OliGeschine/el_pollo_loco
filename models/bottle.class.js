@@ -16,6 +16,7 @@ class Bottle extends CollectableObject {
         this.x = x
         this.y = 355;
         this.animate();
+        this.collected = false;
     }
 
     animate() {

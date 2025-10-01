@@ -44,7 +44,7 @@ class World {
         this.character.world = this;
         this.endboss.world = this;
         this.level.enemies.forEach(e => e.world = this);
-        this.setCollectableObjects();
+        // this.setCollectableObjects();
     }
 
     run() {
@@ -202,10 +202,10 @@ class World {
     }
 
 
-    setCollectableObjects() {
-        // this.setCoins();
-        // this.setBottles();
-    };
+    // setCollectableObjects() {
+    //     // this.setCoins();
+    //     // this.setBottles();
+    // };
 
     // setCoins() {
     //     for (let i = 0; i < 5; i++) {
@@ -250,13 +250,13 @@ class World {
     }
 
     checkCollectedBottles() {
-        this.collectedBottles.forEach((mo, index) => {
-            if (this.character.isColliding(mo)) {
-                mo.collectBottle(this);
+        this.level.bottles.forEach((bottle, index) => {
+            if (!bottle.collected && this.character.isColliding(bottle)) {
+                bottle.collected = true;
+                this.level.bottles.splice(index, 1); // Entferne die eingesammelte Flasche aus dem Level
+                this.currentBottleCount++;
                 this.bottleBar.setPercentageBottle(this.currentBottleCount);
-                this.collectedBottles.splice(index, 1);
-                console.log('Collected Bottles! Total:', this.currentBottleCount);
-                this.setNextBottle();
+                console.log('Collected Bottle! Total:', this.currentBottleCount);
             }
         });
     }
@@ -267,12 +267,13 @@ class World {
     }
 
     checkCollectedCoins() {
-        this.collectedCoins.forEach((mo, index) => {
-            if (this.character.isColliding(mo)) {
-                mo.collectCoin(this.character);
+        this.level.coins.forEach((coin, index) => {
+            if (!coin.collected && this.character.isColliding(coin)) {
+                coin.collected = true;
+                this.character.coins++;
                 this.coinBar.setPercentageCoin(this.character.coins);
-                this.collectedCoins.splice(index, 1);
-                // console.log('Collected coin! Total:', this.character.coins);
+                this.level.coins.splice(index, 1); // Entferne die eingesammelte Münze aus dem Level
+                console.log('Collected Coin! Total:', this.character.coins);
             }
         });
     }
