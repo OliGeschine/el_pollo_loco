@@ -253,7 +253,7 @@ class World {
         this.level.bottles.forEach((bottle, index) => {
             if (!bottle.collected && this.character.isColliding(bottle)) {
                 bottle.collected = true;
-                this.level.bottles.splice(index, 1); // Entferne die eingesammelte Flasche aus dem Level
+                this.level.bottles.splice(index, 1);
                 this.currentBottleCount++;
                 this.bottleBar.setPercentageBottle(this.currentBottleCount);
                 console.log('Collected Bottle! Total:', this.currentBottleCount);
@@ -272,7 +272,7 @@ class World {
                 coin.collected = true;
                 this.character.coins++;
                 this.coinBar.setPercentageCoin(this.character.coins);
-                this.level.coins.splice(index, 1); // Entferne die eingesammelte Münze aus dem Level
+                this.level.coins.splice(index, 1);
                 console.log('Collected Coin! Total:', this.character.coins);
             }
         });
