@@ -58,30 +58,37 @@ h1 {
 } */
 
 .start-screen {
-    margin-top: 10px;
     height: 480px;
     width: 720px;
-    background-image: url('img/9_intro_outro_screens/start/startscreen_1.png');
     background-position: center;
     background-size: cover;
     border: 2px solid black;
 }
 
-.game-buttons img {
-    cursor: pointer;
-}
-
-.game-buttons img:hover {
-    transform: scale(1.2);
+.start-screen img {
+    overflow-clip-margin: content-box;
+    overflow: clip;
 }
 
 .game-buttons {
+    position: absolute;
     display: flex;
     justify-content: space-between;
     padding: 12px;
+    gap: 600px;
 }
 
-button {
+.game-buttons img {
+    height: 48px;
+    width: 48px;
+}
+
+.game-buttons img:hover {
+    cursor: pointer;
+    transform: scale(1.2);
+}
+
+/* button {
     cursor: pointer;
     font-family: 'zabars';
     font-size: 32px;
@@ -92,7 +99,7 @@ button {
     border-radius: 10px;
     -webkit-text-stroke-width: 1px;
     -webkit-text-stroke-color: #9a3a16;
-}
+} */
 
 
 .end-screen {
@@ -168,7 +175,7 @@ button {
 
 }
 
-img {
+.icon_bar img {
     height: 24px;
     width: 24px;
 }
