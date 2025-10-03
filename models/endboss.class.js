@@ -65,11 +65,13 @@ class Endboss extends MovableObject {
             if (!this.isDead() && this.hadFirstContact == true) {
                 this.moveLeft();
             }
-        }, 1000 / 60)
+        }, 1000 / 60);
 
         startInterval(() => {
             if (!this.world || !world.character.x) return;
             let playerX = this.world.character.x;
+            let endbossX = this.world.endboss.x;
+            let distance = endbossX - playerX;
 
             if (this.isDead()) {
                 this.playAnimation(this.IMAGES_DEAD);
@@ -79,11 +81,16 @@ class Endboss extends MovableObject {
                 this.playAnimation(this.IMAGES_HURT);
                 return;
             }
-            if (playerX >= 2160) {
+            if (distance <= 250) {
                 this.playAnimation(this.IMAGES_ATTACKING);
-            } else {
+            } else if (this.hadFirstContact) {
+                this.playAnimation(this.IMAGES_WALKING);
+            }
+            else {
                 this.playAnimation(this.IMAGES_ANGRY);
             }
         }, 200);
     }
+
+
 }
