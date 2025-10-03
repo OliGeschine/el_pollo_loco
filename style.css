@@ -48,10 +48,14 @@ h1 {
     display: none;
 }
 
-.start-button {
+.main_content {
+    position: relative;
+}
+
+/* .start-button {
     width: 150px;
     cursor: pointer;
-}
+} */
 
 .start-screen {
     margin-top: 10px;
@@ -61,6 +65,14 @@ h1 {
     background-position: center;
     background-size: cover;
     border: 2px solid black;
+}
+
+.game-buttons img {
+    cursor: pointer;
+}
+
+.game-buttons img:hover {
+    transform: scale(1.2);
 }
 
 .game-buttons {
@@ -130,4 +142,33 @@ button {
     border-radius: 10px;
     -webkit-text-stroke-width: 1px;
     -webkit-text-stroke-color: #9a3a16;
+}
+
+.fullscreen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-image: url('img/5_background/game_background/game_background.jpg');
+}
+
+.icon_bar {
+    position: absolute;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    gap: 20px;
+    padding-top: 20px;
+
+    img:hover {
+        cursor: pointer;
+        transform: scale(1.2);
+    }
+
+}
+
+img {
+    height: 24px;
+    width: 24px;
 }

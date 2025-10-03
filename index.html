@@ -33,40 +33,51 @@
 </head>
 
 <body>
-
     <h1>El Pollo Loco</h1>
 
-    <button onclick="window.location.reload()">Reload Screen</button>
+
+    <div id="content" class="main_content" width="720" height="480">
+        <div id="iconBar" class="icon_bar d-none">
+            <div id="frontPage">
+                <img src="img/icons/home.webp" alt="frontPage" onclick="window.location.reload()">
+                <!-- <img src="img/icons/home.webp" alt="frontPage" onclick="backToMenu()"> -->
+            </div>
+            <div id="soundOn" onclick="soundOff()">
+                <img src="img/icons/sound-on.png" alt="sound-on">
+            </div>
+            <div id="soundOff" class="dNone" onclick="soundOn()">
+                <img src="img/icons/sound-off.png" alt="sound-off">
+            </div>
+            <div id="fullscreen">
+                <img src="img/icons/full-screen-icon.png" alt="fullScreen" onclick="fullscreen()">
+            </div>
+        </div>
+        <div id="overlay" class="start-screen">
+            <div class="game-buttons">
+                <img src="img/icons/start-game.webp" onclick="startGame()"></img>
+            </div>
+        </div>
+
+        <div id="end_overlay" class="end-screen dNone">
+            <div>
+                <h2 id="end_title"></h2>
+            </div>
+        </div>
 
 
-    <div id="overlay" class="start-screen">
-        <div class="game-buttons">
-            <button onclick="startGame()" class="start-button">Start Game</button>
-            <button onclick="" class="fullscreen">Fullscreen</button>
+        <canvas id="canvas" width="720" height="480" class="dNone">
+        </canvas>
+
+        <div class="instructions_box">
+            <h2>Instructions :</h2>
+            <div class="instructions">
+                <p>Right : move right</p>
+                <p>Left : move left</p>
+                <p>Up : jump</p>
+                <p>Space : throw bottle</p>
+            </div>
         </div>
     </div>
-
-    <div id="end_overlay" class="end-screen dNone">
-        <div>
-            <h2 id="end_title"></h2>
-        </div>
-    </div>
-
-
-    <canvas id="canvas" width="720" height="480" class="dNone">
-    </canvas>
-
-    <div class="instructions_box">
-        <h2>Instructions :</h2>
-        <div class="instructions">
-            <p>Right : move right</p>
-            <p>Left : move left</p>
-            <p>Up : jump</p>
-            <p>Space : throw bottle</p>
-        </div>
-    </div>
-
-
 
 
 </body>
