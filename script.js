@@ -3,6 +3,7 @@ let intervalIds = [];
 function startGame() {
     document.getElementById('overlay').classList.add('dNone');
     document.getElementById('canvas').classList.remove('dNone');
+    document.getElementById('iconBar').classList.remove('dNone');
     initLevel();
     init();
 }
@@ -10,6 +11,8 @@ function startGame() {
 function showEndScreen() {
     document.getElementById('canvas').classList.add('dNone');
     document.getElementById('end_overlay').classList.remove('dNone');
+    document.getElementById('iconBar').classList.add('dNone');
+    document.getElementById('endscreenIconBar').classList.remove('dNone');
     clearAllIntervals();
     this.backgroundSound.pause();
     this.victorySound.play();

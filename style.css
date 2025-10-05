@@ -45,7 +45,7 @@ h1 {
 }
 
 .dNone {
-    display: none;
+    display: none !important;
 }
 
 .main_content {
@@ -107,7 +107,6 @@ h1 {
     height: 480px;
     width: 720px;
     background-color: black;
-    background-image: url('img/You won, you lost/You won A.png');
     background-position: center;
     background-size: cover;
     border: 2px solid black;

@@ -37,10 +37,9 @@
 
 
     <div id="content" class="main_content" width="720" height="480">
-        <div id="iconBar" class="icon_bar d-none">
+        <div id="iconBar" class="icon_bar dNone">
             <div id="frontPage">
-                <img src="img/icons/home.webp" alt="frontPage" onclick="window.location.reload()">
-                <!-- <img src="img/icons/home.webp" alt="frontPage" onclick="backToMenu()"> -->
+                <img src="img/icons/home.png" alt="frontPage" onclick="window.location.reload()">
             </div>
             <div id="soundOn" onclick="soundOff()">
                 <img src="img/icons/sound-on.png" alt="sound-on">
@@ -61,6 +60,12 @@
         </div>
 
         <div id="end_overlay" class="end-screen dNone">
+            <div id="endscreenIconBar" class="game-buttons dNone">
+                <div id="frontPage">
+                    <img src="img/icons/return-to-home.png" alt="frontPage" onclick="window.location.reload()">
+                </div>
+            </div>
+            <img src="img/You won, you lost/You won A.png" width="720" height="480">
             <div>
                 <h2 id="end_title"></h2>
             </div>
