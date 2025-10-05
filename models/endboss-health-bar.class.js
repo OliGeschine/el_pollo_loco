@@ -1,11 +1,11 @@
 class EndbossHealth extends DrawableObjcet {
     IMAGES_ENDBOSSHEALTH = [
-        'img/7_statusbars/1_statusbar/2_statusbar_health/blue/0.png',
-        'img/7_statusbars/1_statusbar/2_statusbar_health/orange/20.png',
-        'img/7_statusbars/1_statusbar/2_statusbar_health/orange/40.png',
-        'img/7_statusbars/1_statusbar/2_statusbar_health/green/60.png',
-        'img/7_statusbars/1_statusbar/2_statusbar_health/green/80.png',
-        'img/7_statusbars/1_statusbar/2_statusbar_health/blue/100.png',
+        'img/7_statusbars/2_statusbar_endboss/blue/blue0.png',
+        'img/7_statusbars/2_statusbar_endboss/orange/orange20.png',
+        'img/7_statusbars/2_statusbar_endboss/orange/orange40.png',
+        'img/7_statusbars/2_statusbar_endboss/green/green60.png',
+        'img/7_statusbars/2_statusbar_endboss/green/green80.png',
+        'img/7_statusbars/2_statusbar_endboss/blue/blue100.png',
     ];
 
     percentageHealth = 10;
