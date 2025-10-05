@@ -33,6 +33,22 @@ function fullscreen() {
     overlay.requestFullscreen();
 }
 
+function turnOffMusic() {
+    isMuted = true;
+    // this.backgroundSound.pause();
+    document.getElementById('soundOn').classList.add('dNone');
+    document.getElementById('soundOff').classList.remove('dNone');
+    sounds.forEach(sound => sound.muted = true);
+}
+
+function turnOnMusic() {
+    isMuted = false;
+    this.backgroundSound.play();
+    document.getElementById('soundOn').classList.remove('dNone');
+    document.getElementById('soundOff').classList.add('dNone');
+    sounds.forEach(sound => sound.muted = false);
+}
+
 // function requestFullscreen(element) {
 //     if (element.requestFullscreen) {
 //         element.requestFullscreen();

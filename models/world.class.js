@@ -34,6 +34,7 @@ class World {
         sounds.push(this.killedEndboss);
         sounds.push(this.killedChicken);
         sounds.push(this.killedSmallChicken);
+        sounds.push(this.getHurt);
         this.draw();
         this.setWorld();
         this.run();
