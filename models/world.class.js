@@ -27,6 +27,7 @@ class World {
     killedChicken = new Audio('audio/chicken_fainting.mp3');
     killedSmallChicken = new Audio('audio/small_chicken_fainting.mp3');
     getHurt = new Audio('audio/get_hurt.mp3');
+    collectCoin = new Audio('audio/collect_coin.mp3');
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -271,6 +272,7 @@ class World {
         this.level.coins.forEach((coin, index) => {
             if (!coin.collected && this.character.isColliding(coin)) {
                 coin.collected = true;
+                this.collectCoin.play();
                 this.character.coins++;
                 this.coinBar.setPercentageCoin(this.character.coins);
                 this.level.coins.splice(index, 1);
