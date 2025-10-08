@@ -21,6 +21,7 @@ class World {
     maxBottles = 5;
     currentBottleCount = 0;
     endbossIsDead = false;
+    lastThrowTime = 0;
 
     killedEndboss = new Audio('audio/endboss_fainting.mp3');
     killedChicken = new Audio('audio/chicken_fainting.mp3');
@@ -239,15 +240,14 @@ class World {
     // }
 
     checkThrowObjects() {
-        if (this.keyboard.SPACE && this.currentBottleCount > 0) {
+        let currentThrowTime = new Date().getTime();
+        if (this.keyboard.SPACE && this.currentBottleCount > 0 && currentThrowTime - this.lastThrowTime >= 750) {
             let bottle = new ThrowableObject(this.character.x + 50, this.character.y + 100);
             this.throwableObjects.push(bottle);
             this.currentBottleCount--;
             this.bottleBar.setPercentageBottle(this.currentBottleCount);
+            this.lastThrowTime = currentThrowTime;
         }
-        // if (this.currentBottleCount < 5) {
-        //     this.setBottles();
-        // }
     }
 
     checkCollectedBottles() {
