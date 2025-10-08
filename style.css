@@ -113,7 +113,6 @@ h1 {
 }
 
 .instructions_box {
-    width: 640px;
     height: 48px;
     margin-left: 5px;
     margin-top: 8px;
@@ -121,12 +120,8 @@ h1 {
     display: flex;
     align-items: center;
     background-image: linear-gradient(#ffdf00, #ff9d00);
-    color: #ff9d00;
-    text-shadow: 2px 2px #9a3a16;
     letter-spacing: 2px;
     border-radius: 10px;
-    -webkit-text-stroke-width: 1px;
-    -webkit-text-stroke-color: #9a3a16;
 }
 
 .instructions_box h2 {
@@ -137,17 +132,13 @@ h1 {
     padding-left: 8px;
     display: flex;
     flex-direction: row;
-
+    font-size: 18px;
 }
 
 .instructions p {
     padding: 8px;
-    color: #ff9d00;
-    text-shadow: 2px 2px #9a3a16;
     letter-spacing: 2px;
     border-radius: 10px;
-    -webkit-text-stroke-width: 1px;
-    -webkit-text-stroke-color: #9a3a16;
 }
 
 .fullscreen {
