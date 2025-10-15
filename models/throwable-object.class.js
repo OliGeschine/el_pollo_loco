@@ -17,6 +17,7 @@ class ThrowableObject extends MovableObject {
         super().loadImage(this.IMAGES_THROWING[0]);
         this.loadImages(this.IMAGES_THROWING);
         this.loadImages(this.IMAGES_SPLASHING);
+        sounds.push(this.throwBottle);
         this.x = x;
         this.y = y;
         this.height = 70;
@@ -28,11 +29,17 @@ class ThrowableObject extends MovableObject {
         this.speedY = 15;
         this.applyGravity();
         this.throwBottle.play();
-        startInterval(() => {
+        this.throwIntervall = startInterval(() => {
             this.playAnimation(this.IMAGES_THROWING);
             this.x += 10;
         }, 25);
     }
 
-}
+    splash() {
+        this.speedY = 0;
+        this.playAnimation(this.IMAGES_SPLASHING);
+        clearInterval(this.throwIntervall);
+        console.log('splash');
+    }
 
+}

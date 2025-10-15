@@ -37,6 +37,7 @@ class World {
         sounds.push(this.killedChicken);
         sounds.push(this.killedSmallChicken);
         sounds.push(this.getHurt);
+        sounds.push(this.collectCoin);
         this.draw();
         this.setWorld();
         this.run();
@@ -162,8 +163,10 @@ class World {
     checkBottleHitsEnemies() {
         this.throwableObjects.forEach((bottle, bottleIndex) => {
             this.level.enemies.forEach((enemy, enemyIndex) => {
-                if (!enemy.isDead() && bottle.isColliding(enemy)) {
+                if (!enemy.isDead() && bottle.isColliding(enemy) && !bottle.splashed) {
                     console.log('Kollision!', bottle.x, bottle.y, enemy.x, enemy.y);
+                    bottle.splashed = true;
+                    bottle.splash();
                     enemy.hit();
                     this.throwableObjects.splice(bottleIndex, 1);
                     this.killedChicken.play();
