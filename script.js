@@ -15,7 +15,9 @@ function showEndScreen() {
     document.getElementById('endscreenIconBar').classList.remove('dNone');
     clearAllIntervals();
     this.backgroundSound.pause();
-    this.victorySound.play();
+    if (isMuted === false) {
+        this.victorySound.play();
+    }
 }
 
 function startInterval(callback, delay) {
