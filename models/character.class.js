@@ -84,7 +84,11 @@ class Character extends MovableObject {
     }
 
     animate() {
+        this.moveCharacter();
+        this.animateCharacter();
+    }
 
+    moveCharacter() {
         startInterval(() => {
             if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
                 this.moveRight();
@@ -99,7 +103,9 @@ class Character extends MovableObject {
             }
             this.world.cameraX = -this.x + 50;
         }, 1000 / 60);
+    }
 
+    animateCharacter() {
         startInterval(() => {
             if (this.isDead()) {
                 this.playAnimation(this.IMAGES_DEAD);

@@ -39,8 +39,8 @@ class ThrowableObject extends MovableObject {
 
     splash() {
         this.speedY = 0;
-        this.playAnimation(this.IMAGES_SPLASHING);
         clearInterval(this.throwIntervall);
+        this.playAnimation(this.IMAGES_SPLASHING);
         console.log('splash');
     }
 
