@@ -28,6 +28,8 @@ class World {
     killedSmallChicken = new Audio('audio/small_chicken_fainting.mp3');
     getHurt = new Audio('audio/get_hurt.mp3');
     collectCoin = new Audio('audio/collect_coin.mp3');
+    collectBottle = new Audio('audio/collect_bottle.mp3');
+    bottleBreaking = new Audio('audio/bottle_breaking.mp3');
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -38,6 +40,8 @@ class World {
         sounds.push(this.killedSmallChicken);
         sounds.push(this.getHurt);
         sounds.push(this.collectCoin);
+        sounds.push(this.collectBottle);
+        sounds.push(this.bottleBreaking);
         this.draw();
         this.setWorld();
         this.run();
@@ -167,6 +171,7 @@ class World {
                     console.log('Kollision!', bottle.x, bottle.y, enemy.x, enemy.y);
                     bottle.splashed = true;
                     bottle.splash();
+                    this.bottleBreaking.play();
                     enemy.hit();
                     this.throwableObjects.splice(bottleIndex, 1);
                     this.killedChicken.play();
@@ -183,7 +188,7 @@ class World {
     checkBottleHitsEndboss() {
         this.throwableObjects.forEach((bottle, bottleIndex) => {
             if (!this.endboss.isDead() && bottle.isColliding(this.endboss)) {
-                console.log('kollision!', bottle.x, bottle.y, this.endboss.x, this.endboss.y);
+                this.bottleBreaking.play();
                 this.endboss.hit();
                 this.endbossHealthBar.setPercentageHealth(this.endboss.energy);
                 this.throwableObjects.splice(bottleIndex, 1);
@@ -258,6 +263,7 @@ class World {
         this.level.bottles.forEach((bottle, index) => {
             if (!bottle.collected && this.character.isColliding(bottle)) {
                 bottle.collected = true;
+                this.collectBottle.play();
                 this.level.bottles.splice(index, 1);
                 this.currentBottleCount++;
                 this.bottleBar.setPercentageBottle(this.currentBottleCount);
