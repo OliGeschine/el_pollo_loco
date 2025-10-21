@@ -8,9 +8,21 @@ function startGame() {
     init();
 }
 
-function showEndScreen() {
+function showWinningScreen() {
     document.getElementById('canvas').classList.add('dNone');
-    document.getElementById('end_overlay').classList.remove('dNone');
+    document.getElementById('winning_overlay').classList.remove('dNone');
+    document.getElementById('iconBar').classList.add('dNone');
+    document.getElementById('endscreenIconBar').classList.remove('dNone');
+    clearAllIntervals();
+    this.backgroundSound.pause();
+    if (isMuted === false) {
+        this.victorySound.play();
+    }
+}
+
+function showLosingScreen() {
+    document.getElementById('canvas').classList.add('dNone');
+    document.getElementById('winning_overlay').classList.remove('dNone');
     document.getElementById('iconBar').classList.add('dNone');
     document.getElementById('endscreenIconBar').classList.remove('dNone');
     clearAllIntervals();

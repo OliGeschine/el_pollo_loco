@@ -21,8 +21,10 @@ class World {
     maxBottles = 5;
     currentBottleCount = 0;
     endbossIsDead = false;
+    characterIsDead = false;
     lastThrowTime = 0;
 
+    characterDies = new Audio('audio/character_fainting.mp3');
     killedEndboss = new Audio('audio/endboss_fainting.mp3');
     killedChicken = new Audio('audio/chicken_fainting.mp3');
     killedSmallChicken = new Audio('audio/small_chicken_fainting.mp3');
@@ -35,6 +37,7 @@ class World {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
+        sounds.push(this.characterDies);
         sounds.push(this.killedEndboss);
         sounds.push(this.killedChicken);
         sounds.push(this.killedSmallChicken);
@@ -138,6 +141,7 @@ class World {
             this.getHurt.play();
             this.statusBar.setPercentageHealth(this.character.energy);
         }
+        this.handleCharacterIsDeadAnimation();
     }
 
     checkEndbossCollisions() {
@@ -146,6 +150,7 @@ class World {
             this.getHurt.play();
             this.statusBar.setPercentageHealth(this.character.energy);
         }
+        this.handleCharacterIsDeadAnimation();
     }
 
 
@@ -206,7 +211,21 @@ class World {
                     this.endbossIsDead = true;
                 }, 3000);
                 setTimeout(() => {
-                    showEndScreen();
+                    showWinningScreen();
+                }, 3000);
+            }
+        })
+    }
+
+    handleCharacterIsDeadAnimation() {
+        setTimeout(() => {
+            if (this.character.energy <= 0) {
+                this.characterDies.play();
+                setTimeout(() => {
+                    this.characterIsDead = true;
+                }, 3000);
+                setTimeout(() => {
+                    showLosingScreen();
                 }, 3000);
             }
         })

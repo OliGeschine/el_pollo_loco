@@ -102,7 +102,17 @@ h1 {
 } */
 
 
-.end-screen {
+.winning-screen {
+    margin-top: 10px;
+    height: 480px;
+    width: 720px;
+    background-color: black;
+    background-position: center;
+    background-size: cover;
+    border: 2px solid black;
+}
+
+.losing-screen {
     margin-top: 10px;
     height: 480px;
     width: 720px;

@@ -8,6 +8,7 @@ class Character extends MovableObject {
     coins = 0;
     energy = 100;
     justStomped = false;
+    walking = new Audio('audio/walking.mp3');
 
     IMAGES_IDLE = [
         'img/2_character_pepe/1_idle/idle/I-1.png',
@@ -79,6 +80,7 @@ class Character extends MovableObject {
         this.loadImages(this.IMAGES_JUMPING);
         this.loadImages(this.IMAGES_DEAD);
         this.loadImages(this.IMAGES_HURT);
+        sounds.push(this.walking);
         this.applyGravity();
         this.animate();
     }
@@ -117,6 +119,7 @@ class Character extends MovableObject {
             } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
                 this.getMoveTime();
                 this.playAnimation(this.IMAGES_WALKING);
+                this.walking.play();
             } else if (this.getSleepTime()) {
                 this.playAnimation(this.IMAGES_SLEEPING)
             } else {
