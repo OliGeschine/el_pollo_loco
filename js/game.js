@@ -4,8 +4,8 @@ let keyboard = new Keyboard();
 let sounds = [];
 let isMuted = false;
 
-// backgroundSound = new Audio('audio/background_music.mp3');
-// backgroundSound.loop = true;
+backgroundSound = new Audio('audio/background_music.mp3');
+backgroundSound.loop = true;
 victorySound = new Audio('audio/victory.mp3');
 
 function init() {

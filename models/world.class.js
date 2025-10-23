@@ -21,7 +21,6 @@ class World {
     maxBottles = 5;
     currentBottleCount = 0;
     endbossIsDead = false;
-    characterIsDead = false;
     lastThrowTime = 0;
 
     characterDies = new Audio('audio/character_fainting.mp3');
@@ -192,7 +191,7 @@ class World {
 
     checkBottleHitsEndboss() {
         this.throwableObjects.forEach((bottle, bottleIndex) => {
-            if (!this.endboss.isDead() && bottle.isColliding(this.endboss)) {
+            if (!this.endboss.isDead() && bottle.isColliding(this.endboss) && !bottle.splashed) {
                 this.bottleBreaking.play();
                 this.endboss.hit();
                 this.endbossHealthBar.setPercentageHealth(this.endboss.energy);
@@ -223,7 +222,6 @@ class World {
                 this.getHurt.muted = true;
                 this.characterDies.play();
                 setTimeout(() => {
-                    this.characterIsDead = true;
                 }, 3000);
                 setTimeout(() => {
                     showLosingScreen();
