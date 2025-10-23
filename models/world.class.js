@@ -220,6 +220,7 @@ class World {
     handleCharacterIsDeadAnimation() {
         setTimeout(() => {
             if (this.character.energy <= 0) {
+                this.getHurt.muted = true;
                 this.characterDies.play();
                 setTimeout(() => {
                     this.characterIsDead = true;

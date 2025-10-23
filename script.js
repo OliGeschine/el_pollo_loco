@@ -12,7 +12,7 @@ function showWinningScreen() {
     document.getElementById('canvas').classList.add('dNone');
     document.getElementById('winning_overlay').classList.remove('dNone');
     document.getElementById('iconBar').classList.add('dNone');
-    document.getElementById('endscreenIconBar').classList.remove('dNone');
+    document.getElementById('winningScreenIconBar').classList.remove('dNone');
     clearAllIntervals();
     this.backgroundSound.pause();
     if (isMuted === false) {
@@ -22,9 +22,9 @@ function showWinningScreen() {
 
 function showLosingScreen() {
     document.getElementById('canvas').classList.add('dNone');
-    document.getElementById('winning_overlay').classList.remove('dNone');
+    document.getElementById('losing_overlay').classList.remove('dNone');
     document.getElementById('iconBar').classList.add('dNone');
-    document.getElementById('endscreenIconBar').classList.remove('dNone');
+    document.getElementById('losingScreenIconBar').classList.remove('dNone');
     clearAllIntervals();
     this.backgroundSound.pause();
     if (isMuted === false) {

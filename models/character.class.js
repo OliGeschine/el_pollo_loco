@@ -6,7 +6,7 @@ class Character extends MovableObject {
     speed = 10;
     world;
     coins = 0;
-    energy = 100;
+    energy = 20;
     justStomped = false;
     walking = new Audio('audio/walking.mp3');
 
