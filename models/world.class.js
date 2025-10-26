@@ -170,20 +170,19 @@ class World {
 
     checkBottleHitsEnemies() {
         this.throwableObjects.forEach((bottle, bottleIndex) => {
+            if (bottle.splashed) return;
             this.level.enemies.forEach((enemy, enemyIndex) => {
-                if (!enemy.isDead() && bottle.isColliding(enemy) && !bottle.splashed) {
-                    console.log('Kollision!', bottle.x, bottle.y, enemy.x, enemy.y);
+                if (!enemy.isDead() && bottle.isColliding(enemy)) {
                     bottle.splashed = true;
                     bottle.splash();
                     this.bottleBreaking.play();
                     enemy.hit();
-                    this.throwableObjects.splice(bottleIndex, 1);
                     this.killedChicken.play();
                     setTimeout(() => {
                         if (enemy.energy <= 0) {
                             this.level.enemies.splice(enemyIndex, 1);
                         }
-                    }, 300)
+                    }, 200)
                 }
             });
         });
@@ -191,11 +190,13 @@ class World {
 
     checkBottleHitsEndboss() {
         this.throwableObjects.forEach((bottle, bottleIndex) => {
+            if (bottle.splashed) return;
             if (!this.endboss.isDead() && bottle.isColliding(this.endboss) && !bottle.splashed) {
+                bottle.splashed = true;
+                bottle.splash();
                 this.bottleBreaking.play();
                 this.endboss.hit();
                 this.endbossHealthBar.setPercentageHealth(this.endboss.energy);
-                this.throwableObjects.splice(bottleIndex, 1);
                 this.killedChicken.play();
                 this.handleEndbossIsDeadAnimation();
             }
@@ -270,6 +271,7 @@ class World {
         let currentThrowTime = new Date().getTime();
         if (this.keyboard.SPACE && this.currentBottleCount > 0 && currentThrowTime - this.lastThrowTime >= 750) {
             let bottle = new ThrowableObject(this.character.x + 50, this.character.y + 100);
+            bottle.world = this;
             this.throwableObjects.push(bottle);
             this.currentBottleCount--;
             this.bottleBar.setPercentageBottle(this.currentBottleCount);

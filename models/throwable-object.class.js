@@ -20,6 +20,8 @@ class ThrowableObject extends MovableObject {
         sounds.push(this.throwBottle);
         this.x = x;
         this.y = y;
+        this.splashed = false;
+        this.world = 0;
         this.height = 70;
         this.width = 60;
         this.throw();
@@ -39,9 +41,18 @@ class ThrowableObject extends MovableObject {
 
     splash() {
         this.speedY = 0;
+        this.acceleration = 0;
         clearInterval(this.throwIntervall);
-        this.playAnimation(this.IMAGES_SPLASHING);
-        console.log('splash');
+        this.splashingIntervall = startInterval(() => {
+            this.playAnimation(this.IMAGES_SPLASHING);
+        }, 100);
+        setTimeout(() => {
+            clearInterval(this.splashingIntervall);
+            const index = this.world?.throwableObjects.indexOf(this);
+            if (index > -1) {
+                this.world.throwableObjects.splice(index, 1);
+            }
+        }, 600);
     }
 
 }
