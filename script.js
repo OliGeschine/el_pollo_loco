@@ -28,7 +28,7 @@ function showLosingScreen() {
     clearAllIntervals();
     this.backgroundSound.pause();
     if (isMuted === false) {
-        this.victorySound.play();
+        this.loseSound.play();
     }
 }
 
