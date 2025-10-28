@@ -199,43 +199,42 @@ h1 {
     padding: 1rem;
     margin-top: 2rem;
     margin-bottom: 2rem;
+    overflow-y: scroll;
 }
-
 
 .impressum h1 {
     margin-bottom: 1rem;
     font-size: 1.75rem;
 }
 
-
-.impressum h2 {
-    font-size: 1.125rem;
-    line-height: 1.75rem;
-}
-
-
-.impressum h3 {
-    font-size: 1.125rem;
-}
-
-
 .impressum a {
-    color: var(--fontColorMain);
+    color: black;
 }
-
 
 .impressum a:hover {
     font-weight: bold;
-    color: var(--green);
 }
-
 
 .impressum p {
-    line-height: 1.25rem;
+    line-height: 1rem;
 }
 
+.home_button {
+    position: absolute;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding-top: 20px;
 
-.impressum hr {
-    margin-top: 2rem;
-    margin-bottom: 1rem
+    img:hover {
+        cursor: pointer;
+        transform: scale(1.2);
+    }
+
+}
+
+.home_button img {
+    height: 24px;
+    width: 24px;
 }
