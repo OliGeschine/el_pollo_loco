@@ -65,14 +65,6 @@ class World {
         }, 200);
     }
 
-    // collisions() {
-    //     setInterval(() => {
-    //         this.checkBottleHitsEnemies();
-    //         this.checkJumpCollisions();
-    //         this.checkEnemyCollisions();
-    //     }, 10);
-    // }
-
     collisions() {
         startInterval(() => {
             this.checkBottleHitsEnemies();
@@ -231,42 +223,6 @@ class World {
         })
     }
 
-
-    // setCollectableObjects() {
-    //     // this.setCoins();
-    //     // this.setBottles();
-    // };
-
-    // setCoins() {
-    //     for (let i = 0; i < 5; i++) {
-    //         let coins = new Coin();
-    //         this.collectedCoins.push(coins);
-    //     }
-    // }
-
-    // varainte 1
-
-    // setBottles() {
-    //     for (let i = 0; i < 5; i++) {
-    //         let bottle = new Bottle();
-    //         this.collectedBottles.push(bottle);
-    //     }
-    // }
-
-
-    //variante 2
-
-    // setBottles() {
-    //     this.setNextBottle();
-    // }
-
-    // setNextBottle() {
-    //     if (this.currentBottleCount < this.maxBottles) {
-    //         let bottle = new Bottle();
-    //         this.collectedBottles.push(bottle);
-    //     }
-    // }
-
     checkThrowObjects() {
         let currentThrowTime = new Date().getTime();
         if (this.keyboard.SPACE && this.currentBottleCount > 0 && currentThrowTime - this.lastThrowTime >= 750 && !this.character.isDead()) {
@@ -287,7 +243,6 @@ class World {
                 this.level.bottles.splice(index, 1);
                 this.currentBottleCount++;
                 this.bottleBar.setPercentageBottle(this.currentBottleCount);
-                console.log('Collected Bottle! Total:', this.currentBottleCount);
             }
         });
     }
@@ -305,7 +260,6 @@ class World {
                 this.character.coins++;
                 this.coinBar.setPercentageCoin(this.character.coins);
                 this.level.coins.splice(index, 1);
-                console.log('Collected Coin! Total:', this.character.coins);
             }
         });
     }

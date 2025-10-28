@@ -188,3 +188,54 @@ h1 {
     height: 24px;
     width: 24px;
 }
+
+/* ========== I M P R E S S U M ========== */
+
+
+.impressum {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 1rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+
+.impressum h1 {
+    margin-bottom: 1rem;
+    font-size: 1.75rem;
+}
+
+
+.impressum h2 {
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+}
+
+
+.impressum h3 {
+    font-size: 1.125rem;
+}
+
+
+.impressum a {
+    color: var(--fontColorMain);
+}
+
+
+.impressum a:hover {
+    font-weight: bold;
+    color: var(--green);
+}
+
+
+.impressum p {
+    line-height: 1.25rem;
+}
+
+
+.impressum hr {
+    margin-top: 2rem;
+    margin-bottom: 1rem
+}
