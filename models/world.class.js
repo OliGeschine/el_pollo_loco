@@ -269,7 +269,7 @@ class World {
 
     checkThrowObjects() {
         let currentThrowTime = new Date().getTime();
-        if (this.keyboard.SPACE && this.currentBottleCount > 0 && currentThrowTime - this.lastThrowTime >= 750) {
+        if (this.keyboard.SPACE && this.currentBottleCount > 0 && currentThrowTime - this.lastThrowTime >= 750 && !this.character.isDead()) {
             let bottle = new ThrowableObject(this.character.x + 50, this.character.y + 100);
             bottle.world = this;
             this.throwableObjects.push(bottle);
