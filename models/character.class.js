@@ -9,7 +9,7 @@ class Character extends MovableObject {
         left: 15,
         right: 30,
     };
-    speed = 10;
+    speed = 8;
     world;
     coins = 0;
     energy = 20;

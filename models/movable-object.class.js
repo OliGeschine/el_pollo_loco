@@ -52,7 +52,11 @@ class MovableObject extends DrawableObjcet {
     isStomping(mo) {
         if (this.justStomped) return false;
         let isColliding = this.isColliding(mo);
-        let fromAbove = this.y + this.height >= mo.y && this.y + this.height <= mo.y + mo.height * 0.7; // vorher * 0.3
+        let characterBottom = (this.y + this.offset.top) + (this.height - this.offset.top - this.offset.bottom);
+        let enemyTop = mo.y + mo.offset.top;
+        let enemyStompZone = enemyTop + ((mo.height - mo.offset.top - mo.offset.bottom) * 0.5);
+
+        let fromAbove = characterBottom >= enemyTop && characterBottom <= enemyStompZone;// vorher * 0.3
         let fallingDown = this.speedY <= 0; // vorher this.speedY < 0
 
         return isColliding && fromAbove && fallingDown;
