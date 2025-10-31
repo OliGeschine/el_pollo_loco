@@ -1,6 +1,12 @@
 class Bottle extends CollectableObject {
     width = 70;
     height = 70;
+    offset = {
+        top: 10,
+        bottom: 5,
+        left: 15,
+        right: 10
+    };
 
     IMAGES_MOVING = ['img/6_salsa_bottle/1_salsa_bottle_on_ground.png',
         'img/6_salsa_bottle/2_salsa_bottle_on_ground.png',];

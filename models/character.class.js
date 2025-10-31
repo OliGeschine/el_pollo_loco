@@ -3,6 +3,12 @@ class Character extends MovableObject {
     width = 100;
     x = 50;
     y = 200;
+    offset = {
+        top: 100,
+        bottom: 10,
+        left: 15,
+        right: 30,
+    };
     speed = 10;
     world;
     coins = 0;

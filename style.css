@@ -50,6 +50,17 @@ h1 {
     display: none !important;
 }
 
+footer {
+    display: flex;
+    gap: 16px;
+    padding-top: 20px;
+    letter-spacing: 2px;
+}
+
+footer a {
+    text-decoration: none;
+}
+
 .main_content {
     position: relative;
 }
