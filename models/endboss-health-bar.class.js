@@ -1,4 +1,4 @@
-class EndbossHealth extends DrawableObjcet {
+class EndbossHealth extends DrawableObject {
     IMAGES_ENDBOSSHEALTH = [
         'img/7_statusbars/2_statusbar_endboss/blue/blue0.png',
         'img/7_statusbars/2_statusbar_endboss/orange/orange20.png',

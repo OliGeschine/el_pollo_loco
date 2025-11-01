@@ -56,7 +56,7 @@ class Endboss extends MovableObject {
         this.loadImages(this.IMAGES_ATTACKING);
         this.loadImages(this.IMAGES_HURT);
         this.loadImages(this.IMAGES_DEAD);
-        this.x = 2550;
+        this.x = 3800;
         this.speed = 0.9;
         this.animate();
     }
@@ -65,7 +65,7 @@ class Endboss extends MovableObject {
     animate() {
         this.walkInterval = startInterval(() => {
             let playerX = this.world.character.x;
-            if (playerX >= 2160) {
+            if (playerX >= 3500) {
                 this.hadFirstContact = true
             }
             if (!this.isDead() && this.hadFirstContact == true) {

@@ -13,6 +13,7 @@ class World {
     statusBar = new Statusbar();
     coinBar = new Coinbar();
     bottleBar = new Bottlebar();
+    chickenHouse = new chickenHouse();
     throwableObjects = [];
     // collectableObjects = [];
     collectedCoins = [];
@@ -286,6 +287,7 @@ class World {
         this.addObjectsToMap(this.throwableObjects);
         this.addObjectsToMap(this.collectedCoins);
         this.addObjectsToMap(this.collectedBottles);
+        this.addToMap(this.chickenHouse);
         this.ctx.translate(-this.cameraX, 0);
 
 
