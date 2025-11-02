@@ -80,3 +80,78 @@ function turnOnMusic() {
 //         document.webkitExitFullscreen();
 //     }
 // }
+
+// Mobile Touch Controls
+let isMobile = window.innerWidth <= 1024;
+
+// Touch Events für Mobile Controls
+if (isMobile) {
+    setupMobileControls();
+}
+
+function setupMobileControls() {
+    const btnLeft = document.getElementById('btn-left');
+    const btnRight = document.getElementById('btn-right');
+    const btnJump = document.getElementById('btn-jump');
+    const btnThrow = document.getElementById('btn-throw');
+
+    // Touch Events (funktionieren auch mit Maus)
+    if (btnLeft) {
+        btnLeft.addEventListener('touchstart', () => keyboard.LEFT = true);
+        btnLeft.addEventListener('touchend', () => keyboard.LEFT = false);
+        btnLeft.addEventListener('mousedown', () => keyboard.LEFT = true);
+        btnLeft.addEventListener('mouseup', () => keyboard.LEFT = false);
+    }
+
+    if (btnRight) {
+        btnRight.addEventListener('touchstart', () => keyboard.RIGHT = true);
+        btnRight.addEventListener('touchend', () => keyboard.RIGHT = false);
+        btnRight.addEventListener('mousedown', () => keyboard.RIGHT = true);
+        btnRight.addEventListener('mouseup', () => keyboard.RIGHT = false);
+    }
+
+    if (btnJump) {
+        btnJump.addEventListener('touchstart', () => keyboard.UP = true);
+        btnJump.addEventListener('touchend', () => keyboard.UP = false);
+        btnJump.addEventListener('mousedown', () => keyboard.UP = true);
+        btnJump.addEventListener('mouseup', () => keyboard.UP = false);
+    }
+
+    if (btnThrow) {
+        btnThrow.addEventListener('touchstart', () => keyboard.SPACE = true);
+        btnThrow.addEventListener('touchend', () => keyboard.SPACE = false);
+        btnThrow.addEventListener('mousedown', () => keyboard.SPACE = true);
+        btnThrow.addEventListener('mouseup', () => keyboard.SPACE = false);
+    }
+}
+
+// Orientation Change Detection
+window.addEventListener('orientationchange', function () {
+    setTimeout(checkOrientation, 100);
+});
+
+window.addEventListener('resize', checkOrientation);
+
+function checkOrientation() {
+    const rotateOverlay = document.getElementById('rotate-device-overlay');
+    const mobileControls = document.getElementById('mobile-controls');
+
+    if (window.innerWidth <= 1024) {
+        if (window.innerHeight > window.innerWidth) {
+            // Portrait Mode
+            rotateOverlay?.classList.remove('dNone');
+            mobileControls?.classList.add('dNone');
+        } else {
+            // Landscape Mode
+            rotateOverlay?.classList.add('dNone');
+            mobileControls?.classList.remove('dNone');
+        }
+    } else {
+        // Desktop
+        rotateOverlay?.classList.add('dNone');
+        mobileControls?.classList.add('dNone');
+    }
+}
+
+// Initial Check
+checkOrientation();
