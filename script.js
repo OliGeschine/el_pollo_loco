@@ -6,6 +6,12 @@ function startGame() {
     document.getElementById('iconBar').classList.remove('dNone');
     initLevel();
     init();
+
+    setTimeout(() => {
+        if (window.innerWidth <= 1024 && typeof keyboard !== 'undefined') {
+            setupMobileControls();
+        }
+    }, 100);
 }
 
 function showWinningScreen() {
@@ -82,7 +88,11 @@ function turnOnMusic() {
 // }
 
 // Mobile Touch Controls
-let isMobile = window.innerWidth <= 1024;
+function initMobileControls() {
+    if (window.innerWidth <= 1024 && typeof keyboard !== 'undefined') {
+        setupMobileControls();
+    }
+}
 
 function setupMobileControls() {
     // Warten bis keyboard definiert ist
@@ -187,21 +197,14 @@ function checkOrientation() {
 
     if (window.innerWidth <= 1024) {
         if (window.innerHeight > window.innerWidth) {
-            // Portrait Mode
             rotateOverlay?.classList.remove('dNone');
             mobileControls?.classList.add('dNone');
         } else {
-            // Landscape Mode
             rotateOverlay?.classList.add('dNone');
             mobileControls?.classList.remove('dNone');
-
-            // Mobile Controls initialisieren falls noch nicht geschehen
-            if (isMobile && typeof keyboard !== 'undefined') {
-                setupMobileControls();
-            }
+            initMobileControls(); // HIER aufrufen
         }
     } else {
-        // Desktop
         rotateOverlay?.classList.add('dNone');
         mobileControls?.classList.add('dNone');
     }
@@ -209,15 +212,3 @@ function checkOrientation() {
 
 // Initial Check
 checkOrientation();
-
-// Mobile Controls initialisieren nach dem Spielstart
-document.addEventListener('DOMContentLoaded', function () {
-    if (isMobile) {
-        // Warten bis alles geladen ist
-        setTimeout(() => {
-            if (typeof keyboard !== 'undefined') {
-                setupMobileControls();
-            }
-        }, 500);
-    }
-});

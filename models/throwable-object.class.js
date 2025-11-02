@@ -1,5 +1,11 @@
 class ThrowableObject extends MovableObject {
     throwBottle = new Audio('audio/throw_bottle.mp3');
+    offset = {
+        top: 10,
+        bottom: 10,
+        left: 10,
+        right: 10
+    };
 
     IMAGES_THROWING = ['img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png',
         'img/6_salsa_bottle/bottle_rotation/2_bottle_rotation.png',

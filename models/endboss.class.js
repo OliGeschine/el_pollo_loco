@@ -74,7 +74,7 @@ class Endboss extends MovableObject {
         }, 1000 / 60);
 
         startInterval(() => {
-            if (!this.world || !world.character.x) return;
+            if (!this.world || !this.world.character.x) return;
             let playerX = this.world.character.x;
             let endbossX = this.world.endboss.x;
             let distance = endbossX - playerX;

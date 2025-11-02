@@ -374,8 +374,7 @@ footer a {
     }
 
     .instructions_box {
-        margin: 2px;
-        padding: 4px;
+        display: none;
     }
 
     .instructions_svg {
@@ -415,6 +414,23 @@ footer a {
 
     footer {
         display: none;
+    }
+}
+
+/* Sehr kleine Smartphones (Landscape) */
+@media only screen and (max-width: 480px) and (orientation: landscape) {
+    .control-btn {
+        width: 45px;
+        height: 45px;
+    }
+
+    .control-left,
+    .control-right {
+        gap: 10px;
+    }
+
+    .mobile-controls {
+        padding: 0 10px;
     }
 }
 
