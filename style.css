@@ -36,129 +36,6 @@ canvas {
     max-height: 80vh;
 }
 
-/* ========== MEDIA QUERIES ========== */
-
-/* Tablets und kleine Laptops (Landscape) */
-@media only screen and (max-width: 1024px) and (orientation: landscape) {
-    h1 {
-        font-size: 2.5rem;
-        margin: 10px 0;
-    }
-
-    canvas,
-    .start-screen,
-    .winning-screen,
-    .losing-screen {
-        width: 90vw;
-        height: calc(90vw * 0.67);
-        /* 720/480 Verhältnis beibehalten */
-        max-height: 70vh;
-    }
-
-    .instructions_svg {
-        gap: 12px;
-    }
-
-    .instruction_item p {
-        font-size: 14px;
-    }
-
-    /* Mobile Controls anzeigen */
-    .mobile-controls {
-        display: flex;
-    }
-}
-
-/* Smartphones (Landscape) */
-@media only screen and (max-width: 768px) and (orientation: landscape) {
-    h1 {
-        font-size: 1.8rem;
-        margin: 5px 0;
-    }
-
-    canvas,
-    .start-screen,
-    .winning-screen,
-    .losing-screen {
-        width: 95vw;
-        height: calc(95vw * 0.67);
-        max-height: 75vh;
-    }
-
-    .instructions_box {
-        margin: 2px;
-        padding: 4px;
-    }
-
-    .instructions_svg {
-        gap: 8px;
-    }
-
-    .instruction_item p {
-        font-size: 12px;
-    }
-
-    .instruction_item svg {
-        width: 60px;
-        height: 40px;
-    }
-
-    footer {
-        padding-top: 10px;
-        font-size: 12px;
-    }
-
-    .control-btn {
-        width: 50px;
-        height: 50px;
-    }
-
-    /* Kleine Smartphones (Landscape) */
-    @media only screen and (max-width: 640px) and (orientation: landscape) {
-        h1 {
-            font-size: 1.5rem;
-            margin: 2px 0;
-        }
-
-        .instructions_box {
-            display: none;
-            /* Instructions bei sehr kleinen Screens ausblenden */
-        }
-
-        footer {
-            display: none;
-            /* Footer bei sehr kleinen Screens ausblenden */
-        }
-    }
-
-    /* Portrait-Modus: "Turn Device" anzeigen */
-    @media only screen and (max-width: 1024px) and (orientation: portrait) {
-        .rotate-overlay {
-            display: flex !important;
-        }
-
-        /* Alle anderen Inhalte verstecken */
-        h1,
-        #content,
-        .instructions_box,
-        footer,
-        .mobile-controls {
-            display: none !important;
-        }
-    }
-
-    /* Desktop: Mobile Controls verstecken */
-    @media only screen and (min-width: 1025px) {
-        .mobile-controls {
-            display: none !important;
-        }
-
-        .rotate-overlay {
-            display: none !important;
-        }
-    }
-}
-
 h1 {
     font-size: 64px;
     letter-spacing: 3px;
@@ -333,12 +210,12 @@ footer a {
 /* Mobile Touch Controls */
 .mobile-controls {
     position: fixed;
-    bottom: 20px;
+    bottom: 10px;
     left: 0;
     right: 0;
     display: flex;
     justify-content: space-between;
-    padding: 0 20px;
+    padding: 0 15px;
     z-index: 1000;
     pointer-events: none;
 }
@@ -351,8 +228,8 @@ footer a {
 }
 
 .control-btn {
-    width: 60px;
-    height: 60px;
+    width: 55px;
+    height: 55px;
     border: none;
     border-radius: 50%;
     background: rgba(255, 223, 0, 0.9);
@@ -364,6 +241,7 @@ footer a {
     transition: all 0.2s ease;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
+    border: 2px solid #9a3a16;
 }
 
 .control-btn:active {
@@ -375,25 +253,6 @@ footer a {
     transform: scale(1.05);
 }
 
-/* Responsive Anpassung */
-@media only screen and (max-width: 720px) {
-    .instructions_svg {
-        gap: 16px;
-    }
-
-    .instruction_item p {
-        font-size: 18px;
-    }
-}
-
-/* .fullscreen {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    background-image: url('img/5_background/game_background/game_background.jpg');
-} */
-
 .icon_bar {
     position: absolute;
     top: 0;
@@ -402,17 +261,16 @@ footer a {
     width: 100%;
     gap: 20px;
     padding-top: 20px;
-
-    img:hover {
-        cursor: pointer;
-        transform: scale(1.2);
-    }
-
 }
 
 .icon_bar img {
     height: 24px;
     width: 24px;
+}
+
+.icon_bar img:hover {
+    cursor: pointer;
+    transform: scale(1.2);
 }
 
 /* ========== I M P R E S S U M ========== */
@@ -450,15 +308,138 @@ footer a {
     justify-content: center;
     width: 100%;
     padding-top: 20px;
-
-    img:hover {
-        cursor: pointer;
-        transform: scale(1.2);
-    }
-
 }
 
 .home_button img {
     height: 24px;
     width: 24px;
+}
+
+.home_button img:hover {
+    cursor: pointer;
+    transform: scale(1.2);
+}
+
+/* ========== MEDIA QUERIES ========== */
+
+/* Tablets und kleine Laptops (Landscape) */
+@media only screen and (max-width: 1024px) and (orientation: landscape) {
+    h1 {
+        font-size: 2.5rem;
+        margin: 10px 0;
+    }
+
+    canvas,
+    .start-screen,
+    .winning-screen,
+    .losing-screen {
+        width: 90vw;
+        height: calc(90vw * 0.67);
+        max-height: 70vh;
+    }
+
+    .instructions_svg {
+        gap: 12px;
+    }
+
+    .instruction_item p {
+        font-size: 14px;
+    }
+
+    /* Instructions Box verstecken bei Tablets */
+    .instructions_box {
+        display: none;
+    }
+
+    /* Mobile Controls anzeigen */
+    .mobile-controls {
+        display: flex;
+    }
+}
+
+/* Smartphones (Landscape) */
+@media only screen and (max-width: 768px) and (orientation: landscape) {
+    h1 {
+        font-size: 1.8rem;
+        margin: 5px 0;
+    }
+
+    canvas,
+    .start-screen,
+    .winning-screen,
+    .losing-screen {
+        width: 95vw;
+        height: calc(95vw * 0.67);
+        max-height: 75vh;
+    }
+
+    .instructions_box {
+        margin: 2px;
+        padding: 4px;
+    }
+
+    .instructions_svg {
+        gap: 8px;
+    }
+
+    .instruction_item p {
+        font-size: 12px;
+    }
+
+    .instruction_item svg {
+        width: 60px;
+        height: 40px;
+    }
+
+    footer {
+        padding-top: 10px;
+        font-size: 12px;
+    }
+
+    .control-btn {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+/* Kleine Smartphones (Landscape) */
+@media only screen and (max-width: 640px) and (orientation: landscape) {
+    h1 {
+        font-size: 1.5rem;
+        margin: 2px 0;
+    }
+
+    .instructions_box {
+        display: none;
+    }
+
+    footer {
+        display: none;
+    }
+}
+
+/* Portrait-Modus: "Turn Device" anzeigen */
+@media only screen and (max-width: 1024px) and (orientation: portrait) {
+    .rotate-overlay {
+        display: flex !important;
+    }
+
+    h1,
+    #content,
+    .instructions_box,
+    footer,
+    .mobile-controls {
+        display: none !important;
+    }
+}
+
+/* Desktop: Mobile Controls verstecken */
+@media only screen and (min-width: 1025px) {
+    .mobile-controls {
+        display: none !important;
+    }
+
+    .rotate-overlay {
+        display: none !important;
+    }
 }

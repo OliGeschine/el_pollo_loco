@@ -84,12 +84,13 @@ function turnOnMusic() {
 // Mobile Touch Controls
 let isMobile = window.innerWidth <= 1024;
 
-// Touch Events für Mobile Controls
-if (isMobile) {
-    setupMobileControls();
-}
-
 function setupMobileControls() {
+    // Warten bis keyboard definiert ist
+    if (typeof keyboard === 'undefined') {
+        setTimeout(setupMobileControls, 100);
+        return;
+    }
+
     const btnLeft = document.getElementById('btn-left');
     const btnRight = document.getElementById('btn-right');
     const btnJump = document.getElementById('btn-jump');
@@ -97,31 +98,79 @@ function setupMobileControls() {
 
     // Touch Events (funktionieren auch mit Maus)
     if (btnLeft) {
-        btnLeft.addEventListener('touchstart', () => keyboard.LEFT = true);
-        btnLeft.addEventListener('touchend', () => keyboard.LEFT = false);
-        btnLeft.addEventListener('mousedown', () => keyboard.LEFT = true);
-        btnLeft.addEventListener('mouseup', () => keyboard.LEFT = false);
+        btnLeft.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            keyboard.LEFT = true;
+        });
+        btnLeft.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            keyboard.LEFT = false;
+        });
+        btnLeft.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            keyboard.LEFT = true;
+        });
+        btnLeft.addEventListener('mouseup', (e) => {
+            e.preventDefault();
+            keyboard.LEFT = false;
+        });
     }
 
     if (btnRight) {
-        btnRight.addEventListener('touchstart', () => keyboard.RIGHT = true);
-        btnRight.addEventListener('touchend', () => keyboard.RIGHT = false);
-        btnRight.addEventListener('mousedown', () => keyboard.RIGHT = true);
-        btnRight.addEventListener('mouseup', () => keyboard.RIGHT = false);
+        btnRight.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            keyboard.RIGHT = true;
+        });
+        btnRight.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            keyboard.RIGHT = false;
+        });
+        btnRight.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            keyboard.RIGHT = true;
+        });
+        btnRight.addEventListener('mouseup', (e) => {
+            e.preventDefault();
+            keyboard.RIGHT = false;
+        });
     }
 
     if (btnJump) {
-        btnJump.addEventListener('touchstart', () => keyboard.UP = true);
-        btnJump.addEventListener('touchend', () => keyboard.UP = false);
-        btnJump.addEventListener('mousedown', () => keyboard.UP = true);
-        btnJump.addEventListener('mouseup', () => keyboard.UP = false);
+        btnJump.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            keyboard.UP = true;
+        });
+        btnJump.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            keyboard.UP = false;
+        });
+        btnJump.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            keyboard.UP = true;
+        });
+        btnJump.addEventListener('mouseup', (e) => {
+            e.preventDefault();
+            keyboard.UP = false;
+        });
     }
 
     if (btnThrow) {
-        btnThrow.addEventListener('touchstart', () => keyboard.SPACE = true);
-        btnThrow.addEventListener('touchend', () => keyboard.SPACE = false);
-        btnThrow.addEventListener('mousedown', () => keyboard.SPACE = true);
-        btnThrow.addEventListener('mouseup', () => keyboard.SPACE = false);
+        btnThrow.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            keyboard.SPACE = true;
+        });
+        btnThrow.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            keyboard.SPACE = false;
+        });
+        btnThrow.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            keyboard.SPACE = true;
+        });
+        btnThrow.addEventListener('mouseup', (e) => {
+            e.preventDefault();
+            keyboard.SPACE = false;
+        });
     }
 }
 
@@ -145,6 +194,11 @@ function checkOrientation() {
             // Landscape Mode
             rotateOverlay?.classList.add('dNone');
             mobileControls?.classList.remove('dNone');
+
+            // Mobile Controls initialisieren falls noch nicht geschehen
+            if (isMobile && typeof keyboard !== 'undefined') {
+                setupMobileControls();
+            }
         }
     } else {
         // Desktop
@@ -155,3 +209,15 @@ function checkOrientation() {
 
 // Initial Check
 checkOrientation();
+
+// Mobile Controls initialisieren nach dem Spielstart
+document.addEventListener('DOMContentLoaded', function () {
+    if (isMobile) {
+        // Warten bis alles geladen ist
+        setTimeout(() => {
+            if (typeof keyboard !== 'undefined') {
+                setupMobileControls();
+            }
+        }, 500);
+    }
+});
