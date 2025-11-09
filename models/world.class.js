@@ -176,7 +176,6 @@ class World {
             if (bottle.splashed) return;
             this.level.enemies.forEach((enemy, enemyIndex) => {
                 if (!enemy.isDead() && bottle.isColliding(enemy)) {
-                    bottle.splashed = true;
                     bottle.splash();
                     if (!isMuted) {
                         this.bottleBreaking.play();
@@ -199,7 +198,6 @@ class World {
         this.throwableObjects.forEach((bottle, bottleIndex) => {
             if (bottle.splashed) return;
             if (!this.endboss.isDead() && bottle.isColliding(this.endboss) && !bottle.splashed) {
-                bottle.splashed = true;
                 bottle.splash();
                 if (!isMuted) {
                     this.bottleBreaking.play();

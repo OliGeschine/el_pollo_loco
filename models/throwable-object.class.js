@@ -40,12 +40,26 @@ class ThrowableObject extends MovableObject {
             this.throwBottle.play();
         };
         this.throwIntervall = startInterval(() => {
-            this.playAnimation(this.IMAGES_THROWING);
-            this.x += 10;
+            if (!this.splashed) {
+                this.playAnimation(this.IMAGES_THROWING);
+                this.x += 10;
+                if (this.y >= 355) {
+                    this.hitGround();
+                }
+            }
+
         }, 25);
     }
 
+    hitGround() {
+        if (this.splashed) return;
+        this.y = 355;
+        this.splash();
+    }
+
     splash() {
+        if (this.splashed) return;
+        this.splashed = true;
         this.speedY = 0;
         this.acceleration = 0;
         clearInterval(this.throwIntervall);
