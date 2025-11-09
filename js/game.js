@@ -2,7 +2,7 @@ let canvas;
 let world;
 let keyboard = new Keyboard();
 let sounds = [];
-let isMuted = false;
+let isMuted = localStorage.getItem('isMuted') === 'true';
 
 backgroundSound = new Audio('audio/background_music.mp3');
 backgroundSound.loop = true;
@@ -12,9 +12,31 @@ loseSound = new Audio('audio/game_over.mp3');
 function init() {
     canvas = document.getElementById('canvas');
     world = new World(canvas, keyboard);
-    this.backgroundSound.play();
+    if (isMuted) {
+        backgroundSound.muted = true;
+    } else {
+        backgroundSound.play();
+    }
     sounds.push(backgroundSound);
+    updateSoundUI();
 }
+
+function updateSoundUI() {
+    const soundOnIcon = document.getElementById('soundOn');
+    const soundOffIcon = document.getElementById('soundOff');
+
+    if (isMuted) {
+        soundOnIcon?.classList.add('dNone');
+        soundOffIcon?.classList.remove('dNone');
+    } else {
+        soundOnIcon?.classList.remove('dNone');
+        soundOffIcon?.classList.add('dNone');
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    updateSoundUI();
+});
 
 window.addEventListener("keydown", (e) => {
     if (e.keyCode == 39) {

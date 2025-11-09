@@ -304,7 +304,7 @@ class World {
     }
 
     addEndbossBarToMap() {
-        if (this.character.x >= 2160) {
+        if (this.character.x >= 3300) {
             this.endbossHealthBar.hadFirstContact = true;
         }
         if (this.endbossHealthBar.hadFirstContact == true) {

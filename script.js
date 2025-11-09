@@ -20,8 +20,8 @@ function showWinningScreen() {
     document.getElementById('iconBar').classList.add('dNone');
     document.getElementById('winningScreenIconBar').classList.remove('dNone');
     clearAllIntervals();
-    this.backgroundSound.pause();
-    if (isMuted === false) {
+    backgroundSound.pause();
+    if (!isMuted) {
         this.victorySound.play();
     }
 }
@@ -32,8 +32,8 @@ function showLosingScreen() {
     document.getElementById('iconBar').classList.add('dNone');
     document.getElementById('losingScreenIconBar').classList.remove('dNone');
     clearAllIntervals();
-    this.backgroundSound.pause();
-    if (isMuted === false) {
+    backgroundSound.pause();
+    if (!isMuted) {
         this.loseSound.play();
     }
 }
@@ -55,18 +55,40 @@ function fullscreen() {
 
 function turnOffMusic() {
     isMuted = true;
-    // this.backgroundSound.pause();
-    document.getElementById('soundOn').classList.add('dNone');
-    document.getElementById('soundOff').classList.remove('dNone');
-    sounds.forEach(sound => sound.muted = true);
+    localStorage.setItem('isMuted', 'true'); // In Local Storage speichern
+
+    // UI aktualisieren
+    document.getElementById('soundOn')?.classList.add('dNone');
+    document.getElementById('soundOff')?.classList.remove('dNone');
+
+    // Alle Sounds muten
+    backgroundSound.pause();
+    sounds.forEach(sound => {
+        if (sound) {
+            sound.muted = true;
+        }
+    });
 }
 
 function turnOnMusic() {
     isMuted = false;
-    this.backgroundSound.play();
-    document.getElementById('soundOn').classList.remove('dNone');
-    document.getElementById('soundOff').classList.add('dNone');
-    sounds.forEach(sound => sound.muted = false);
+    localStorage.setItem('isMuted', 'false'); // In Local Storage speichern
+
+    // UI aktualisieren
+    document.getElementById('soundOn')?.classList.remove('dNone');
+    document.getElementById('soundOff')?.classList.add('dNone');
+
+    // Alle Sounds unmuten
+    sounds.forEach(sound => {
+        if (sound) {
+            sound.muted = false;
+        }
+    });
+
+    // Background Music nur starten wenn Spiel läuft
+    if (!document.getElementById('canvas').classList.contains('dNone')) {
+        backgroundSound.play().catch(() => { }); // Autoplay-Blocker ignorieren
+    }
 }
 
 // function requestFullscreen(element) {
