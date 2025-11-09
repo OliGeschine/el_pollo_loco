@@ -91,24 +91,6 @@ function turnOnMusic() {
     }
 }
 
-// function requestFullscreen(element) {
-//     if (element.requestFullscreen) {
-//         element.requestFullscreen();
-//     } else if (element.msRequestFullscreen) {
-//         element.msRequestFullscreen();
-//     } else if (element.webkitRequestFullscreen) {
-//         element.webkitRequestFullscreen();
-//     }
-// }
-
-// function exitFullscreen() {
-//     if (document.exitFullscreen) {
-//         document.exitFullscreen();
-//     } else if (document.webkitExitFullscreen) {
-//         document.webkitExitFullscreen();
-//     }
-// }
-
 // Mobile Touch Controls
 function initMobileControls() {
     if (window.innerWidth <= 1024 && typeof keyboard !== 'undefined') {

@@ -95,7 +95,9 @@ class World {
         if (this.character.isStomping(enemy, enemyIndex)) {
             enemy.hit();
             this.stompedEnemies.push(enemy);
-            this.killedChicken.play();
+            if (!isMuted) {
+                this.killedChicken.play();
+            }
             setTimeout(() => {
                 if (enemy.energy <= 0) {
                     this.level.enemies.splice(enemyIndex, 1);
@@ -111,10 +113,14 @@ class World {
         if (this.character.isStomping(this.endboss)) {
             this.endboss.hit();
             this.endbossHealthBar.setPercentageHealth(this.endboss.energy);
-            this.killedChicken.play();
+            if (!isMuted) {
+                this.killedChicken.play();
+            }
             setTimeout(() => {
                 if (this.endboss.energy <= 0) {
-                    this.killedEndboss.play();
+                    if (!isMuted) {
+                        this.killedEndboss.play();
+                    }
                     setTimeout(() => {
                         this.endbossIsDead = true;
                     }, 3000);
@@ -130,7 +136,9 @@ class World {
     checkEnemyCollisions(enemy) {
         if (!this.character.justStomped && this.character.isColliding(enemy)) {
             this.character.hit();
-            this.getHurt.play();
+            if (!isMuted) {
+                this.getHurt.play();
+            }
             this.statusBar.setPercentageHealth(this.character.energy);
         }
         this.handleCharacterIsDeadAnimation();
@@ -139,7 +147,9 @@ class World {
     checkEndbossCollisions() {
         if (!this.character.justStomped && this.character.isColliding(this.endboss)) {
             this.character.hit();
-            this.getHurt.play();
+            if (!isMuted) {
+                this.getHurt.play();
+            }
             this.statusBar.setPercentageHealth(this.character.energy);
         }
         this.handleCharacterIsDeadAnimation();
@@ -168,9 +178,13 @@ class World {
                 if (!enemy.isDead() && bottle.isColliding(enemy)) {
                     bottle.splashed = true;
                     bottle.splash();
-                    this.bottleBreaking.play();
+                    if (!isMuted) {
+                        this.bottleBreaking.play();
+                    }
                     enemy.hit();
-                    this.killedChicken.play();
+                    if (!isMuted) {
+                        this.killedChicken.play();
+                    }
                     setTimeout(() => {
                         if (enemy.energy <= 0) {
                             this.level.enemies.splice(enemyIndex, 1);
@@ -187,10 +201,14 @@ class World {
             if (!this.endboss.isDead() && bottle.isColliding(this.endboss) && !bottle.splashed) {
                 bottle.splashed = true;
                 bottle.splash();
-                this.bottleBreaking.play();
+                if (!isMuted) {
+                    this.bottleBreaking.play();
+                }
                 this.endboss.hit();
                 this.endbossHealthBar.setPercentageHealth(this.endboss.energy);
-                this.killedChicken.play();
+                if (!isMuted) {
+                    this.killedChicken.play();
+                }
                 this.handleEndbossIsDeadAnimation();
             }
         })
@@ -199,7 +217,9 @@ class World {
     handleEndbossIsDeadAnimation() {
         setTimeout(() => {
             if (this.endboss.energy <= 0) {
-                this.killedEndboss.play();
+                if (!isMuted) {
+                    this.killedEndboss.play();
+                }
                 setTimeout(() => {
                     this.endbossIsDead = true;
                 }, 3000);
@@ -214,7 +234,9 @@ class World {
         setTimeout(() => {
             if (this.character.energy <= 0) {
                 this.getHurt.muted = true;
-                this.characterDies.play();
+                if (!isMuted) {
+                    this.characterDies.play();
+                }
                 setTimeout(() => {
                 }, 3000);
                 setTimeout(() => {
@@ -240,7 +262,9 @@ class World {
         this.level.bottles.forEach((bottle, index) => {
             if (!bottle.collected && this.character.isColliding(bottle)) {
                 bottle.collected = true;
-                this.collectBottle.play();
+                if (!isMuted) {
+                    this.collectBottle.play();
+                }
                 this.level.bottles.splice(index, 1);
                 this.currentBottleCount++;
                 this.bottleBar.setPercentageBottle(this.currentBottleCount);
@@ -257,7 +281,9 @@ class World {
         this.level.coins.forEach((coin, index) => {
             if (!coin.collected && this.character.isColliding(coin)) {
                 coin.collected = true;
-                this.collectCoin.play();
+                if (!isMuted) {
+                    this.collectCoin.play();
+                }
                 this.character.coins++;
                 this.coinBar.setPercentageCoin(this.character.coins);
                 this.level.coins.splice(index, 1);
