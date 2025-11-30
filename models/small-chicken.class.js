@@ -9,6 +9,8 @@ class smallChicken extends MovableObject {
         left: 5,
         right: 5
     };
+    nextJumpTime = 0;
+    groundLevel = 375;
 
 
     IMAGES_WALKING = [
@@ -27,6 +29,8 @@ class smallChicken extends MovableObject {
         this.loadImages(this.IMAGES_DEAD);
         this.x = 600 + Math.random() * 3000;
         this.speed = 0.7;
+        this.scheduleNextJump();
+        this.smallChickenGravity();
         this.animate();
     }
 
@@ -34,6 +38,8 @@ class smallChicken extends MovableObject {
         this.walkInterval = startInterval(() => {
             if (!this.isDead()) {
                 this.moveLeft();
+                this.checkForJump();
+                this.stayOnGround();
             }
         }, 1000 / 60)
 
@@ -47,6 +53,46 @@ class smallChicken extends MovableObject {
             }
         }, 100);
 
+    }
+
+    scheduleNextJump() {
+        const randomDelay = 2000 + Math.random() * 3000; // 3-8 Sekunden
+        this.nextJumpTime = Date.now() + randomDelay;
+    }
+
+    checkForJump() {
+        const currentTime = Date.now();
+        if (currentTime >= this.nextJumpTime && !this.smallChickenIsAboveGround()) {
+            this.smallChickenJump();
+            this.scheduleNextJump(); // Nächsten Sprung planen
+        }
+    }
+
+    smallChickenJump() {
+        if (!this.smallChickenIsAboveGround()) { // Nur springen wenn am Boden
+            this.speedY = 15; // Character springt mit 25, smallChicken mit 12.5
+            console.log(`SmallChicken at x:${Math.round(this.x)} jumped!`); // Debug
+        }
+    }
+
+    stayOnGround() {
+        if (this.y > this.groundLevel) {
+            this.y = this.groundLevel; // Zurück zum Boden
+            this.speedY = 0; // Fallgeschwindigkeit stoppen
+        }
+    }
+
+    smallChickenIsAboveGround() {
+        return this.y < this.groundLevel;
+    }
+
+    smallChickenGravity() {
+        startInterval(() => {
+            if (this.smallChickenIsAboveGround() || this.speedY > 0) {
+                this.y -= this.speedY;
+                this.speedY -= this.acceleration;
+            }
+        }, 1000 / 25);
     }
 
 }
