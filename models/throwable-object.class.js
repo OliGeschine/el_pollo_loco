@@ -53,7 +53,7 @@ class ThrowableObject extends MovableObject {
 
     hitGround() {
         if (this.splashed) return;
-        this.y = 355;
+        this.y = 380;
         this.splash();
     }
 
