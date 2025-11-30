@@ -8,7 +8,7 @@ class EndbossHealth extends DrawableObject {
         'img/7_statusbars/2_statusbar_endboss/blue/blue100.png',
     ];
 
-    percentageHealth = 10;
+    percentageHealthEndboss = 10;
 
     constructor() {
         super();
@@ -17,26 +17,26 @@ class EndbossHealth extends DrawableObject {
         this.y = -10;
         this.height = 60;
         this.width = 200;
-        this.setPercentageHealth(10);
+        this.setPercentageHealthEndboss(10);
     }
 
-    setPercentageHealth(percentageHealth) {
-        this.percentageHealth = percentageHealth;
-        let path = this.IMAGES_ENDBOSSHEALTH[this.resolveHealthImageIndex()];
+    setPercentageHealthEndboss(percentageHealthEndboss) {
+        this.percentageHealthEndboss = percentageHealthEndboss;
+        let path = this.IMAGES_ENDBOSSHEALTH[this.resolveEndbossHealthImageIndex()];
         this.img = this.imageCache[path];
     }
 
 
-    resolveHealthImageIndex() {
-        if (this.percentageHealth == 10) {
+    resolveEndbossHealthImageIndex() {
+        if (this.percentageHealthEndboss == 10) {
             return 5;
-        } else if (this.percentageHealth >= 8) {
+        } else if (this.percentageHealthEndboss >= 8) {
             return 4;
-        } else if (this.percentageHealth >= 6) {
+        } else if (this.percentageHealthEndboss >= 6) {
             return 3;
-        } else if (this.percentageHealth >= 4) {
+        } else if (this.percentageHealthEndboss >= 4) {
             return 2;
-        } else if (this.percentageHealth >= 2) {
+        } else if (this.percentageHealthEndboss >= 2) {
             return 1;
         } else {
             return 0;

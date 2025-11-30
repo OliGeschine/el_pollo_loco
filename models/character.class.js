@@ -12,7 +12,7 @@ class Character extends MovableObject {
     speed = 8;
     world;
     coins = 0;
-    energy = 20;
+    energy = 50;
     justStomped = false;
     walking = new Audio('audio/walking.mp3');
 
@@ -89,6 +89,7 @@ class Character extends MovableObject {
         sounds.push(this.walking);
         this.applyGravity();
         this.animate();
+        this.lastHit = 0;
     }
 
     animate() {

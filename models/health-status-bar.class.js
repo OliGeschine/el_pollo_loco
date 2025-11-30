@@ -8,7 +8,7 @@ class Statusbar extends DrawableObject {
         'img/7_statusbars/1_statusbar/2_statusbar_health/blue/100.png',
     ];
 
-    percentageHealth = 20;
+    percentageHealth = 50;
 
     constructor() {
         super();
@@ -17,7 +17,7 @@ class Statusbar extends DrawableObject {
         this.y = -10;
         this.height = 60;
         this.width = 200;
-        this.setPercentageHealth(20);
+        this.setPercentageHealth(50);
     }
 
     setPercentageHealth(percentageHealth) {
@@ -28,15 +28,15 @@ class Statusbar extends DrawableObject {
 
 
     resolveHealthImageIndex() {
-        if (this.percentageHealth == 20) {
+        if (this.percentageHealth == 50) {
             return 5;
-        } else if (this.percentageHealth >= 16) {
+        } else if (this.percentageHealth >= 40) {
             return 4;
-        } else if (this.percentageHealth >= 12) {
+        } else if (this.percentageHealth >= 30) {
             return 3;
-        } else if (this.percentageHealth >= 8) {
+        } else if (this.percentageHealth >= 20) {
             return 2;
-        } else if (this.percentageHealth >= 4) {
+        } else if (this.percentageHealth >= 1) {
             return 1;
         } else {
             return 0;

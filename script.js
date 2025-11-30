@@ -14,6 +14,27 @@ function startGame() {
     }, 100);
 }
 
+function restartGame() {
+    clearAllIntervals();
+    document.getElementById('canvas').classList.remove('dNone');
+    document.getElementById('iconBar').classList.remove('dNone');
+    document.getElementById('overlay').classList.add('dNone');
+    document.getElementById('winning_overlay').classList.add('dNone');
+    document.getElementById('losing_overlay').classList.add('dNone');
+    document.getElementById('winningScreenIconBar').classList.add('dNone');
+    document.getElementById('losingScreenIconBar').classList.add('dNone');
+    backgroundSound.pause();
+    backgroundSound.currentTime = 0;
+    world = null;
+    initLevel();
+    init();
+    setTimeout(() => {
+        if (window.innerWidth <= 1024 && typeof keyboard !== 'undefined') {
+            setupMobileControls();
+        }
+    }, 100);
+}
+
 function showWinningScreen() {
     document.getElementById('canvas').classList.add('dNone');
     document.getElementById('winning_overlay').classList.remove('dNone');

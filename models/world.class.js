@@ -112,7 +112,7 @@ class World {
     checkJumpEndbossCollision() {
         if (this.character.isStomping(this.endboss)) {
             this.endboss.hit();
-            this.endbossHealthBar.setPercentageHealth(this.endboss.energy);
+            this.endbossHealthBar.setPercentageHealthEndboss(this.endboss.energy);
             if (!isMuted) {
                 this.killedChicken.play();
             }
@@ -140,6 +140,8 @@ class World {
                 this.getHurt.play();
             }
             this.statusBar.setPercentageHealth(this.character.energy);
+            console.log('energy:', this.character.energy);
+
         }
         this.handleCharacterIsDeadAnimation();
     }
@@ -203,7 +205,7 @@ class World {
                     this.bottleBreaking.play();
                 }
                 this.endboss.hit();
-                this.endbossHealthBar.setPercentageHealth(this.endboss.energy);
+                this.endbossHealthBar.setPercentageHealthEndboss(this.endboss.energy);
                 if (!isMuted) {
                     this.killedChicken.play();
                 }

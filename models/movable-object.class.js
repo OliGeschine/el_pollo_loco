@@ -76,13 +76,12 @@ class MovableObject extends DrawableObject {
         const now = new Date().getTime();
         const timeSinceLastHit = now - this.lastHit;
 
-        if (timeSinceLastHit > 500) {
+        if (timeSinceLastHit > 1000) {
             this.energy -= 2;
             if (this.energy < 0) {
                 this.energy = 0;
-            } else {
-                this.lastHit = now;
             }
+            this.lastHit = now;
         }
     }
 
