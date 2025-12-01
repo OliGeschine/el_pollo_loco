@@ -93,7 +93,7 @@ class World {
 
     checkJumpCollisions(enemy, enemyIndex) {
         if (this.character.isStomping(enemy, enemyIndex)) {
-            enemy.hit();
+            enemy.hitWeak();
             this.stompedEnemies.push(enemy);
             if (!isMuted) {
                 this.killedChicken.play();
@@ -111,7 +111,7 @@ class World {
 
     checkJumpEndbossCollision() {
         if (this.character.isStomping(this.endboss)) {
-            this.endboss.hit();
+            this.endboss.hitWeak();
             this.endbossHealthBar.setPercentageHealthEndboss(this.endboss.energy);
             if (!isMuted) {
                 this.killedChicken.play();
@@ -135,7 +135,7 @@ class World {
 
     checkEnemyCollisions(enemy) {
         if (!this.character.justStomped && this.character.isColliding(enemy)) {
-            this.character.hit();
+            this.character.hitWeak();
             if (!isMuted) {
                 this.getHurt.play();
             }
@@ -148,11 +148,12 @@ class World {
 
     checkEndbossCollisions() {
         if (!this.character.justStomped && this.character.isColliding(this.endboss)) {
-            this.character.hit();
+            this.character.hitStrong();
             if (!isMuted) {
                 this.getHurt.play();
             }
             this.statusBar.setPercentageHealth(this.character.energy);
+            console.log('energy:', this.character.energy);
         }
         this.handleCharacterIsDeadAnimation();
     }
@@ -182,7 +183,7 @@ class World {
                     if (!isMuted) {
                         this.bottleBreaking.play();
                     }
-                    enemy.hit();
+                    enemy.hitWeak();
                     if (!isMuted) {
                         this.killedChicken.play();
                     }
@@ -204,7 +205,7 @@ class World {
                 if (!isMuted) {
                     this.bottleBreaking.play();
                 }
-                this.endboss.hit();
+                this.endboss.bottleHitEndboss();
                 this.endbossHealthBar.setPercentageHealthEndboss(this.endboss.energy);
                 if (!isMuted) {
                     this.killedChicken.play();

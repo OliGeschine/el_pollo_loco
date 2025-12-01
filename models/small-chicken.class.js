@@ -71,7 +71,6 @@ class smallChicken extends MovableObject {
     smallChickenJump() {
         if (!this.smallChickenIsAboveGround()) { // Nur springen wenn am Boden
             this.speedY = 15; // Character springt mit 25, smallChicken mit 12.5
-            console.log(`SmallChicken at x:${Math.round(this.x)} jumped!`); // Debug
         }
     }
 

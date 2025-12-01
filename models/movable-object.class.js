@@ -72,11 +72,37 @@ class MovableObject extends DrawableObject {
     //     }
     // }
 
-    hit() {
+    hitWeak() {
         const now = new Date().getTime();
         const timeSinceLastHit = now - this.lastHit;
 
         if (timeSinceLastHit > 1000) {
+            this.energy -= 2;
+            if (this.energy < 0) {
+                this.energy = 0;
+            }
+            this.lastHit = now;
+        }
+    }
+
+    hitStrong() {
+        const now = new Date().getTime();
+        const timeSinceLastHit = now - this.lastHit;
+
+        if (timeSinceLastHit > 500) {
+            this.energy -= 10;
+            if (this.energy < 0) {
+                this.energy = 0;
+            }
+            this.lastHit = now;
+        }
+    }
+
+    bottleHitEndboss() {
+        const now = new Date().getTime();
+        const timeSinceLastHit = now - this.lastHit;
+
+        if (timeSinceLastHit > 500) {
             this.energy -= 2;
             if (this.energy < 0) {
                 this.energy = 0;
