@@ -36,19 +36,6 @@ class MovableObject extends DrawableObject {
             this.y + this.offset.top < mo.y + mo.height - mo.offset.bottom;
     }
 
-    // isColliding(mo) {
-    //     return this.x + this.width > mo.x &&
-    //         this.x < mo.x + mo.width &&
-    //         this.y + this.height > mo.y &&
-    //         this.y < mo.y + mo.height;
-    // }
-
-    // isStomping(mo) {
-    //     return this.isColliding(mo) &&
-    //         this.y + this.height <= mo.y + mo.height / 2 &&
-    //         this.speedY < 0
-    // }
-
     isStomping(mo) {
         if (this.justStomped) return false;
         let isColliding = this.isColliding(mo);
@@ -56,21 +43,11 @@ class MovableObject extends DrawableObject {
         let enemyTop = mo.y + mo.offset.top;
         let enemyStompZone = enemyTop + ((mo.height - mo.offset.top - mo.offset.bottom) * 0.5);
 
-        let fromAbove = characterBottom >= enemyTop && characterBottom <= enemyStompZone;// vorher * 0.3
-        let fallingDown = this.speedY <= 0; // vorher this.speedY < 0
+        let fromAbove = characterBottom >= enemyTop && characterBottom <= enemyStompZone;
+        let fallingDown = this.speedY <= 0;
 
         return isColliding && fromAbove && fallingDown;
     }
-
-
-    // hit() {
-    //     this.energy -= 2;
-    //     if (this.energy < 0) {
-    //         this.energy = 0;
-    //     } else {
-    //         this.lastHit = new Date().getTime();
-    //     }
-    // }
 
     hitWeak() {
         const now = new Date().getTime();
@@ -111,29 +88,25 @@ class MovableObject extends DrawableObject {
         }
     }
 
-
     isDead() {
         return this.energy == 0;
     }
 
     isHurt() {
-        let timepassed = new Date().getTime() - this.lastHit; // Differenz in Millisekunden
+        let timepassed = new Date().getTime() - this.lastHit;
         timepassed = timepassed / 1000;
         return timepassed < 1;
     }
 
     moveRight() {
-        // movement right
         this.x += this.speed;
     }
 
     moveLeft() {
-        // movement left
         this.x -= this.speed;
     }
 
     playAnimation(images) {
-        // walk animation
         let i = this.currentImage % images.length; // let i = 0 % 6; => 0, Rest 0
         let path = images[i];
         this.img = this.imageCache[path];

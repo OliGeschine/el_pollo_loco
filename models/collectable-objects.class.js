@@ -17,7 +17,6 @@ class CollectableObject extends MovableObject {
             this.collected = true;
             character.coins++;
         }
-        // console.log('number of Coins=', character.coins);
     }
 
     collectBottle(world) {

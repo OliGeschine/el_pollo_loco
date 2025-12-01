@@ -56,7 +56,7 @@ class smallChicken extends MovableObject {
     }
 
     scheduleNextJump() {
-        const randomDelay = 2000 + Math.random() * 3000; // 3-8 Sekunden
+        const randomDelay = 2000 + Math.random() * 3000;
         this.nextJumpTime = Date.now() + randomDelay;
     }
 
@@ -64,20 +64,20 @@ class smallChicken extends MovableObject {
         const currentTime = Date.now();
         if (currentTime >= this.nextJumpTime && !this.smallChickenIsAboveGround()) {
             this.smallChickenJump();
-            this.scheduleNextJump(); // Nächsten Sprung planen
+            this.scheduleNextJump();
         }
     }
 
     smallChickenJump() {
-        if (!this.smallChickenIsAboveGround()) { // Nur springen wenn am Boden
-            this.speedY = 15; // Character springt mit 25, smallChicken mit 12.5
+        if (!this.smallChickenIsAboveGround()) {
+            this.speedY = 15;
         }
     }
 
     stayOnGround() {
         if (this.y > this.groundLevel) {
-            this.y = this.groundLevel; // Zurück zum Boden
-            this.speedY = 0; // Fallgeschwindigkeit stoppen
+            this.y = this.groundLevel;
+            this.speedY = 0;
         }
     }
 

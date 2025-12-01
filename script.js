@@ -76,13 +76,9 @@ function fullscreen() {
 
 function turnOffMusic() {
     isMuted = true;
-    localStorage.setItem('isMuted', 'true'); // In Local Storage speichern
-
-    // UI aktualisieren
+    localStorage.setItem('isMuted', 'true');
     document.getElementById('soundOn')?.classList.add('dNone');
     document.getElementById('soundOff')?.classList.remove('dNone');
-
-    // Alle Sounds muten
     backgroundSound.pause();
     sounds.forEach(sound => {
         if (sound) {
@@ -93,26 +89,19 @@ function turnOffMusic() {
 
 function turnOnMusic() {
     isMuted = false;
-    localStorage.setItem('isMuted', 'false'); // In Local Storage speichern
-
-    // UI aktualisieren
+    localStorage.setItem('isMuted', 'false');
     document.getElementById('soundOn')?.classList.remove('dNone');
     document.getElementById('soundOff')?.classList.add('dNone');
-
-    // Alle Sounds unmuten
     sounds.forEach(sound => {
         if (sound) {
             sound.muted = false;
         }
     });
-
-    // Background Music nur starten wenn Spiel läuft
     if (!document.getElementById('canvas').classList.contains('dNone')) {
-        backgroundSound.play().catch(() => { }); // Autoplay-Blocker ignorieren
+        backgroundSound.play().catch(() => { });
     }
 }
 
-// Mobile Touch Controls
 function initMobileControls() {
     if (window.innerWidth <= 1024 && typeof keyboard !== 'undefined') {
         setupMobileControls();
@@ -120,18 +109,14 @@ function initMobileControls() {
 }
 
 function setupMobileControls() {
-    // Warten bis keyboard definiert ist
     if (typeof keyboard === 'undefined') {
         setTimeout(setupMobileControls, 100);
         return;
     }
-
     const btnLeft = document.getElementById('btn-left');
     const btnRight = document.getElementById('btn-right');
     const btnJump = document.getElementById('btn-jump');
     const btnThrow = document.getElementById('btn-throw');
-
-    // Touch Events (funktionieren auch mit Maus)
     if (btnLeft) {
         btnLeft.addEventListener('touchstart', (e) => {
             e.preventDefault();
@@ -213,9 +198,7 @@ function setupMobileControls() {
 window.addEventListener('orientationchange', function () {
     setTimeout(checkOrientation, 100);
 });
-
 window.addEventListener('resize', checkOrientation);
-
 function checkOrientation() {
     const rotateOverlay = document.getElementById('rotate-device-overlay');
     const mobileControls = document.getElementById('mobile-controls');
@@ -227,7 +210,7 @@ function checkOrientation() {
         } else {
             rotateOverlay?.classList.add('dNone');
             mobileControls?.classList.remove('dNone');
-            initMobileControls(); // HIER aufrufen
+            initMobileControls();
         }
     } else {
         rotateOverlay?.classList.add('dNone');
@@ -235,5 +218,4 @@ function checkOrientation() {
     }
 }
 
-// Initial Check
 checkOrientation();

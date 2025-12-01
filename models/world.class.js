@@ -15,7 +15,6 @@ class World {
     bottleBar = new Bottlebar();
     chickenHouse = new chickenHouse();
     throwableObjects = [];
-    // collectableObjects = [];
     collectedCoins = [];
     collectedBottles = [];
     stompedEnemies = [];
@@ -55,12 +54,10 @@ class World {
         this.character.world = this;
         this.endboss.world = this;
         this.level.enemies.forEach(e => e.world = this);
-        // this.setCollectableObjects();
     }
 
     run() {
         startInterval(() => {
-            // this.checkEnemyCollisions();
             this.checkThrowObjects();
             this.checkCollectableCollisions();
         }, 200);
@@ -157,22 +154,6 @@ class World {
         }
         this.handleCharacterIsDeadAnimation();
     }
-
-
-    // checkCharacterEnemyInteractions() {
-    //     this.level.enemies.forEach((enemy, enemyIndex) => {
-    //         if (!enemy.isDead() && this.character.isStomping(enemy)) {
-    //             enemy.hit();
-    //             this.character.speedY = 15;
-    //             setTimeout(() => {
-    //                 this.level.enemies.splice(enemyIndex, 1);
-    //             }, 250);
-    //         } else if (!enemy.isDead() && this.character.isColliding(enemy)) {
-    //             this.character.hit();
-    //             this.statusBar.setPercentageHealth(this.character.energy);
-    //         }
-    //     });
-    // }
 
     checkBottleHitsEnemies() {
         this.throwableObjects.forEach((bottle, bottleIndex) => {
@@ -317,8 +298,7 @@ class World {
         this.addToMap(this.chickenHouse);
         this.ctx.translate(-this.cameraX, 0);
 
-
-        let self = this // muss so gehandhabt werden, da "this" innerhalb der Funktion nicht erkannt wird
+        let self = this
         requestAnimationFrame(function () {
             self.draw();
         });
