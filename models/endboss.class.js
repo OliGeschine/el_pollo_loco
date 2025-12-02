@@ -1,3 +1,9 @@
+/**
+ * Final boss enemy with multiple states and powerful attacks
+ * Requires multiple hits to defeat and triggers victory condition
+ * @class
+ * @extends MovableObject
+ */
 class Endboss extends MovableObject {
     height = 400;
     width = 250;
@@ -61,7 +67,12 @@ class Endboss extends MovableObject {
         this.animate();
     }
 
-
+    /**
+     * Starts all endboss animation and behavior loops
+     * Handles walking, alert state, attack, and hurt animations
+     * @function
+     * @returns {void}
+     */
     animate() {
         this.walkInterval = startInterval(() => {
             let playerX = this.world.character.x;

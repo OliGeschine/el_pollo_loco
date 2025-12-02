@@ -1,3 +1,9 @@
+/**
+ * UI status bar showing endboss health with color-coded states
+ * Changes color from blue (full) to red (empty) based on health
+ * @class
+ * @extends DrawableObject
+ */
 class EndbossHealth extends DrawableObject {
     IMAGES_ENDBOSSHEALTH = [
         'img/7_statusbars/2_statusbar_endboss/blue/blue0.png',
@@ -20,13 +26,25 @@ class EndbossHealth extends DrawableObject {
         this.setPercentageHealthEndboss(10);
     }
 
+    /**
+     * Updates the endboss health bar display based on current health
+     * Changes the visual bar image and color to reflect health level
+     * @function
+     * @param {number} percentageHealthEndboss - Current endboss health value
+     * @returns {void}
+     */
     setPercentageHealthEndboss(percentageHealthEndboss) {
         this.percentageHealthEndboss = percentageHealthEndboss;
         let path = this.IMAGES_ENDBOSSHEALTH[this.resolveEndbossHealthImageIndex()];
         this.img = this.imageCache[path];
     }
 
-
+    /**
+     * Determines which health bar image to display based on health value
+     * Maps health ranges to appropriate color-coded visual representation
+     * @function
+     * @returns {number} Index of image to display from IMAGES_ENDBOSSHEALTH array
+     */
     resolveEndbossHealthImageIndex() {
         if (this.percentageHealthEndboss == 10) {
             return 5;

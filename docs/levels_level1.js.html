@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: levels/level1.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: levels/level1.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>let level1;
+
+/**
+ * Initializes Level 1 with all enemies, collectables, and background objects
+ * Creates chickens, small chickens, bottles, coins, clouds and backgrounds
+ * Called when starting a new game or restarting
+ * @function
+ * @returns {void}
+ */
+function initLevel() {
+    level1 = new Level(
+        [
+            new Chicken(),
+            new Chicken(),
+            new Chicken(),
+            new Chicken(),
+            new Chicken(),
+            new Chicken(),
+            new Chicken(),
+            new smallChicken(),
+            new smallChicken(),
+            new smallChicken(),
+            new smallChicken(),
+            new smallChicken(),
+            new smallChicken(),
+            new smallChicken(),
+        ],
+        [
+            new Clouds('img/5_background/layers/4_clouds/1.png'),
+            new Clouds('img/5_background/layers/4_clouds/2.png'),
+        ],
+        [
+            new BackgroundObject('img/5_background/layers/air.png', 0),
+            new BackgroundObject('img/5_background/layers/3_third_layer/1.png', 0),
+            new BackgroundObject('img/5_background/layers/2_second_layer/1.png', 0),
+            new BackgroundObject('img/5_background/layers/1_first_layer/1.png', 0),
+            new BackgroundObject('img/5_background/layers/air.png', 720),
+            new BackgroundObject('img/5_background/layers/3_third_layer/2.png', 720),
+            new BackgroundObject('img/5_background/layers/2_second_layer/2.png', 720),
+            new BackgroundObject('img/5_background/layers/1_first_layer/2.png', 720),
+            new BackgroundObject('img/5_background/layers/air.png', 1440),
+            new BackgroundObject('img/5_background/layers/3_third_layer/1.png', 1440),
+            new BackgroundObject('img/5_background/layers/2_second_layer/1.png', 1440),
+            new BackgroundObject('img/5_background/layers/1_first_layer/1.png', 1440),
+            new BackgroundObject('img/5_background/layers/air.png', 2160),
+            new BackgroundObject('img/5_background/layers/3_third_layer/2.png', 2160),
+            new BackgroundObject('img/5_background/layers/2_second_layer/2.png', 2160),
+            new BackgroundObject('img/5_background/layers/1_first_layer/2.png', 2160),
+            new BackgroundObject('img/5_background/layers/air.png', 2880),
+            new BackgroundObject('img/5_background/layers/3_third_layer/1.png', 2880),
+            new BackgroundObject('img/5_background/layers/2_second_layer/1.png', 2880),
+            new BackgroundObject('img/5_background/layers/1_first_layer/1.png', 2880),
+            new BackgroundObject('img/5_background/layers/air.png', 3600),
+            new BackgroundObject('img/5_background/layers/3_third_layer/2.png', 3600),
+            new BackgroundObject('img/5_background/layers/2_second_layer/2.png', 3600),
+            new BackgroundObject('img/5_background/layers/1_first_layer/2.png', 3600),
+            new BackgroundObject('img/5_background/layers/air.png', 4320),
+            new BackgroundObject('img/5_background/layers/3_third_layer/1.png', 4320),
+            new BackgroundObject('img/5_background/layers/2_second_layer/1.png', 4320),
+            new BackgroundObject('img/5_background/layers/1_first_layer/1.png', 4320),
+
+        ],
+        [
+            new Coin(700),
+            new Coin(1100),
+            new Coin(1700),
+            new Coin(2400),
+            new Coin(3100),
+        ],
+        [
+            new Bottle(300),
+            new Bottle(600),
+            new Bottle(900),
+            new Bottle(1200),
+            new Bottle(1500),
+            new Bottle(1800),
+            new Bottle(2100),
+            new Bottle(2300),
+            new Bottle(2500),
+            new Bottle(2800),
+        ],
+    );
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Bottle.html">Bottle</a></li><li><a href="Bottlebar.html">Bottlebar</a></li><li><a href="Character.html">Character</a></li><li><a href="Chicken.html">Chicken</a></li><li><a href="Clouds.html">Clouds</a></li><li><a href="Coin.html">Coin</a></li><li><a href="Coinbar.html">Coinbar</a></li><li><a href="CollectableObject.html">CollectableObject</a></li><li><a href="DrawableObject.html">DrawableObject</a></li><li><a href="Endboss.html">Endboss</a></li><li><a href="EndbossHealth.html">EndbossHealth</a></li><li><a href="MovableObject.html">MovableObject</a></li><li><a href="Statusbar.html">Statusbar</a></li><li><a href="ThrowableObject.html">ThrowableObject</a></li><li><a href="World.html">World</a></li><li><a href="smallChicken.html">smallChicken</a></li></ul><h3>Global</h3><ul><li><a href="global.html#checkOrientation">checkOrientation</a></li><li><a href="global.html#clearAllIntervals">clearAllIntervals</a></li><li><a href="global.html#fullscreen">fullscreen</a></li><li><a href="global.html#handleKeyDown">handleKeyDown</a></li><li><a href="global.html#handleKeyUp">handleKeyUp</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initLevel">initLevel</a></li><li><a href="global.html#initMobileControls">initMobileControls</a></li><li><a href="global.html#restartGame">restartGame</a></li><li><a href="global.html#setupMobileControls">setupMobileControls</a></li><li><a href="global.html#showLosingScreen">showLosingScreen</a></li><li><a href="global.html#showWinningScreen">showWinningScreen</a></li><li><a href="global.html#startGame">startGame</a></li><li><a href="global.html#startInterval">startInterval</a></li><li><a href="global.html#turnOffMusic">turnOffMusic</a></li><li><a href="global.html#turnOnMusic">turnOnMusic</a></li><li><a href="global.html#updateSoundUI">updateSoundUI</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Tue Dec 02 2025 10:44:12 GMT+0100 (Mitteleuropäische Normalzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

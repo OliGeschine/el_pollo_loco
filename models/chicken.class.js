@@ -1,3 +1,9 @@
+/**
+ * Regular chicken enemy that walks left across the level
+ * Can be defeated by jumping on it or throwing bottles
+ * @class
+ * @extends MovableObject
+ */
 class Chicken extends MovableObject {
     height = 60;
     width = 60;
@@ -29,6 +35,12 @@ class Chicken extends MovableObject {
         this.animate();
     }
 
+    /**
+     * Starts chicken animation and movement loops
+     * Handles walking animation and left movement
+     * @function
+     * @returns {void}
+     */
     animate() {
         this.walkInterval = startInterval(() => {
             if (!this.isDead()) {

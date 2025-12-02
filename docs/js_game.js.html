@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: js/game.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: js/game.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>let canvas;
+let world;
+let keyboard = new Keyboard();
+let sounds = [];
+let isMuted = localStorage.getItem('isMuted') === 'true';
+
+backgroundSound = new Audio('audio/background_music.mp3');
+backgroundSound.loop = true;
+victorySound = new Audio('audio/victory.mp3');
+loseSound = new Audio('audio/game_over.mp3');
+
+/**
+ * Initializes the game by setting up canvas, world, and audio
+ * Called when the game starts
+ * @function
+ * @returns {void}
+ */
+function init() {
+    canvas = document.getElementById('canvas');
+    world = new World(canvas, keyboard);
+    if (isMuted) {
+        backgroundSound.muted = true;
+    } else {
+        backgroundSound.play();
+    }
+    sounds.push(backgroundSound);
+    updateSoundUI();
+}
+
+/**
+ * Updates the sound UI icons based on current mute state
+ * Shows/hides sound-on and sound-off icons accordingly
+ * @function
+ * @returns {void}
+ */
+function updateSoundUI() {
+    const soundOnIcon = document.getElementById('soundOn');
+    const soundOffIcon = document.getElementById('soundOff');
+
+    if (isMuted) {
+        soundOnIcon?.classList.add('dNone');
+        soundOffIcon?.classList.remove('dNone');
+    } else {
+        soundOnIcon?.classList.remove('dNone');
+        soundOffIcon?.classList.add('dNone');
+    }
+}
+
+/**
+ * Event listener for DOM content loaded
+ * Initializes sound UI when page is fully loaded
+ */
+document.addEventListener('DOMContentLoaded', function () {
+    updateSoundUI();
+});
+
+/**
+ * Handles keyboard input for player movement
+ * @param {KeyboardEvent} e - The keyboard event object
+ */
+function handleKeyDown(e) {
+    if (e.keyCode == 39) keyboard.RIGHT = true;
+    if (e.keyCode == 37) keyboard.LEFT = true;
+    if (e.keyCode == 38) keyboard.UP = true;
+    if (e.keyCode == 32) keyboard.SPACE = true;
+}
+
+/**
+ * Handles keyboard input release
+ * @param {KeyboardEvent} e - The keyboard event object  
+ */
+function handleKeyUp(e) {
+    if (e.keyCode == 39) keyboard.RIGHT = false;
+    if (e.keyCode == 37) keyboard.LEFT = false;
+    if (e.keyCode == 38) keyboard.UP = false;
+    if (e.keyCode == 32) keyboard.SPACE = false;
+}
+
+window.addEventListener("keydown", handleKeyDown);
+window.addEventListener("keyup", handleKeyUp);</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Bottle.html">Bottle</a></li><li><a href="Bottlebar.html">Bottlebar</a></li><li><a href="Character.html">Character</a></li><li><a href="Chicken.html">Chicken</a></li><li><a href="Clouds.html">Clouds</a></li><li><a href="Coin.html">Coin</a></li><li><a href="Coinbar.html">Coinbar</a></li><li><a href="CollectableObject.html">CollectableObject</a></li><li><a href="DrawableObject.html">DrawableObject</a></li><li><a href="Endboss.html">Endboss</a></li><li><a href="EndbossHealth.html">EndbossHealth</a></li><li><a href="MovableObject.html">MovableObject</a></li><li><a href="Statusbar.html">Statusbar</a></li><li><a href="ThrowableObject.html">ThrowableObject</a></li><li><a href="World.html">World</a></li><li><a href="smallChicken.html">smallChicken</a></li></ul><h3>Global</h3><ul><li><a href="global.html#checkOrientation">checkOrientation</a></li><li><a href="global.html#clearAllIntervals">clearAllIntervals</a></li><li><a href="global.html#fullscreen">fullscreen</a></li><li><a href="global.html#handleKeyDown">handleKeyDown</a></li><li><a href="global.html#handleKeyUp">handleKeyUp</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initLevel">initLevel</a></li><li><a href="global.html#initMobileControls">initMobileControls</a></li><li><a href="global.html#restartGame">restartGame</a></li><li><a href="global.html#setupMobileControls">setupMobileControls</a></li><li><a href="global.html#showLosingScreen">showLosingScreen</a></li><li><a href="global.html#showWinningScreen">showWinningScreen</a></li><li><a href="global.html#startGame">startGame</a></li><li><a href="global.html#startInterval">startInterval</a></li><li><a href="global.html#turnOffMusic">turnOffMusic</a></li><li><a href="global.html#turnOnMusic">turnOnMusic</a></li><li><a href="global.html#updateSoundUI">updateSoundUI</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Tue Dec 02 2025 10:44:12 GMT+0100 (Mitteleuropäische Normalzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

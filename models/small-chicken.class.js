@@ -1,3 +1,9 @@
+/**
+ * Small chicken enemy that walks and jumps randomly
+ * Faster than regular chickens with jumping ability
+ * @class
+ * @extends MovableObject
+ */
 class smallChicken extends MovableObject {
     height = 50;
     width = 50;
@@ -34,6 +40,12 @@ class smallChicken extends MovableObject {
         this.animate();
     }
 
+    /**
+ * Starts animation loops for movement and visual effects
+ * Handles walking animation, movement, and jump timing
+ * @function
+ * @returns {void}
+ */
     animate() {
         this.walkInterval = startInterval(() => {
             if (!this.isDead()) {
@@ -55,11 +67,23 @@ class smallChicken extends MovableObject {
 
     }
 
+    /**
+ * Schedules the next random jump for this chicken
+ * Sets random delay between 3-8 seconds for next jump
+ * @function
+ * @returns {void}
+ */
     scheduleNextJump() {
         const randomDelay = 2000 + Math.random() * 3000;
         this.nextJumpTime = Date.now() + randomDelay;
     }
 
+    /**
+ * Checks if it's time for this chicken to jump
+ * Compares current time with scheduled jump time
+ * @function
+ * @returns {void}
+ */
     checkForJump() {
         const currentTime = Date.now();
         if (currentTime >= this.nextJumpTime && !this.smallChickenIsAboveGround()) {
@@ -68,12 +92,24 @@ class smallChicken extends MovableObject {
         }
     }
 
+    /**
+ * Makes the small chicken jump with half the height of character
+ * Only jumps if chicken is currently on the ground
+ * @function
+ * @returns {void}
+ */
     smallChickenJump() {
         if (!this.smallChickenIsAboveGround()) {
             this.speedY = 15;
         }
     }
 
+    /**
+     * Ensures chicken stays on ground level after falling
+     * Resets position and velocity when hitting ground
+     * @function
+     * @returns {void}
+     */
     stayOnGround() {
         if (this.y > this.groundLevel) {
             this.y = this.groundLevel;
@@ -81,10 +117,21 @@ class smallChicken extends MovableObject {
         }
     }
 
+    /**
+ * Checks if small chicken is above its ground level
+ * @function
+ * @returns {boolean} True if chicken is above ground
+ */
     smallChickenIsAboveGround() {
         return this.y < this.groundLevel;
     }
 
+    /**
+ * Applies custom gravity physics to small chicken
+ * Handles falling and ground collision for jumping chickens
+ * @function
+ * @returns {void}
+ */
     smallChickenGravity() {
         startInterval(() => {
             if (this.smallChickenIsAboveGround() || this.speedY > 0) {

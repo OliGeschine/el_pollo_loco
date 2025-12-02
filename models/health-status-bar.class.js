@@ -1,3 +1,9 @@
+/**
+ * UI status bar showing character health with color-coded states
+ * Changes color from blue (full) to red (empty) based on health
+ * @class
+ * @extends DrawableObject
+ */
 class Statusbar extends DrawableObject {
     IMAGES_HEALTH = [
         'img/7_statusbars/1_statusbar/2_statusbar_health/blue/0.png',
@@ -20,13 +26,25 @@ class Statusbar extends DrawableObject {
         this.setPercentageHealth(50);
     }
 
+    /**
+     * Updates the character health bar display based on current health
+     * Changes the visual bar image and color to reflect health level
+     * @function
+     * @param {number} percentageHealth - Current character health value
+     * @returns {void}
+     */
     setPercentageHealth(percentageHealth) {
         this.percentageHealth = percentageHealth;
         let path = this.IMAGES_HEALTH[this.resolveHealthImageIndex()];
         this.img = this.imageCache[path];
     }
 
-
+    /**
+     * Determines which health bar image to display based on health value
+     * Maps health ranges to appropriate color-coded visual representation
+     * @function
+     * @returns {number} Index of image to display from IMAGES_HEALTH array
+     */
     resolveHealthImageIndex() {
         if (this.percentageHealth == 50) {
             return 5;

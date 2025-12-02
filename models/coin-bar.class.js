@@ -1,3 +1,9 @@
+/**
+ * UI status bar showing collected coin count
+ * Updates visual representation based on coins collected
+ * @class
+ * @extends DrawableObject
+ */
 class Coinbar extends DrawableObject {
     IMAGES_COINS = [
         'img/7_statusbars/1_statusbar/1_statusbar_coin/blue/0.png',
@@ -20,12 +26,25 @@ class Coinbar extends DrawableObject {
         this.setPercentageCoin(0);
     }
 
+    /**
+ * Updates the coin bar display based on collected coins
+ * Changes the visual bar image to reflect current coin count
+ * @function
+ * @param {number} percentageCoin - Number of coins collected
+ * @returns {void}
+ */
     setPercentageCoin(percentageCoin) {
         this.percentageCoin = percentageCoin;
         let path = this.IMAGES_COINS[this.addCollectedCoin()];
         this.img = this.imageCache[path];
     }
 
+    /**
+ * Determines which coin bar image to display based on coin count
+ * Maps coin count ranges to appropriate visual representation
+ * @function
+ * @returns {number} Index of image to display from IMAGES_COINS array
+ */
     addCollectedCoin() {
         if (this.percentageCoin == 5) {
             return 5;

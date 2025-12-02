@@ -1,3 +1,9 @@
+/**
+ * Collectable bottle object that animates on the ground
+ * Can be collected by player for throwing at enemies
+ * @class
+ * @extends CollectableObject
+ */
 class Bottle extends CollectableObject {
     width = 70;
     height = 70;
@@ -26,6 +32,12 @@ class Bottle extends CollectableObject {
         this.collected = false;
     }
 
+    /**
+ * Starts the bottle's ground animation loop
+ * Animates between different bottle images to show movement
+ * @function
+ * @returns {void}
+ */
     animate() {
         startInterval(() => {
             this.animateIcons(this.IMAGES_MOVING);

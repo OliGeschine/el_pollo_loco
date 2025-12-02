@@ -9,6 +9,12 @@ backgroundSound.loop = true;
 victorySound = new Audio('audio/victory.mp3');
 loseSound = new Audio('audio/game_over.mp3');
 
+/**
+ * Initializes the game by setting up canvas, world, and audio
+ * Called when the game starts
+ * @function
+ * @returns {void}
+ */
 function init() {
     canvas = document.getElementById('canvas');
     world = new World(canvas, keyboard);
@@ -21,6 +27,12 @@ function init() {
     updateSoundUI();
 }
 
+/**
+ * Updates the sound UI icons based on current mute state
+ * Shows/hides sound-on and sound-off icons accordingly
+ * @function
+ * @returns {void}
+ */
 function updateSoundUI() {
     const soundOnIcon = document.getElementById('soundOn');
     const soundOffIcon = document.getElementById('soundOff');
@@ -34,36 +46,35 @@ function updateSoundUI() {
     }
 }
 
+/**
+ * Event listener for DOM content loaded
+ * Initializes sound UI when page is fully loaded
+ */
 document.addEventListener('DOMContentLoaded', function () {
     updateSoundUI();
 });
 
-window.addEventListener("keydown", (e) => {
-    if (e.keyCode == 39) {
-        keyboard.RIGHT = true;
-    }
-    if (e.keyCode == 37) {
-        keyboard.LEFT = true;
-    }
-    if (e.keyCode == 38) {
-        keyboard.UP = true;
-    }
-    if (e.keyCode == 32) {
-        keyboard.SPACE = true;
-    }
-});
+/**
+ * Handles keyboard input for player movement
+ * @param {KeyboardEvent} e - The keyboard event object
+ */
+function handleKeyDown(e) {
+    if (e.keyCode == 39) keyboard.RIGHT = true;
+    if (e.keyCode == 37) keyboard.LEFT = true;
+    if (e.keyCode == 38) keyboard.UP = true;
+    if (e.keyCode == 32) keyboard.SPACE = true;
+}
 
-window.addEventListener("keyup", (e) => {
-    if (e.keyCode == 39) {
-        keyboard.RIGHT = false;
-    }
-    if (e.keyCode == 37) {
-        keyboard.LEFT = false;
-    }
-    if (e.keyCode == 38) {
-        keyboard.UP = false;
-    }
-    if (e.keyCode == 32) {
-        keyboard.SPACE = false;
-    }
-});
+/**
+ * Handles keyboard input release
+ * @param {KeyboardEvent} e - The keyboard event object  
+ */
+function handleKeyUp(e) {
+    if (e.keyCode == 39) keyboard.RIGHT = false;
+    if (e.keyCode == 37) keyboard.LEFT = false;
+    if (e.keyCode == 38) keyboard.UP = false;
+    if (e.keyCode == 32) keyboard.SPACE = false;
+}
+
+window.addEventListener("keydown", handleKeyDown);
+window.addEventListener("keyup", handleKeyUp);

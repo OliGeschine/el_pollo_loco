@@ -1,3 +1,9 @@
+/**
+ * UI status bar showing collected bottle count
+ * Updates visual representation based on bottles collected
+ * @class
+ * @extends DrawableObject
+ */
 class Bottlebar extends DrawableObject {
     IMAGES_BOTTLE = [
         'img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/0.png',
@@ -20,12 +26,24 @@ class Bottlebar extends DrawableObject {
         this.setPercentageBottle(0);
     }
 
+    /**
+ * Applies custom gravity physics to small chicken
+ * Handles falling and ground collision for jumping chickens
+ * @function
+ * @returns {void}
+ */
     setPercentageBottle(percentageBottle) {
         this.percentageBottle = percentageBottle;
         let path = this.IMAGES_BOTTLE[this.addCollectedBottle()];
         this.img = this.imageCache[path];
     }
 
+    /**
+ * Determines which bottle bar image to display
+ * Maps bottle count to appropriate visual representation
+ * @function
+ * @returns {number} Index of image to display from IMAGES_BOTTLE array
+ */
     addCollectedBottle() {
         if (this.percentageBottle == 10) {
             return 5;

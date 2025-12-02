@@ -1,3 +1,9 @@
+/**
+ * Main playable character class representing Pepe
+ * Extends MovableObject to inherit physics and collision detection
+ * @class Character
+ * @extends MovableObject
+ */
 class Character extends MovableObject {
     height = 230;
     width = 100;
@@ -92,11 +98,23 @@ class Character extends MovableObject {
         this.lastHit = 0;
     }
 
+    /**
+ * Main animation controller for character
+ * Starts both movement and visual animation loops
+ * @function
+ * @returns {void}
+ */
     animate() {
         this.moveCharacter();
         this.animateCharacter();
     }
 
+    /**
+ * Handles character movement based on keyboard input
+ * Controls left/right movement, jumping, and camera following
+ * @function
+ * @returns {void}
+ */
     moveCharacter() {
         this.movingInterval = startInterval(() => {
             if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
@@ -114,6 +132,12 @@ class Character extends MovableObject {
         }, 1000 / 60);
     }
 
+    /**
+   * Handles character visual animations based on current state
+   * Manages idle, walking, jumping, hurt, and death animations
+   * @function
+   * @returns {void}
+   */
     animateCharacter() {
         startInterval(() => {
             if (this.isDead()) {
@@ -139,11 +163,23 @@ class Character extends MovableObject {
         }, 100);
     }
 
+    /**
+ * Records the current time as last movement time
+ * Used for sleep animation timing
+ * @function
+ * @returns {void}
+ */
     getMoveTime() {
         let currentTime = new Date().getTime();
         this.lastMove = currentTime;
     }
 
+    /**
+ * Determines if character should show sleep animation
+ * Returns true if no movement for more than 5 seconds
+ * @function
+ * @returns {boolean} True if character should sleep
+ */
     getSleepTime() {
         let lastTimeMoved = new Date().getTime() - this.lastMove;
         return lastTimeMoved > 5000;

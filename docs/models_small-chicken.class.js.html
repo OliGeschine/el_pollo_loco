@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: models/small-chicken.class.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: models/small-chicken.class.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Small chicken enemy that walks and jumps randomly
+ * Faster than regular chickens with jumping ability
+ * @class
+ * @extends MovableObject
+ */
+class smallChicken extends MovableObject {
+    height = 50;
+    width = 50;
+    y = 375;
+    energy = 2;
+    offset = {
+        top: 5,
+        bottom: 5,
+        left: 5,
+        right: 5
+    };
+    nextJumpTime = 0;
+    groundLevel = 375;
+
+
+    IMAGES_WALKING = [
+        'img/3_enemies_chicken/chicken_small/1_walk/1_w.png',
+        'img/3_enemies_chicken/chicken_small/1_walk/2_w.png',
+        'img/3_enemies_chicken/chicken_small/1_walk/3_w.png',
+    ];
+
+    IMAGES_DEAD = [
+        'img/3_enemies_chicken/chicken_small/2_dead/dead.png',
+    ]
+
+    constructor() {
+        super().loadImage('img/3_enemies_chicken/chicken_small/1_walk/1_w.png');
+        this.loadImages(this.IMAGES_WALKING);
+        this.loadImages(this.IMAGES_DEAD);
+        this.x = 600 + Math.random() * 3000;
+        this.speed = 0.7;
+        this.scheduleNextJump();
+        this.smallChickenGravity();
+        this.animate();
+    }
+
+    /**
+ * Starts animation loops for movement and visual effects
+ * Handles walking animation, movement, and jump timing
+ * @function
+ * @returns {void}
+ */
+    animate() {
+        this.walkInterval = startInterval(() => {
+            if (!this.isDead()) {
+                this.moveLeft();
+                this.checkForJump();
+                this.stayOnGround();
+            }
+        }, 1000 / 60)
+
+        startInterval(() => {
+            if (this.isDead()) {
+                this.playAnimation(this.IMAGES_DEAD);
+            } else if (this.isHurt()) {
+                return this.isDead();
+            } else {
+                this.playAnimation(this.IMAGES_WALKING);
+            }
+        }, 100);
+
+    }
+
+    /**
+ * Schedules the next random jump for this chicken
+ * Sets random delay between 3-8 seconds for next jump
+ * @function
+ * @returns {void}
+ */
+    scheduleNextJump() {
+        const randomDelay = 2000 + Math.random() * 3000;
+        this.nextJumpTime = Date.now() + randomDelay;
+    }
+
+    /**
+ * Checks if it's time for this chicken to jump
+ * Compares current time with scheduled jump time
+ * @function
+ * @returns {void}
+ */
+    checkForJump() {
+        const currentTime = Date.now();
+        if (currentTime >= this.nextJumpTime &amp;&amp; !this.smallChickenIsAboveGround()) {
+            this.smallChickenJump();
+            this.scheduleNextJump();
+        }
+    }
+
+    /**
+ * Makes the small chicken jump with half the height of character
+ * Only jumps if chicken is currently on the ground
+ * @function
+ * @returns {void}
+ */
+    smallChickenJump() {
+        if (!this.smallChickenIsAboveGround()) {
+            this.speedY = 15;
+        }
+    }
+
+    /**
+     * Ensures chicken stays on ground level after falling
+     * Resets position and velocity when hitting ground
+     * @function
+     * @returns {void}
+     */
+    stayOnGround() {
+        if (this.y > this.groundLevel) {
+            this.y = this.groundLevel;
+            this.speedY = 0;
+        }
+    }
+
+    /**
+ * Checks if small chicken is above its ground level
+ * @function
+ * @returns {boolean} True if chicken is above ground
+ */
+    smallChickenIsAboveGround() {
+        return this.y &lt; this.groundLevel;
+    }
+
+    /**
+ * Applies custom gravity physics to small chicken
+ * Handles falling and ground collision for jumping chickens
+ * @function
+ * @returns {void}
+ */
+    smallChickenGravity() {
+        startInterval(() => {
+            if (this.smallChickenIsAboveGround() || this.speedY > 0) {
+                this.y -= this.speedY;
+                this.speedY -= this.acceleration;
+            }
+        }, 1000 / 25);
+    }
+
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Bottle.html">Bottle</a></li><li><a href="Bottlebar.html">Bottlebar</a></li><li><a href="Character.html">Character</a></li><li><a href="Chicken.html">Chicken</a></li><li><a href="Clouds.html">Clouds</a></li><li><a href="Coin.html">Coin</a></li><li><a href="Coinbar.html">Coinbar</a></li><li><a href="CollectableObject.html">CollectableObject</a></li><li><a href="DrawableObject.html">DrawableObject</a></li><li><a href="Endboss.html">Endboss</a></li><li><a href="EndbossHealth.html">EndbossHealth</a></li><li><a href="MovableObject.html">MovableObject</a></li><li><a href="Statusbar.html">Statusbar</a></li><li><a href="ThrowableObject.html">ThrowableObject</a></li><li><a href="World.html">World</a></li><li><a href="smallChicken.html">smallChicken</a></li></ul><h3>Global</h3><ul><li><a href="global.html#checkOrientation">checkOrientation</a></li><li><a href="global.html#clearAllIntervals">clearAllIntervals</a></li><li><a href="global.html#fullscreen">fullscreen</a></li><li><a href="global.html#handleKeyDown">handleKeyDown</a></li><li><a href="global.html#handleKeyUp">handleKeyUp</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initLevel">initLevel</a></li><li><a href="global.html#initMobileControls">initMobileControls</a></li><li><a href="global.html#restartGame">restartGame</a></li><li><a href="global.html#setupMobileControls">setupMobileControls</a></li><li><a href="global.html#showLosingScreen">showLosingScreen</a></li><li><a href="global.html#showWinningScreen">showWinningScreen</a></li><li><a href="global.html#startGame">startGame</a></li><li><a href="global.html#startInterval">startInterval</a></li><li><a href="global.html#turnOffMusic">turnOffMusic</a></li><li><a href="global.html#turnOnMusic">turnOnMusic</a></li><li><a href="global.html#updateSoundUI">updateSoundUI</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Tue Dec 02 2025 10:44:12 GMT+0100 (Mitteleuropäische Normalzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

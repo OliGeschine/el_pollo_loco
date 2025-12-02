@@ -1,5 +1,12 @@
 let level1;
 
+/**
+ * Initializes Level 1 with all enemies, collectables, and background objects
+ * Creates chickens, small chickens, bottles, coins, clouds and backgrounds
+ * Called when starting a new game or restarting
+ * @function
+ * @returns {void}
+ */
 function initLevel() {
     level1 = new Level(
         [

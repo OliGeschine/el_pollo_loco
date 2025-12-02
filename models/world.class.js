@@ -1,3 +1,8 @@
+/**
+ * Main World class that manages the entire game state and logic
+ * Handles rendering, collision detection, audio, and game object interactions
+ * @class World
+ */
 class World {
     character = new Character();
     endboss = new Endboss();
@@ -50,12 +55,24 @@ class World {
         this.collisions();
     }
 
+    /**
+     * Sets world reference for character, endboss, and enemies
+     * Allows game objects to access world methods and properties
+     * @function
+     * @returns {void}
+     */
     setWorld() {
         this.character.world = this;
         this.endboss.world = this;
         this.level.enemies.forEach(e => e.world = this);
     }
 
+    /**
+     * Starts the main game loop for throwing objects and collectables
+     * Runs collision checks and updates at 200ms intervals
+     * @function
+     * @returns {void}
+     */
     run() {
         startInterval(() => {
             this.checkThrowObjects();
@@ -63,6 +80,12 @@ class World {
         }, 200);
     }
 
+    /**
+     * Starts collision detection loop for all interactive objects
+     * Runs at 10ms intervals for precise collision detection
+     * @function
+     * @returns {void}
+     */
     collisions() {
         startInterval(() => {
             this.checkBottleHitsEnemies();
@@ -72,6 +95,12 @@ class World {
         }, 10);
     }
 
+    /**
+     * Checks all character interactions with regular enemies
+     * Handles jumping on enemies and collision damage
+     * @function
+     * @returns {void}
+     */
     checkCharacterEnemyInteractions() {
         for (let i = 0; i < this.level.enemies.length; i++) {
             const enemy = this.level.enemies[i];
@@ -81,6 +110,12 @@ class World {
         }
     }
 
+    /**
+     * Checks character interactions specifically with the endboss
+     * Handles jumping attacks and collision damage with endboss
+     * @function
+     * @returns {void}
+     */
     checkCharacterEndbossInteractions() {
         if (!this.endboss.isDead()) {
             this.checkJumpEndbossCollision(this.endboss);
@@ -88,6 +123,14 @@ class World {
         }
     }
 
+    /**
+     * Handles character jumping on enemies (stomp attacks)
+     * Damages enemy, plays sound, and removes dead enemies
+     * @function
+     * @param {MovableObject} enemy - The enemy being stomped
+     * @param {number} enemyIndex - Index of enemy in enemies array
+     * @returns {void}
+     */
     checkJumpCollisions(enemy, enemyIndex) {
         if (this.character.isStomping(enemy, enemyIndex)) {
             enemy.hitWeak();
@@ -106,6 +149,12 @@ class World {
         }
     }
 
+    /**
+     * Handles character jumping on the endboss
+     * Damages endboss, updates health bar, and triggers death sequence
+     * @function
+     * @returns {void}
+     */
     checkJumpEndbossCollision() {
         if (this.character.isStomping(this.endboss)) {
             this.endboss.hitWeak();
@@ -130,6 +179,13 @@ class World {
         this.handleEndbossIsDeadAnimation();
     }
 
+    /**
+     * Handles character collision damage from regular enemies
+     * Reduces character health and plays hurt sound
+     * @function
+     * @param {MovableObject} enemy - The enemy causing damage
+     * @returns {void}
+     */
     checkEnemyCollisions(enemy) {
         if (!this.character.justStomped && this.character.isColliding(enemy)) {
             this.character.hitWeak();
@@ -143,6 +199,12 @@ class World {
         this.handleCharacterIsDeadAnimation();
     }
 
+    /**
+     * Handles character collision damage from endboss
+     * Causes stronger damage than regular enemies
+     * @function
+     * @returns {void}
+     */
     checkEndbossCollisions() {
         if (!this.character.justStomped && this.character.isColliding(this.endboss)) {
             this.character.hitStrong();
@@ -155,6 +217,12 @@ class World {
         this.handleCharacterIsDeadAnimation();
     }
 
+    /**
+     * Checks if thrown bottles hit any enemies
+     * Triggers bottle splash animation and enemy damage
+     * @function
+     * @returns {void}
+     */
     checkBottleHitsEnemies() {
         this.throwableObjects.forEach((bottle, bottleIndex) => {
             if (bottle.splashed) return;
@@ -178,6 +246,12 @@ class World {
         });
     }
 
+    /**
+     * Checks if thrown bottles hit the endboss
+     * Triggers bottle splash and endboss damage
+     * @function
+     * @returns {void}
+     */
     checkBottleHitsEndboss() {
         this.throwableObjects.forEach((bottle, bottleIndex) => {
             if (bottle.splashed) return;
@@ -196,6 +270,12 @@ class World {
         })
     }
 
+    /**
+     * Handles endboss death animation and victory sequence
+     * Plays death sound and triggers winning screen
+     * @function
+     * @returns {void}
+     */
     handleEndbossIsDeadAnimation() {
         setTimeout(() => {
             if (this.endboss.energy <= 0) {
@@ -212,6 +292,12 @@ class World {
         })
     }
 
+    /**
+     * Handles character death animation and game over sequence
+     * Plays death sound and triggers losing screen
+     * @function
+     * @returns {void}
+     */
     handleCharacterIsDeadAnimation() {
         setTimeout(() => {
             if (this.character.energy <= 0) {
@@ -228,6 +314,12 @@ class World {
         })
     }
 
+    /**
+     * Handles throwing bottle objects when space key is pressed
+     * Checks cooldown, bottle count, and character state
+     * @function
+     * @returns {void}
+     */
     checkThrowObjects() {
         let currentThrowTime = new Date().getTime();
         if (this.keyboard.SPACE && this.currentBottleCount > 0 && currentThrowTime - this.lastThrowTime >= 750 && !this.character.isDead()) {
@@ -240,6 +332,12 @@ class World {
         }
     }
 
+    /**
+     * Checks collection of bottle collectables
+     * Updates bottle count and removes collected bottles
+     * @function
+     * @returns {void}
+     */
     checkCollectedBottles() {
         this.level.bottles.forEach((bottle, index) => {
             if (!bottle.collected && this.character.isColliding(bottle)) {
@@ -254,11 +352,23 @@ class World {
         });
     }
 
+    /**
+     * Runs all collectable object collision checks
+     * Handles coins and bottles collection
+     * @function
+     * @returns {void}
+     */
     checkCollectableCollisions() {
         this.checkCollectedCoins();
         this.checkCollectedBottles();
     }
 
+    /**
+     * Checks collection of coin collectables
+     * Updates coin count and removes collected coins
+     * @function
+     * @returns {void}
+     */
     checkCollectedCoins() {
         this.level.coins.forEach((coin, index) => {
             if (!coin.collected && this.character.isColliding(coin)) {
@@ -273,6 +383,12 @@ class World {
         });
     }
 
+    /**
+     * Main rendering function that draws all game objects
+     * Handles camera movement and layer ordering
+     * @function
+     * @returns {void}
+     */
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.translate(this.cameraX, 0);
@@ -304,12 +420,22 @@ class World {
         });
     }
 
+    /**
+     * Conditionally renders the endboss if alive
+     * @function
+     * @returns {void}
+     */
     addEndbossToMap() {
         if (this.endboss && !this.endbossIsDead) {
             this.addToMap(this.endboss);
         }
     }
 
+    /**
+     * Shows endboss health bar when character approaches
+     * @function
+     * @returns {void}
+     */
     addEndbossBarToMap() {
         if (this.character.x >= 3300) {
             this.endbossHealthBar.hadFirstContact = true;
@@ -319,12 +445,24 @@ class World {
         }
     }
 
+    /**
+     * Renders an array of game objects to the canvas
+     * @function
+     * @param {Object[]} objects - Array of drawable objects
+     * @returns {void}
+     */
     addObjectsToMap(objects) {
         objects.forEach(o => {
             this.addToMap(o);
         });
     }
 
+    /**
+     * Renders a single movable object with direction handling
+     * @function
+     * @param {MovableObject} mo - The movable object to render
+     * @returns {void}
+     */
     addToMap(mo) {
         if (mo.otherDirection) {
             this.flipImage(mo);
@@ -339,6 +477,12 @@ class World {
 
     }
 
+    /**
+     * Flips image horizontally for objects facing left
+     * @function
+     * @param {MovableObject} mo - Object to flip
+     * @returns {void}
+     */
     flipImage(mo) {
         this.ctx.save();
         this.ctx.translate(mo.width, 0);
@@ -346,6 +490,12 @@ class World {
         mo.x = mo.x * -1;
     }
 
+    /**
+     * Restores normal image orientation after flipping
+     * @function
+     * @param {MovableObject} mo - Object to restore
+     * @returns {void}
+     */
     flipImageBack(mo) {
         mo.x = mo.x * -1;
         this.ctx.restore();

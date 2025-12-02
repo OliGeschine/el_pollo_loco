@@ -1,3 +1,9 @@
+/**
+ * Collectable coin object that animates and can be picked up
+ * Spawns at random heights and animates between two states
+ * @class
+ * @extends CollectableObject
+ */
 class Coin extends CollectableObject {
     width = 90;
     height = 90;
@@ -22,6 +28,12 @@ class Coin extends CollectableObject {
         this.collected = false;
     }
 
+    /**
+ * Starts the coin's animation loop
+ * Alternates between two coin images every 500ms
+ * @function
+ * @returns {void}
+ */
     animate() {
         startInterval(() => {
             this.animateIcons(this.IMAGES_MOVING);

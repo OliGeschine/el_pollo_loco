@@ -1,3 +1,9 @@
+/**
+ * Throwable bottle projectile that flies in an arc and splashes on impact
+ * Can hit enemies or ground, plays rotation animation while flying
+ * @class
+ * @extends MovableObject
+ */
 class ThrowableObject extends MovableObject {
     throwBottle = new Audio('audio/throw_bottle.mp3');
     offset = {
@@ -33,6 +39,12 @@ class ThrowableObject extends MovableObject {
         this.throw();
     }
 
+    /**
+ * Initiates the bottle throwing physics and animation
+ * Sets upward velocity, applies gravity, plays sound, and starts movement loop
+ * @function
+ * @returns {void}
+ */
     throw() {
         this.speedY = 15;
         this.applyGravity();
@@ -51,12 +63,24 @@ class ThrowableObject extends MovableObject {
         }, 25);
     }
 
+    /**
+ * Handles bottle collision with ground
+ * Stops bottle movement and triggers splash animation
+ * @function
+ * @returns {void}
+ */
     hitGround() {
         if (this.splashed) return;
         this.y = 380;
         this.splash();
     }
 
+    /**
+ * Plays bottle splash animation and removes bottle from world
+ * Shows splash effects for 600ms then removes bottle from game
+ * @function
+ * @returns {void}
+ */
     splash() {
         if (this.splashed) return;
         this.splashed = true;
