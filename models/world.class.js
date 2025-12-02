@@ -13,6 +13,7 @@ class World {
     canvas;
     ctx; // kurzform für context
     keyboard;
+    collision;
     cameraX = 0;
     endbossHealthBar = new EndbossHealth();
     statusBar = new Statusbar();
@@ -41,6 +42,7 @@ class World {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
+        this.collision = new Collision(this);
         sounds.push(this.characterDies);
         sounds.push(this.killedEndboss);
         sounds.push(this.killedChicken);
@@ -52,7 +54,7 @@ class World {
         this.draw();
         this.setWorld();
         this.run();
-        this.collisions();
+        this.collision.collisions();
     }
 
     /**
@@ -76,198 +78,8 @@ class World {
     run() {
         startInterval(() => {
             this.checkThrowObjects();
-            this.checkCollectableCollisions();
+            this.collision.checkCollectableCollisions();
         }, 200);
-    }
-
-    /**
-     * Starts collision detection loop for all interactive objects
-     * Runs at 10ms intervals for precise collision detection
-     * @function
-     * @returns {void}
-     */
-    collisions() {
-        startInterval(() => {
-            this.checkBottleHitsEnemies();
-            this.checkBottleHitsEndboss();
-            this.checkCharacterEnemyInteractions();
-            this.checkCharacterEndbossInteractions();
-        }, 10);
-    }
-
-    /**
-     * Checks all character interactions with regular enemies
-     * Handles jumping on enemies and collision damage
-     * @function
-     * @returns {void}
-     */
-    checkCharacterEnemyInteractions() {
-        for (let i = 0; i < this.level.enemies.length; i++) {
-            const enemy = this.level.enemies[i];
-            if (enemy.isDead()) continue;
-            this.checkJumpCollisions(enemy, i);
-            this.checkEnemyCollisions(enemy);
-        }
-    }
-
-    /**
-     * Checks character interactions specifically with the endboss
-     * Handles jumping attacks and collision damage with endboss
-     * @function
-     * @returns {void}
-     */
-    checkCharacterEndbossInteractions() {
-        if (!this.endboss.isDead()) {
-            this.checkJumpEndbossCollision(this.endboss);
-            this.checkEndbossCollisions(this.endboss);
-        }
-    }
-
-    /**
-     * Handles character jumping on enemies (stomp attacks)
-     * Damages enemy, plays sound, and removes dead enemies
-     * @function
-     * @param {MovableObject} enemy - The enemy being stomped
-     * @param {number} enemyIndex - Index of enemy in enemies array
-     * @returns {void}
-     */
-    checkJumpCollisions(enemy, enemyIndex) {
-        if (this.character.isStomping(enemy, enemyIndex)) {
-            enemy.hitWeak();
-            this.stompedEnemies.push(enemy);
-            if (!isMuted) {
-                this.killedChicken.play();
-            }
-            setTimeout(() => {
-                if (enemy.energy <= 0) {
-                    this.level.enemies.splice(enemyIndex, 1);
-                }
-            }, 500)
-            this.character.speedY = 15;
-            this.character.justStomped = true;
-            setTimeout(() => (this.character.justStomped = false), 500);
-        }
-    }
-
-    /**
-     * Handles character jumping on the endboss
-     * Damages endboss, updates health bar, and triggers death sequence
-     * @function
-     * @returns {void}
-     */
-    checkJumpEndbossCollision() {
-        if (this.character.isStomping(this.endboss)) {
-            this.endboss.hitWeak();
-            this.endbossHealthBar.setPercentageHealthEndboss(this.endboss.energy);
-            if (!isMuted) {
-                this.killedChicken.play();
-            }
-            setTimeout(() => {
-                if (this.endboss.energy <= 0) {
-                    if (!isMuted) {
-                        this.killedEndboss.play();
-                    }
-                    setTimeout(() => {
-                        this.endbossIsDead = true;
-                    }, 3000);
-                }
-            })
-            this.character.speedY = 15;
-            this.character.justStomped = true;
-            setTimeout(() => (this.character.justStomped = false), 500);
-        }
-        this.handleEndbossIsDeadAnimation();
-    }
-
-    /**
-     * Handles character collision damage from regular enemies
-     * Reduces character health and plays hurt sound
-     * @function
-     * @param {MovableObject} enemy - The enemy causing damage
-     * @returns {void}
-     */
-    checkEnemyCollisions(enemy) {
-        if (!this.character.justStomped && this.character.isColliding(enemy)) {
-            this.character.hitWeak();
-            if (!isMuted) {
-                this.getHurt.play();
-            }
-            this.statusBar.setPercentageHealth(this.character.energy);
-            console.log('energy:', this.character.energy);
-
-        }
-        this.handleCharacterIsDeadAnimation();
-    }
-
-    /**
-     * Handles character collision damage from endboss
-     * Causes stronger damage than regular enemies
-     * @function
-     * @returns {void}
-     */
-    checkEndbossCollisions() {
-        if (!this.character.justStomped && this.character.isColliding(this.endboss)) {
-            this.character.hitStrong();
-            if (!isMuted) {
-                this.getHurt.play();
-            }
-            this.statusBar.setPercentageHealth(this.character.energy);
-            console.log('energy:', this.character.energy);
-        }
-        this.handleCharacterIsDeadAnimation();
-    }
-
-    /**
-     * Checks if thrown bottles hit any enemies
-     * Triggers bottle splash animation and enemy damage
-     * @function
-     * @returns {void}
-     */
-    checkBottleHitsEnemies() {
-        this.throwableObjects.forEach((bottle, bottleIndex) => {
-            if (bottle.splashed) return;
-            this.level.enemies.forEach((enemy, enemyIndex) => {
-                if (!enemy.isDead() && bottle.isColliding(enemy)) {
-                    bottle.splash();
-                    if (!isMuted) {
-                        this.bottleBreaking.play();
-                    }
-                    enemy.hitWeak();
-                    if (!isMuted) {
-                        this.killedChicken.play();
-                    }
-                    setTimeout(() => {
-                        if (enemy.energy <= 0) {
-                            this.level.enemies.splice(enemyIndex, 1);
-                        }
-                    }, 200)
-                }
-            });
-        });
-    }
-
-    /**
-     * Checks if thrown bottles hit the endboss
-     * Triggers bottle splash and endboss damage
-     * @function
-     * @returns {void}
-     */
-    checkBottleHitsEndboss() {
-        this.throwableObjects.forEach((bottle, bottleIndex) => {
-            if (bottle.splashed) return;
-            if (!this.endboss.isDead() && bottle.isColliding(this.endboss) && !bottle.splashed) {
-                bottle.splash();
-                if (!isMuted) {
-                    this.bottleBreaking.play();
-                }
-                this.endboss.bottleHitEndboss();
-                this.endbossHealthBar.setPercentageHealthEndboss(this.endboss.energy);
-                if (!isMuted) {
-                    this.killedChicken.play();
-                }
-                this.handleEndbossIsDeadAnimation();
-            }
-        })
     }
 
     /**
@@ -330,57 +142,6 @@ class World {
             this.bottleBar.setPercentageBottle(this.currentBottleCount);
             this.lastThrowTime = currentThrowTime;
         }
-    }
-
-    /**
-     * Checks collection of bottle collectables
-     * Updates bottle count and removes collected bottles
-     * @function
-     * @returns {void}
-     */
-    checkCollectedBottles() {
-        this.level.bottles.forEach((bottle, index) => {
-            if (!bottle.collected && this.character.isColliding(bottle)) {
-                bottle.collected = true;
-                if (!isMuted) {
-                    this.collectBottle.play();
-                }
-                this.level.bottles.splice(index, 1);
-                this.currentBottleCount++;
-                this.bottleBar.setPercentageBottle(this.currentBottleCount);
-            }
-        });
-    }
-
-    /**
-     * Runs all collectable object collision checks
-     * Handles coins and bottles collection
-     * @function
-     * @returns {void}
-     */
-    checkCollectableCollisions() {
-        this.checkCollectedCoins();
-        this.checkCollectedBottles();
-    }
-
-    /**
-     * Checks collection of coin collectables
-     * Updates coin count and removes collected coins
-     * @function
-     * @returns {void}
-     */
-    checkCollectedCoins() {
-        this.level.coins.forEach((coin, index) => {
-            if (!coin.collected && this.character.isColliding(coin)) {
-                coin.collected = true;
-                if (!isMuted) {
-                    this.collectCoin.play();
-                }
-                this.character.coins++;
-                this.coinBar.setPercentageCoin(this.character.coins);
-                this.level.coins.splice(index, 1);
-            }
-        });
     }
 
     /**
