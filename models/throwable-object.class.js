@@ -40,27 +40,65 @@ class ThrowableObject extends MovableObject {
     }
 
     /**
- * Initiates the bottle throwing physics and animation
- * Sets upward velocity, applies gravity, plays sound, and starts movement loop
- * @function
- * @returns {void}
- */
+     * Initiates the bottle throwing physics and animation
+     * Sets upward velocity, applies gravity, plays sound, and starts movement loop
+     * @method
+     * @returns {void}
+     */
     throw() {
         this.speedY = 15;
         this.applyGravity();
         if (isMuted === false) {
             this.throwBottle.play();
         };
-        this.throwIntervall = startInterval(() => {
-            if (!this.splashed) {
-                this.playAnimation(this.IMAGES_THROWING);
-                this.x += 10;
-                if (this.y >= 355) {
-                    this.hitGround();
-                }
-            }
+        this.getThrowDirection();
+    }
 
+    /**
+     * Determines throwing direction based on character orientation
+     * Starts continuous movement loop checking both left and right directions
+     * @method
+     * @returns {void}
+     */
+    getThrowDirection() {
+        this.throwIntervall = startInterval(() => {
+            this.throwRight();
+            this.throwLeft();
         }, 25);
+    }
+
+    /**
+     * Moves bottle to the right when character faces right
+     * Animates bottle rotation and checks for ground collision
+     * @method
+     * @returns {void}
+     */
+    throwRight() {
+        if (!this.splashed && !this.world.character.otherDirection) {
+            this.playAnimation(this.IMAGES_THROWING);
+            this.x += 10;
+            if (this.y >= 355) {
+                this.hitGround();
+                this.world.bottleBreaking.play();
+            }
+        }
+    }
+
+    /**
+     * Moves bottle to the left when character faces left
+     * Animates bottle rotation and checks for ground collision
+     * @method
+     * @returns {void}
+     */
+    throwLeft() {
+        if (!this.splashed && this.world.character.otherDirection) {
+            this.playAnimation(this.IMAGES_THROWING);
+            this.x -= 10;
+            if (this.y >= 355) {
+                this.hitGround();
+                this.world.bottleBreaking.play();
+            }
+        }
     }
 
     /**

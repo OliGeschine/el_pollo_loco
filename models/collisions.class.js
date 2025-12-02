@@ -119,7 +119,7 @@ class Collision {
         if (!this.world.character.justStomped && this.world.character.isColliding(enemy)) {
             this.world.character.hitWeak();
             if (!isMuted) {
-                this.getHurt.play();
+                this.world.getHurt.play();
             }
             this.world.statusBar.setPercentageHealth(this.world.character.energy);
             console.log('energy:', this.world.character.energy);
@@ -210,7 +210,7 @@ class Collision {
             if (!bottle.collected && this.world.character.isColliding(bottle)) {
                 bottle.collected = true;
                 if (!isMuted) {
-                    this.collectBottle.play();
+                    this.world.collectBottle.play();
                 }
                 this.world.level.bottles.splice(index, 1);
                 this.world.currentBottleCount++;

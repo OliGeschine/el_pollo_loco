@@ -235,7 +235,6 @@ class World {
         if (mo.otherDirection) {
             this.flipImageBack(mo);
         }
-
     }
 
     /**
