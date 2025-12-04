@@ -55,7 +55,14 @@ footer {
 }
 
 footer a {
+    cursor: pointer;
     text-decoration: none;
+    color: #9a3a16;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+footer a:hover {
+    transform: scale(1.1);
 }
 
 .main_content {
@@ -284,13 +291,9 @@ footer a {
 
 /* ========== I M P R E S S U M ========== */
 .impressum {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
     padding: 1rem;
     margin-top: 2rem;
-    margin-bottom: 2rem;
-    overflow-y: scroll;
+    font-family: Arial;
 }
 
 .impressum h1 {
@@ -307,7 +310,7 @@ footer a {
 }
 
 .impressum p {
-    line-height: 1rem;
+    line-height: 16px;
 }
 
 .home_button {

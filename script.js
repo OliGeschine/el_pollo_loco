@@ -28,15 +28,48 @@ function startGame() {
  */
 function restartGame() {
     clearAllIntervals();
+    backgroundSound.pause();
+    document.getElementById('canvas').classList.remove('dNone');
+    document.getElementById('iconBar').classList.remove('dNone');
+    document.getElementById('overlay').classList.add('dNone');
+    world = null;
+    initLevel();
+    init();
+    setTimeout(() => {
+        if (window.innerWidth <= 1024 && typeof keyboard !== 'undefined') {
+            setupMobileControls();
+        }
+    }, 100);
+}
+
+function restartWonGame() {
+    clearAllIntervals();
+    victorySound.pause();
+    backgroundSound.pause();
     document.getElementById('canvas').classList.remove('dNone');
     document.getElementById('iconBar').classList.remove('dNone');
     document.getElementById('overlay').classList.add('dNone');
     document.getElementById('winning_overlay').classList.add('dNone');
-    document.getElementById('losing_overlay').classList.add('dNone');
     document.getElementById('winningScreenIconBar').classList.add('dNone');
-    document.getElementById('losingScreenIconBar').classList.add('dNone');
+    world = null;
+    initLevel();
+    init();
+    setTimeout(() => {
+        if (window.innerWidth <= 1024 && typeof keyboard !== 'undefined') {
+            setupMobileControls();
+        }
+    }, 100);
+}
+
+function restartLostGame() {
+    clearAllIntervals();
+    loseSound.pause();
     backgroundSound.pause();
-    backgroundSound.currentTime = 0;
+    document.getElementById('canvas').classList.remove('dNone');
+    document.getElementById('iconBar').classList.remove('dNone');
+    document.getElementById('overlay').classList.add('dNone');
+    document.getElementById('losing_overlay').classList.add('dNone');
+    document.getElementById('losingScreenIconBar').classList.add('dNone');
     world = null;
     initLevel();
     init();
@@ -61,7 +94,7 @@ function showWinningScreen() {
     clearAllIntervals();
     backgroundSound.pause();
     if (!isMuted) {
-        this.victorySound.play();
+        victorySound.play();
     }
 }
 
@@ -79,7 +112,7 @@ function showLosingScreen() {
     clearAllIntervals();
     backgroundSound.pause();
     if (!isMuted) {
-        this.loseSound.play();
+        loseSound.play();
     }
 }
 
