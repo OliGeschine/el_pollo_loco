@@ -5,7 +5,7 @@ class chickenHouse extends DrawableObject {
     otherDirection = true;
 
     constructor() {
-        super().loadImage('img/icons/chicken_house.png');
+        super().loadImage('img/icons/chicken-house.png');
         this.x = 4000;
     }
 
