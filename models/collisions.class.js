@@ -105,7 +105,7 @@ class Collision {
             this.world.character.justStomped = true;
             setTimeout(() => (this.world.character.justStomped = false), 500);
         }
-        this.world.handleEndbossIsDeadAnimation();
+        this.world.checkDeath();
     }
 
     /**
@@ -125,7 +125,7 @@ class Collision {
             console.log('energy:', this.world.character.energy);
 
         }
-        this.world.handleCharacterIsDeadAnimation();
+        this.world.checkDeath();
     }
 
     /**
@@ -143,7 +143,7 @@ class Collision {
             this.world.statusBar.setPercentageHealth(this.world.character.energy);
             console.log('energy:', this.world.character.energy);
         }
-        this.world.handleCharacterIsDeadAnimation();
+        this.world.checkDeath();
     }
 
     /**
@@ -194,7 +194,7 @@ class Collision {
                 if (!isMuted) {
                     this.world.killedChicken.play();
                 }
-                this.world.handleEndbossIsDeadAnimation();
+                this.world.checkDeath();
             }
         })
     }

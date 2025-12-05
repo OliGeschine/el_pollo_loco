@@ -45,6 +45,7 @@ function restartGame() {
 function restartWonGame() {
     clearAllIntervals();
     victorySound.pause();
+    loseSound.pause();
     backgroundSound.pause();
     document.getElementById('canvas').classList.remove('dNone');
     document.getElementById('iconBar').classList.remove('dNone');
@@ -86,17 +87,17 @@ function restartLostGame() {
  * @function
  * @returns {void}
  */
-function showWinningScreen() {
-    document.getElementById('canvas').classList.add('dNone');
-    document.getElementById('winning_overlay').classList.remove('dNone');
-    document.getElementById('iconBar').classList.add('dNone');
-    document.getElementById('winningScreenIconBar').classList.remove('dNone');
-    clearAllIntervals();
-    backgroundSound.pause();
-    if (!isMuted) {
-        victorySound.play();
-    }
-}
+// function showWinningScreen() {
+//     document.getElementById('canvas').classList.add('dNone');
+//     document.getElementById('winning_overlay').classList.remove('dNone');
+//     document.getElementById('iconBar').classList.add('dNone');
+//     document.getElementById('winningScreenIconBar').classList.remove('dNone');
+//     clearAllIntervals();
+//     backgroundSound.pause();
+//     if (!isMuted) {
+//         victorySound.play();
+//     }
+// }
 
 /**
  * Displays the losing screen when player fails the game
@@ -104,15 +105,34 @@ function showWinningScreen() {
  * @function
  * @returns {void}
  */
-function showLosingScreen() {
+// function showLosingScreen() {
+//     document.getElementById('canvas').classList.add('dNone');
+//     document.getElementById('losing_overlay').classList.remove('dNone');
+//     document.getElementById('iconBar').classList.add('dNone');
+//     document.getElementById('losingScreenIconBar').classList.remove('dNone');
+//     clearAllIntervals();
+//     backgroundSound.pause();
+//     if (!isMuted) {
+//         loseSound.play();
+//     }
+// }
+
+function toggleEndScreen(endbossIsDead, characterIsDead) {
+    let endScreen = document.getElementById('endScreenImg');
     document.getElementById('canvas').classList.add('dNone');
-    document.getElementById('losing_overlay').classList.remove('dNone');
+    document.getElementById('winning_overlay').classList.remove('dNone');
     document.getElementById('iconBar').classList.add('dNone');
-    document.getElementById('losingScreenIconBar').classList.remove('dNone');
+    document.getElementById('winningScreenIconBar').classList.remove('dNone');
     clearAllIntervals();
     backgroundSound.pause();
-    if (!isMuted) {
+    console.log('test', isMuted, endbossIsDead, characterIsDead);
+
+    if (!isMuted && endbossIsDead) {
+        victorySound.play();
+        endScreen.src = 'img/You won, you lost/You won A.png';
+    } else if (!isMuted && characterIsDead) {
         loseSound.play();
+        endScreen.src = 'img/You won, you lost/You lost.png';
     }
 }
 
@@ -136,9 +156,16 @@ function startInterval(callback, delay) {
  * @function
  * @returns {void}
  */
+// function clearAllIntervals() {
+//     intervalIds.forEach(clearInterval);
+//     intervalIds.length = 0;
+// }
+
 function clearAllIntervals() {
-    intervalIds.forEach(clearInterval);
-    intervalIds.length = 0;
+    // Alle aktiven Intervalle stoppen
+    for (let i = 1; i < 99999; i++) {
+        window.clearInterval(i);
+    }
 }
 
 /**

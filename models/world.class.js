@@ -27,6 +27,7 @@ class World {
     maxBottles = 5;
     currentBottleCount = 0;
     endbossIsDead = false;
+    characterIsDead = false;
     lastThrowTime = 0;
 
     characterDies = new Audio('audio/character_fainting.mp3');
@@ -82,6 +83,11 @@ class World {
         }, 200);
     }
 
+    checkDeath() {
+        this.handleEndbossIsDeadAnimation();
+        this.handleCharacterIsDeadAnimation();
+    }
+
     /**
      * Handles endboss death animation and victory sequence
      * Plays death sound and triggers winning screen
@@ -95,10 +101,13 @@ class World {
                     this.killedEndboss.play();
                 }
                 setTimeout(() => {
-                    this.endbossIsDead = true;
+
                 }, 3000);
                 setTimeout(() => {
-                    showWinningScreen();
+                    this.endbossIsDead = true;
+                    console.log('test', this.endbossIsDead);
+
+                    toggleEndScreen(this.endbossIsDead, this.characterIsDead);
                 }, 3000);
             }
         })
@@ -118,9 +127,8 @@ class World {
                     this.characterDies.play();
                 }
                 setTimeout(() => {
-                }, 3000);
-                setTimeout(() => {
-                    showLosingScreen();
+                    this.characterIsDead = true;
+                    toggleEndScreen(this.endbossIsDead, this.characterIsDead);
                 }, 3000);
             }
         })
