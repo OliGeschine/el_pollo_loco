@@ -28,7 +28,6 @@ function startGame() {
  */
 function restartGame() {
     clearAllIntervals();
-    backgroundSound.pause();
     world = null;
     initLevel();
     init();
@@ -45,16 +44,43 @@ function restartGame() {
  * @function
  * @returns {void}
  */
-function restartEndGame() {
+function restartWinGame() {
     clearAllIntervals();
-    victorySound.pause();
-    loseSound.pause();
+    if (world && world.victorySound) {
+        world.victorySound.pause();
+        world.victorySound.currentTime = 0;
+    }
     backgroundSound.pause();
+    backgroundSound.currentTime = 0;
+
     document.getElementById('canvas').classList.remove('dNone');
     document.getElementById('iconBar').classList.remove('dNone');
     document.getElementById('overlay').classList.add('dNone');
     document.getElementById('winning_overlay').classList.add('dNone');
     document.getElementById('winningScreenIconBar').classList.add('dNone');
+    world = null;
+    initLevel();
+    init();
+    setTimeout(() => {
+        if (window.innerWidth <= 1024 && typeof keyboard !== 'undefined') {
+            setupMobileControls();
+        }
+    }, 100);
+}
+
+function restartLoseGame() {
+    clearAllIntervals();
+    if (world && world.loseSound) {
+        world.loseSound.pause();
+        world.loseSound.currentTime = 0;
+    }
+    backgroundSound.pause();
+    backgroundSound.currentTime = 0;
+    document.getElementById('canvas').classList.remove('dNone');
+    document.getElementById('iconBar').classList.remove('dNone');
+    document.getElementById('overlay').classList.add('dNone');
+    document.getElementById('losing_overlay').classList.add('dNone');
+    document.getElementById('losingScreenIconBar').classList.add('dNone');
     world = null;
     initLevel();
     init();
@@ -74,21 +100,27 @@ function restartEndGame() {
  * @returns {void}
  */
 function toggleEndScreen(endbossIsDead, characterIsDead) {
-    let endScreen = document.getElementById('endScreenImg');
     document.getElementById('canvas').classList.add('dNone');
-    document.getElementById('winning_overlay').classList.remove('dNone');
     document.getElementById('iconBar').classList.add('dNone');
-    document.getElementById('winningScreenIconBar').classList.remove('dNone');
     clearAllIntervals();
     backgroundSound.pause();
-    console.log('test', isMuted, endbossIsDead, characterIsDead);
-
-    if (!isMuted && endbossIsDead) {
-        victorySound.play();
-        endScreen.src = 'img/You won, you lost/You won A.png';
-    } else if (!isMuted && characterIsDead) {
-        loseSound.play();
-        endScreen.src = 'img/You won, you lost/You lost.png';
+    if (endbossIsDead) {
+        document.getElementById('winning_overlay').classList.remove('dNone');
+        document.getElementById('winningScreenIconBar').classList.remove('dNone');
+        let winScreen = document.getElementById('winningScreenImg');
+        winScreen.src = 'img/You won, you lost/You won A.png';
+        if (!isMuted) {
+            world.victorySound.play();
+        }
+    }
+    if (characterIsDead) {
+        document.getElementById('losing_overlay').classList.remove('dNone');
+        document.getElementById('losingScreenIconBar').classList.remove('dNone');
+        let loseScreen = document.getElementById('losingScreenImg');
+        loseScreen.src = 'img/You won, you lost/You lost.png';
+        if (!isMuted) {
+            world.loseSound.play();
+        }
     }
 }
 

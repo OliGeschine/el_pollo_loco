@@ -38,6 +38,8 @@ class World {
     collectCoin = new Audio('audio/collect_coin.mp3');
     collectBottle = new Audio('audio/collect_bottle.mp3');
     bottleBreaking = new Audio('audio/bottle_breaking.mp3');
+    victorySound = new Audio('audio/victory.mp3');
+    loseSound = new Audio('audio/game_over.mp3');
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -52,6 +54,8 @@ class World {
         sounds.push(this.collectCoin);
         sounds.push(this.collectBottle);
         sounds.push(this.bottleBreaking);
+        sounds.push(this.victorySound);
+        sounds.push(this.loseSound);
         this.draw();
         this.setWorld();
         this.run();
@@ -239,7 +243,7 @@ class World {
         }
 
         mo.draw(this.ctx);
-        mo.drawFrame(this.ctx);
+        // mo.drawFrame(this.ctx);
 
         if (mo.otherDirection) {
             this.flipImageBack(mo);

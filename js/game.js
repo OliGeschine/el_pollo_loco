@@ -6,8 +6,6 @@ let isMuted = localStorage.getItem('isMuted') === 'true';
 
 backgroundSound = new Audio('audio/background_music.mp3');
 backgroundSound.loop = true;
-victorySound = new Audio('audio/victory.mp3');
-loseSound = new Audio('audio/game_over.mp3');
 
 /**
  * Initializes the game by setting up canvas, world, and audio
@@ -18,11 +16,13 @@ loseSound = new Audio('audio/game_over.mp3');
 function init() {
     canvas = document.getElementById('canvas');
     world = new World(canvas, keyboard);
-    if (isMuted) {
-        backgroundSound.muted = true;
-    } else {
-        backgroundSound.play();
-    }
+    setTimeout(() => {
+        if (isMuted) {
+            backgroundSound.muted = true;
+        } else {
+            backgroundSound.play().catch(console.error);
+        }
+    }, 100);
     sounds.push(backgroundSound);
     updateSoundUI();
 }

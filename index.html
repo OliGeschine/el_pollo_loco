@@ -77,6 +77,13 @@
         </div>
     </div>
 
+    <div id="overlay" class="start_screen">
+        <div class="game_buttons">
+            <img src="img/icons/start-game.png" onclick="startGame()">
+        </div>
+        <img src="img/9_intro_outro_screens/start/startscreen_1.png" width="720" height="480">
+    </div>
+
     <div id="content" class="main_content" width="720" height="480">
         <div id="iconBar" class="icon_bar dNone">
             <div>
@@ -92,23 +99,29 @@
                 <img src="img/icons/restart-game.png" alt="restart">
             </div>
         </div>
-        <div id="overlay" class="start_screen">
-            <div class="game_buttons">
-                <img src="img/icons/start-game.png" onclick="startGame()">
-            </div>
-            <img src="img/9_intro_outro_screens/start/startscreen_1.png" width="720" height="480">
-        </div>
 
         <div id="winning_overlay" class="winning_screen dNone">
             <div id="winningScreenIconBar" class="game_buttons dNone">
                 <div id="frontPage">
                     <img src="img/icons/return-to-home.png" alt="frontPage" onclick="window.location.reload()">
                 </div>
-                <div onclick="restartEndGame()">
+                <div onclick="restartWinGame()">
                     <img src="img/icons/restart-game-white.png" alt="restart">
                 </div>
             </div>
-            <img id="endScreenImg" width="720" height="480">
+            <img id="winningScreenImg" width="720" height="480">
+        </div>
+
+        <div id="losing_overlay" class="losing_screen dNone">
+            <div id="losingScreenIconBar" class="game_buttons dNone">
+                <div id="frontPage">
+                    <img src="img/icons/return-to-home.png" alt="frontPage" onclick="window.location.reload()">
+                </div>
+                <div onclick="restartLoseGame()">
+                    <img src="img/icons/restart-game-white.png" alt="restart">
+                </div>
+            </div>
+            <img id="losingScreenImg" width="720" height="480">
         </div>
 
 
