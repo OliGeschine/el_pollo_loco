@@ -29,9 +29,6 @@ function startGame() {
 function restartGame() {
     clearAllIntervals();
     backgroundSound.pause();
-    document.getElementById('canvas').classList.remove('dNone');
-    document.getElementById('iconBar').classList.remove('dNone');
-    document.getElementById('overlay').classList.add('dNone');
     world = null;
     initLevel();
     init();
@@ -42,7 +39,13 @@ function restartGame() {
     }, 100);
 }
 
-function restartWonGame() {
+/**
+ * Restarts the game from end screens (winning/losing overlay)
+ * Clears intervals, stops all sounds, hides overlays, and reinitializes game
+ * @function
+ * @returns {void}
+ */
+function restartEndGame() {
     clearAllIntervals();
     victorySound.pause();
     loseSound.pause();
@@ -62,61 +65,14 @@ function restartWonGame() {
     }, 100);
 }
 
-function restartLostGame() {
-    clearAllIntervals();
-    loseSound.pause();
-    backgroundSound.pause();
-    document.getElementById('canvas').classList.remove('dNone');
-    document.getElementById('iconBar').classList.remove('dNone');
-    document.getElementById('overlay').classList.add('dNone');
-    document.getElementById('losing_overlay').classList.add('dNone');
-    document.getElementById('losingScreenIconBar').classList.add('dNone');
-    world = null;
-    initLevel();
-    init();
-    setTimeout(() => {
-        if (window.innerWidth <= 1024 && typeof keyboard !== 'undefined') {
-            setupMobileControls();
-        }
-    }, 100);
-}
-
 /**
- * Displays the winning screen when player completes the game
- * Hides canvas, shows victory overlay, stops all intervals and plays victory sound
+ * Toggles between winning and losing screens based on game outcome
+ * Shows appropriate overlay, plays victory/defeat sound, and updates UI
  * @function
+ * @param {boolean} endbossIsDead - Whether the endboss has been defeated
+ * @param {boolean} characterIsDead - Whether the character has died
  * @returns {void}
  */
-// function showWinningScreen() {
-//     document.getElementById('canvas').classList.add('dNone');
-//     document.getElementById('winning_overlay').classList.remove('dNone');
-//     document.getElementById('iconBar').classList.add('dNone');
-//     document.getElementById('winningScreenIconBar').classList.remove('dNone');
-//     clearAllIntervals();
-//     backgroundSound.pause();
-//     if (!isMuted) {
-//         victorySound.play();
-//     }
-// }
-
-/**
- * Displays the losing screen when player fails the game
- * Hides canvas, shows game over overlay, stops all intervals and plays lose sound
- * @function
- * @returns {void}
- */
-// function showLosingScreen() {
-//     document.getElementById('canvas').classList.add('dNone');
-//     document.getElementById('losing_overlay').classList.remove('dNone');
-//     document.getElementById('iconBar').classList.add('dNone');
-//     document.getElementById('losingScreenIconBar').classList.remove('dNone');
-//     clearAllIntervals();
-//     backgroundSound.pause();
-//     if (!isMuted) {
-//         loseSound.play();
-//     }
-// }
-
 function toggleEndScreen(endbossIsDead, characterIsDead) {
     let endScreen = document.getElementById('endScreenImg');
     document.getElementById('canvas').classList.add('dNone');
@@ -156,26 +112,10 @@ function startInterval(callback, delay) {
  * @function
  * @returns {void}
  */
-// function clearAllIntervals() {
-//     intervalIds.forEach(clearInterval);
-//     intervalIds.length = 0;
-// }
-
 function clearAllIntervals() {
-    // Alle aktiven Intervalle stoppen
     for (let i = 1; i < 99999; i++) {
         window.clearInterval(i);
     }
-}
-
-/**
- * Toggles fullscreen mode for the game overlay
- * Requests fullscreen API on the overlay element
- * @function
- * @returns {void}
- */
-function fullscreen() {
-    overlay.requestFullscreen();
 }
 
 /**

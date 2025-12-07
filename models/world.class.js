@@ -11,7 +11,7 @@ class World {
     clouds = level1.clouds;
     backgroundObjects = level1.backgroundObjects;
     canvas;
-    ctx; // kurzform für context
+    ctx;
     keyboard;
     collision;
     cameraX = 0;
@@ -83,6 +83,12 @@ class World {
         }, 200);
     }
 
+    /**
+ * Checks and handles character and endboss death states
+ * Triggers appropriate death animations and screen transitions
+ * @method
+ * @returns {void}
+ */
     checkDeath() {
         this.handleEndbossIsDeadAnimation();
         this.handleCharacterIsDeadAnimation();
@@ -101,14 +107,9 @@ class World {
                     this.killedEndboss.play();
                 }
                 setTimeout(() => {
-
-                }, 3000);
-                setTimeout(() => {
                     this.endbossIsDead = true;
-                    console.log('test', this.endbossIsDead);
-
                     toggleEndScreen(this.endbossIsDead, this.characterIsDead);
-                }, 3000);
+                }, 2000);
             }
         })
     }

@@ -39,15 +39,15 @@ class DrawableObject {
  * @param {CanvasRenderingContext2D} ctx - Canvas rendering context
  * @returns {void}
  */
-    drawFrame(ctx) {
-        if (this instanceof Character || this instanceof Chicken || this instanceof smallChicken || this instanceof Coin || this instanceof Bottle || this instanceof Endboss) {
-            ctx.beginPath();
-            ctx.lineWidth = '1';
-            ctx.strokeStyle = 'red';
-            ctx.rect(this.x + this.offset.left, this.y + this.offset.top, this.width - this.offset.right - this.offset.left, this.height - this.offset.top - this.offset.bottom);
-            ctx.stroke();
-        }
-    }
+    // drawFrame(ctx) {
+    //     if (this instanceof Character || this instanceof Chicken || this instanceof smallChicken || this instanceof Coin || this instanceof Bottle || this instanceof Endboss) {
+    //         ctx.beginPath();
+    //         ctx.lineWidth = '1';
+    //         ctx.strokeStyle = 'red';
+    //         ctx.rect(this.x + this.offset.left, this.y + this.offset.top, this.width - this.offset.right - this.offset.left, this.height - this.offset.top - this.offset.bottom);
+    //         ctx.stroke();
+    //     }
+    // }
 
     /**
  * Loads multiple images and stores them in image cache
