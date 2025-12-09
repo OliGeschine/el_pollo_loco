@@ -29,6 +29,9 @@ class World {
     endbossIsDead = false;
     characterIsDead = false;
     lastThrowTime = 0;
+    deathTimeouts = [];
+    endbossDeathHandled = false;
+    characterDeathHandled = false;
 
     characterDies = new Audio('audio/character_fainting.mp3');
     killedEndboss = new Audio('audio/endboss_fainting.mp3');
@@ -40,26 +43,30 @@ class World {
     bottleBreaking = new Audio('audio/bottle_breaking.mp3');
     victorySound = new Audio('audio/victory.mp3');
     loseSound = new Audio('audio/game_over.mp3');
+    walking = new Audio('audio/walking.mp3');
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
         this.collision = new Collision(this);
-        sounds.push(this.characterDies);
-        sounds.push(this.killedEndboss);
-        sounds.push(this.killedChicken);
-        sounds.push(this.killedSmallChicken);
-        sounds.push(this.getHurt);
-        sounds.push(this.collectCoin);
-        sounds.push(this.collectBottle);
-        sounds.push(this.bottleBreaking);
-        sounds.push(this.victorySound);
-        sounds.push(this.loseSound);
-        this.draw();
-        this.setWorld();
-        this.run();
-        this.collision.collisions();
+        if (sounds.length === 0) {
+            sounds.push(this.characterDies,
+                this.killedEndboss,
+                this.killedChicken,
+                this.killedSmallChicken,
+                this.getHurt,
+                this.collectCoin,
+                this.collectBottle,
+                this.bottleBreaking,
+                this.victorySound,
+                this.loseSound,
+                this.walking);
+            this.draw();
+            this.setWorld();
+            this.run();
+            this.collision.collisions();
+        }
     }
 
     /**
@@ -105,17 +112,19 @@ class World {
      * @returns {void}
      */
     handleEndbossIsDeadAnimation() {
-        setTimeout(() => {
-            if (this.endboss.energy <= 0) {
-                if (!isMuted) {
-                    this.killedEndboss.play();
-                }
-                setTimeout(() => {
+        if (this.endboss.energy <= 0 && !this.endbossDeathHandled) {
+            this.endbossDeathHandled = true;
+            if (!isMuted) {
+                this.killedEndboss.play();
+            }
+            const timeoutId = setTimeout(() => {
+                if (this && !this.characterIsDead) {
                     this.endbossIsDead = true;
                     toggleEndScreen(this.endbossIsDead, this.characterIsDead);
-                }, 2000);
-            }
-        })
+                }
+            }, 2000);
+            this.deathTimeouts.push(timeoutId);
+        }
     }
 
     /**
@@ -125,18 +134,33 @@ class World {
      * @returns {void}
      */
     handleCharacterIsDeadAnimation() {
-        setTimeout(() => {
-            if (this.character.energy <= 0) {
-                this.getHurt.muted = true;
-                if (!isMuted) {
-                    this.characterDies.play();
-                }
-                setTimeout(() => {
+        if (this.character.energy <= 0 && !this.characterDeathHandled) {
+            this.characterDeathHandled = true;
+            this.getHurt.muted = true;
+            if (!isMuted) {
+                this.characterDies.play();
+            }
+            const timeoutId = setTimeout(() => {
+                if (this && !this.endbossIsDead) {
                     this.characterIsDead = true;
                     toggleEndScreen(this.endbossIsDead, this.characterIsDead);
-                }, 3000);
-            }
-        })
+                }
+            }, 3000);
+            this.deathTimeouts.push(timeoutId);
+        }
+    }
+
+    /**
+ * Cleans up all pending timeouts and resets death states
+ * Called before destroying world instance
+ * @function
+ * @returns {void}
+ */
+    cleanup() {
+        this.deathTimeouts.forEach(timeoutId => clearTimeout(timeoutId));
+        this.deathTimeouts = [];
+        this.endbossDeathHandled = false;
+        this.characterDeathHandled = false;
     }
 
     /**

@@ -1,4 +1,6 @@
 let intervalIds = [];
+let mobileControlsSetup = false;
+let mobileEventListeners = [];
 
 /**
  * Starts the game by hiding overlay and initializing game components
@@ -27,14 +29,16 @@ function startGame() {
  * @returns {void}
  */
 function restartGame() {
+    resetMobileControls();
     clearAllIntervals();
+    if (world && typeof world.cleanup === 'function') {
+        world.cleanup();
+    }
     world = null;
     initLevel();
     init();
     setTimeout(() => {
-        if (window.innerWidth <= 1024 && typeof keyboard !== 'undefined') {
-            setupMobileControls();
-        }
+        initMobileControls();
     }, 100);
 }
 
@@ -45,22 +49,26 @@ function restartGame() {
  * @returns {void}
  */
 function restartWinGame() {
-    clearAllIntervals();
+    resetMobileControls();
     if (world && world.victorySound) {
         world.victorySound.pause();
         world.victorySound.currentTime = 0;
     }
-    backgroundSound.pause();
-    backgroundSound.currentTime = 0;
-
-    document.getElementById('canvas').classList.remove('dNone');
-    document.getElementById('iconBar').classList.remove('dNone');
-    document.getElementById('overlay').classList.add('dNone');
-    document.getElementById('winning_overlay').classList.add('dNone');
-    document.getElementById('winningScreenIconBar').classList.add('dNone');
+    sounds.forEach(sound => {
+        if (sound) {
+            sound.pause();
+            sound.currentTime = 0;
+        }
+    });
+    sounds.length = 0;
+    clearAllIntervals();
+    if (world && typeof world.cleanup === 'function') {
+        world.cleanup();
+    }
     world = null;
     initLevel();
     init();
+    resetFromWinningScreen();
     setTimeout(() => {
         if (window.innerWidth <= 1024 && typeof keyboard !== 'undefined') {
             setupMobileControls();
@@ -69,26 +77,47 @@ function restartWinGame() {
 }
 
 function restartLoseGame() {
-    clearAllIntervals();
+    resetMobileControls();
     if (world && world.loseSound) {
         world.loseSound.pause();
         world.loseSound.currentTime = 0;
     }
-    backgroundSound.pause();
-    backgroundSound.currentTime = 0;
-    document.getElementById('canvas').classList.remove('dNone');
-    document.getElementById('iconBar').classList.remove('dNone');
-    document.getElementById('overlay').classList.add('dNone');
-    document.getElementById('losing_overlay').classList.add('dNone');
-    document.getElementById('losingScreenIconBar').classList.add('dNone');
+    sounds.forEach(sound => {
+        if (sound) {
+            sound.pause();
+            sound.currentTime = 0;
+        }
+    });
+    sounds.length = 0;
+    clearAllIntervals();
+    if (world && typeof world.cleanup === 'function') {
+        world.cleanup();
+    }
     world = null;
     initLevel();
     init();
+    resetFromLosingScreen();
     setTimeout(() => {
         if (window.innerWidth <= 1024 && typeof keyboard !== 'undefined') {
             setupMobileControls();
         }
     }, 100);
+}
+
+function resetFromWinningScreen() {
+    document.getElementById('canvas').classList.remove('dNone');
+    document.getElementById('iconBar').classList.remove('dNone');
+    document.getElementById('overlay').classList.add('dNone');
+    document.getElementById('winning_overlay').classList.add('dNone');
+    document.getElementById('winningScreenIconBar').classList.add('dNone');
+}
+
+function resetFromLosingScreen() {
+    document.getElementById('canvas').classList.remove('dNone');
+    document.getElementById('iconBar').classList.remove('dNone');
+    document.getElementById('overlay').classList.add('dNone');
+    document.getElementById('losing_overlay').classList.add('dNone');
+    document.getElementById('losingScreenIconBar').classList.add('dNone');
 }
 
 /**
@@ -102,15 +131,17 @@ function restartLoseGame() {
 function toggleEndScreen(endbossIsDead, characterIsDead) {
     document.getElementById('canvas').classList.add('dNone');
     document.getElementById('iconBar').classList.add('dNone');
-    clearAllIntervals();
-    backgroundSound.pause();
+    if (backgroundSound) {
+        backgroundSound.pause();
+        backgroundSound.currentTime = 0;
+    }
     if (endbossIsDead) {
         document.getElementById('winning_overlay').classList.remove('dNone');
         document.getElementById('winningScreenIconBar').classList.remove('dNone');
         let winScreen = document.getElementById('winningScreenImg');
         winScreen.src = 'img/You won, you lost/You won A.png';
-        if (!isMuted) {
-            world.victorySound.play();
+        if (!isMuted && world && world.victorySound) {
+            world.victorySound.play().catch(console.error);
         }
     }
     if (characterIsDead) {
@@ -118,8 +149,8 @@ function toggleEndScreen(endbossIsDead, characterIsDead) {
         document.getElementById('losingScreenIconBar').classList.remove('dNone');
         let loseScreen = document.getElementById('losingScreenImg');
         loseScreen.src = 'img/You won, you lost/You lost.png';
-        if (!isMuted) {
-            world.loseSound.play();
+        if (!isMuted && world && world.loseSound) {
+            world.loseSound.play().catch(console.error);
         }
     }
 }
@@ -145,9 +176,8 @@ function startInterval(callback, delay) {
  * @returns {void}
  */
 function clearAllIntervals() {
-    for (let i = 1; i < 99999; i++) {
-        window.clearInterval(i);
-    }
+    intervalIds.forEach(id => clearInterval(id));
+    intervalIds = [];
 }
 
 /**
@@ -210,90 +240,79 @@ function initMobileControls() {
  * @returns {void}
  */
 function setupMobileControls() {
-    if (typeof keyboard === 'undefined') {
-        setTimeout(setupMobileControls, 100);
+    if (typeof keyboard === 'undefined' || mobileControlsSetup) {
         return;
     }
+    mobileControlsSetup = true;
+
     const btnLeft = document.getElementById('btn-left');
-    const btnRight = document.getElementById('btn-right');
-    const btnJump = document.getElementById('btn-jump');
-    const btnThrow = document.getElementById('btn-throw');
-
     if (btnLeft) {
-        btnLeft.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            keyboard.LEFT = true;
-        });
-        btnLeft.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            keyboard.LEFT = false;
-        });
-        btnLeft.addEventListener('mousedown', (e) => {
-            e.preventDefault();
-            keyboard.LEFT = true;
-        });
-        btnLeft.addEventListener('mouseup', (e) => {
-            e.preventDefault();
-            keyboard.LEFT = false;
+        const handlers = {
+            touchstart: (e) => { e.preventDefault(); keyboard.LEFT = true; },
+            touchend: (e) => { e.preventDefault(); keyboard.LEFT = false; },
+            mousedown: (e) => { e.preventDefault(); keyboard.LEFT = true; },
+            mouseup: (e) => { e.preventDefault(); keyboard.LEFT = false; }
+        };
+
+        Object.entries(handlers).forEach(([event, handler]) => {
+            btnLeft.addEventListener(event, handler);
+            mobileEventListeners.push({ element: btnLeft, event, handler });
         });
     }
 
+    const btnRight = document.getElementById('btn-right');
     if (btnRight) {
-        btnRight.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            keyboard.RIGHT = true;
-        });
-        btnRight.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            keyboard.RIGHT = false;
-        });
-        btnRight.addEventListener('mousedown', (e) => {
-            e.preventDefault();
-            keyboard.RIGHT = true;
-        });
-        btnRight.addEventListener('mouseup', (e) => {
-            e.preventDefault();
-            keyboard.RIGHT = false;
+        const handlers = {
+            touchstart: (e) => { e.preventDefault(); keyboard.RIGHT = true; },
+            touchend: (e) => { e.preventDefault(); keyboard.RIGHT = false; },
+            mousedown: (e) => { e.preventDefault(); keyboard.RIGHT = true; },
+            mouseup: (e) => { e.preventDefault(); keyboard.RIGHT = false; }
+        };
+
+        Object.entries(handlers).forEach(([event, handler]) => {
+            btnRight.addEventListener(event, handler);
+            mobileEventListeners.push({ element: btnRight, event, handler });
         });
     }
 
+    const btnJump = document.getElementById('btn-jump');
     if (btnJump) {
-        btnJump.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            keyboard.UP = true;
-        });
-        btnJump.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            keyboard.UP = false;
-        });
-        btnJump.addEventListener('mousedown', (e) => {
-            e.preventDefault();
-            keyboard.UP = true;
-        });
-        btnJump.addEventListener('mouseup', (e) => {
-            e.preventDefault();
-            keyboard.UP = false;
+        const handlers = {
+            touchstart: (e) => { e.preventDefault(); keyboard.UP = true; },
+            touchend: (e) => { e.preventDefault(); keyboard.UP = false; },
+            mousedown: (e) => { e.preventDefault(); keyboard.UP = true; },
+            mouseup: (e) => { e.preventDefault(); keyboard.UP = false; }
+        };
+
+        Object.entries(handlers).forEach(([event, handler]) => {
+            btnJump.addEventListener(event, handler);
+            mobileEventListeners.push({ element: btnJump, event, handler });
         });
     }
 
+    const btnThrow = document.getElementById('btn-throw');
     if (btnThrow) {
-        btnThrow.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            keyboard.SPACE = true;
-        });
-        btnThrow.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            keyboard.SPACE = false;
-        });
-        btnThrow.addEventListener('mousedown', (e) => {
-            e.preventDefault();
-            keyboard.SPACE = true;
-        });
-        btnThrow.addEventListener('mouseup', (e) => {
-            e.preventDefault();
-            keyboard.SPACE = false;
+        const handlers = {
+            touchstart: (e) => { e.preventDefault(); keyboard.SPACE = true; },
+            touchend: (e) => { e.preventDefault(); keyboard.SPACE = false; },
+            mousedown: (e) => { e.preventDefault(); keyboard.SPACE = true; },
+            mouseup: (e) => { e.preventDefault(); keyboard.SPACE = false; }
+        };
+
+        Object.entries(handlers).forEach(([event, handler]) => {
+            btnThrow.addEventListener(event, handler);
+            mobileEventListeners.push({ element: btnThrow, event, handler });
         });
     }
+}
+
+function resetMobileControls() {
+    // Event-Listener entfernen
+    mobileEventListeners.forEach(({ element, event, handler }) => {
+        element.removeEventListener(event, handler);
+    });
+    mobileEventListeners = [];
+    mobileControlsSetup = false;
 }
 
 /**
