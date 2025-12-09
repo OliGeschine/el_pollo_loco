@@ -76,18 +76,37 @@ class Endboss extends MovableObject {
     animate() {
         this.walkInterval = startInterval(() => {
             let playerX = this.world.character.x;
+            let endbossX = this.x;
+            let distance = playerX - endbossX;
+            let deadzone = 10;
             if (playerX >= 3500) {
                 this.hadFirstContact = true
             }
-            if (!this.isDead() && this.hadFirstContact == true) {
-                this.moveLeft();
+            if (!this.isDead() && this.hadFirstContact) {
+                if (distance < -deadzone) {
+                    this.moveLeft();
+                    this.otherDirection = false;
+                } else if (distance > deadzone) {
+                    this.moveRight();
+                    this.otherDirection = true;
+                }
             }
         }, 1000 / 60);
+        this.endbossMovingIntervall();
+    }
 
-        startInterval(() => {
-            if (!this.world || !this.world.character.x) return;
+    /**
+     * Handles endboss animation states based on distance to player and current state
+     * Switches between angry, walking, attacking, hurt, and dead animations
+     * @function
+     * @returns {void}
+     */
+    endbossMovingIntervall() {
+        this.animationInterval = startInterval(() => {
+            if (!this.world || !this.world.character) return;
+
             let playerX = this.world.character.x;
-            let endbossX = this.world.endboss.x;
+            let endbossX = this.x;
             let distance = endbossX - playerX;
 
             if (this.isDead()) {
@@ -102,8 +121,7 @@ class Endboss extends MovableObject {
                 this.playAnimation(this.IMAGES_ATTACKING);
             } else if (this.hadFirstContact) {
                 this.playAnimation(this.IMAGES_WALKING);
-            }
-            else {
+            } else {
                 this.playAnimation(this.IMAGES_ANGRY);
             }
         }, 200);
