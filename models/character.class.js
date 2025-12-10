@@ -7,7 +7,7 @@
 class Character extends MovableObject {
     height = 230;
     width = 100;
-    x = 50;
+    x = 200;
     y = 200;
     offset = {
         top: 100,
@@ -123,7 +123,7 @@ class Character extends MovableObject {
                 this.moveRight();
                 this.otherDirection = false;
             }
-            if (this.world.keyboard.LEFT && this.x > 50) {
+            if (this.world.keyboard.LEFT && this.x > 35) {
                 this.moveLeft();
                 this.otherDirection = true;
             }
@@ -131,7 +131,7 @@ class Character extends MovableObject {
                 this.jump();
             }
             this.stayOnGround();
-            this.world.cameraX = -this.x + 50;
+            this.world.cameraX = -this.x + 200;
         }, 1000 / 60);
     }
 

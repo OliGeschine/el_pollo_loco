@@ -38,6 +38,10 @@ function initLevel() {
             new Clouds('img/5_background/layers/4_clouds/2.png', 4100),
         ],
         [
+            new BackgroundObject('img/5_background/layers/air.png', -720),
+            new BackgroundObject('img/5_background/layers/3_third_layer/2.png', -720),
+            new BackgroundObject('img/5_background/layers/2_second_layer/2.png', -720),
+            new BackgroundObject('img/5_background/layers/1_first_layer/2.png', -720),
             new BackgroundObject('img/5_background/layers/air.png', 0),
             new BackgroundObject('img/5_background/layers/3_third_layer/1.png', 0),
             new BackgroundObject('img/5_background/layers/2_second_layer/1.png', 0),
@@ -67,6 +71,9 @@ function initLevel() {
             new BackgroundObject('img/5_background/layers/2_second_layer/1.png', 4320),
             new BackgroundObject('img/5_background/layers/1_first_layer/1.png', 4320),
 
+        ],
+        [
+            new Saloon('img/icons/saloon.png', -200),
         ],
         [
             new Coin(700),

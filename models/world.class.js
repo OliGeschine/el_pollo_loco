@@ -17,6 +17,7 @@ class World {
     coinBar = new Coinbar();
     bottleBar = new Bottlebar();
     chickenHouse = new chickenHouse();
+    // saloon = new Saloon();
     throwableObjects = [];
     stompedEnemies = [];
     currentBottleCount = 0;
@@ -209,6 +210,7 @@ class World {
         this.ctx.translate(this.cameraX, 0);
         this.addObjectsToMap(this.level.backgroundObjects);
         this.addObjectsToMap(this.level.clouds);
+        this.addObjectsToMap(this.level.saloons);
 
         this.ctx.translate(-this.cameraX, 0); // Back
         // ----- space for fixed objects ----- //

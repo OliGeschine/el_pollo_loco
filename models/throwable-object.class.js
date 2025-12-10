@@ -73,6 +73,9 @@ class ThrowableObject extends MovableObject {
                 }
                 if (this.y >= 355) {
                     this.hitGround();
+                    if (!isMuted) {
+                        this.world.bottleBreaking.play();
+                    }
                 }
             }
         }, 25);
@@ -112,6 +115,22 @@ class ThrowableObject extends MovableObject {
                 this.world.throwableObjects.splice(index, 1);
             }
         }, 600);
+    }
+
+    /**
+ * Cleans up throwable object intervals
+ * @function
+ * @returns {void}
+ */
+    cleanup() {
+        if (this.throwInterval) {
+            clearInterval(this.throwInterval);
+            this.throwInterval = null;
+        }
+        if (this.splashingInterval) {
+            clearInterval(this.splashingInterval);
+            this.splashingInterval = null;
+        }
     }
 
 }
