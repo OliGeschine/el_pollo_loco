@@ -26,8 +26,16 @@ function initLevel() {
             new smallChicken(),
         ],
         [
-            new Clouds('img/5_background/layers/4_clouds/1.png'),
-            new Clouds('img/5_background/layers/4_clouds/2.png'),
+            new Clouds('img/5_background/layers/4_clouds/1.png', 300),
+            new Clouds('img/5_background/layers/4_clouds/2.png', 700),
+            new Clouds('img/5_background/layers/4_clouds/1.png', 1200),
+            new Clouds('img/5_background/layers/4_clouds/2.png', 1600),
+            new Clouds('img/5_background/layers/4_clouds/1.png', 2100),
+            new Clouds('img/5_background/layers/4_clouds/2.png', 2500),
+            new Clouds('img/5_background/layers/4_clouds/1.png', 2900),
+            new Clouds('img/5_background/layers/4_clouds/2.png', 3400),
+            new Clouds('img/5_background/layers/4_clouds/2.png', 3700),
+            new Clouds('img/5_background/layers/4_clouds/2.png', 4100),
         ],
         [
             new BackgroundObject('img/5_background/layers/air.png', 0),
