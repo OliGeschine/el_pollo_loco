@@ -7,9 +7,6 @@ class World {
     character = new Character();
     endboss = new Endboss();
     level = level1;
-    enemies = level1.enemies;
-    clouds = level1.clouds;
-    backgroundObjects = level1.backgroundObjects;
     canvas;
     ctx;
     keyboard;
@@ -21,10 +18,7 @@ class World {
     bottleBar = new Bottlebar();
     chickenHouse = new chickenHouse();
     throwableObjects = [];
-    collectedCoins = [];
-    collectedBottles = [];
     stompedEnemies = [];
-    maxBottles = 5;
     currentBottleCount = 0;
     endbossIsDead = false;
     characterIsDead = false;
@@ -32,6 +26,8 @@ class World {
     deathTimeouts = [];
     endbossDeathHandled = false;
     characterDeathHandled = false;
+    animatonId = null;
+    isDestroyed = false;
 
     characterDies = new Audio('audio/character_fainting.mp3');
     killedEndboss = new Audio('audio/endboss_fainting.mp3');
@@ -62,6 +58,7 @@ class World {
                 this.victorySound,
                 this.loseSound,
                 this.walking);
+            this.animationId = 0;
             this.draw();
             this.setWorld();
             this.run();
@@ -157,10 +154,24 @@ class World {
  * @returns {void}
  */
     cleanup() {
+        this.isDestroyed = true;
+        if (this.animationId) {
+            cancelAnimationFrame(this.animationId);
+            this.animationId = null;
+        }
         this.deathTimeouts.forEach(timeoutId => clearTimeout(timeoutId));
         this.deathTimeouts = [];
         this.endbossDeathHandled = false;
         this.characterDeathHandled = false;
+        if (this.character && typeof this.character.cleanup === 'function') {
+            this.character.cleanup();
+        }
+        if (this.endboss && typeof this.endboss.cleanup === 'function') {
+            this.endboss.cleanup();
+        }
+        if (this.collision && typeof this.collision.cleanup === 'function') {
+            this.collision.cleanup();
+        }
     }
 
     /**
@@ -207,15 +218,17 @@ class World {
         this.addObjectsToMap(this.level.bottles);
         this.addObjectsToMap(this.level.coins);
         this.addObjectsToMap(this.throwableObjects);
-        this.addObjectsToMap(this.collectedCoins);
-        this.addObjectsToMap(this.collectedBottles);
         this.addToMap(this.chickenHouse);
         this.ctx.translate(-this.cameraX, 0);
 
-        let self = this
-        requestAnimationFrame(function () {
-            self.draw();
-        });
+        if (this.animationId !== null) {
+            let self = this;
+            this.animationId = requestAnimationFrame(function () {
+                if (self && self.animationId !== null && !self.isDestroyed) {
+                    self.draw();
+                }
+            });
+        }
     }
 
     /**

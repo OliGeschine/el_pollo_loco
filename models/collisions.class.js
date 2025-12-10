@@ -122,8 +122,6 @@ class Collision {
                 this.world.getHurt.play();
             }
             this.world.statusBar.setPercentageHealth(this.world.character.energy);
-            console.log('energy:', this.world.character.energy);
-
         }
         this.world.checkDeath();
     }
@@ -141,7 +139,6 @@ class Collision {
                 this.world.getHurt.play();
             }
             this.world.statusBar.setPercentageHealth(this.world.character.energy);
-            console.log('energy:', this.world.character.energy);
         }
         this.world.checkDeath();
     }
@@ -250,5 +247,15 @@ class Collision {
         });
     }
 
-
+    /**
+     * Cleans up collision intervals when collision system is destroyed
+     * @function
+     * @returns {void}
+     */
+    cleanup() {
+        if (this.collisionInterval) {
+            clearInterval(this.collisionInterval);
+            this.collisionInterval = null;
+        }
+    }
 }

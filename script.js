@@ -14,9 +14,9 @@ function startGame() {
     document.getElementById('iconBar').classList.remove('dNone');
     initLevel();
     init();
-
     setTimeout(() => {
-        if (window.innerWidth <= 1024 && typeof keyboard !== 'undefined') {
+        if (window.innerWidth <= 1024 && window.innerHeight <= window.innerWidth) {
+            document.getElementById('mobile-controls')?.classList.remove('dNone');
             setupMobileControls();
         }
     }, 100);
@@ -30,16 +30,29 @@ function startGame() {
  */
 function restartGame() {
     resetMobileControls();
-    clearAllIntervals();
+    sounds.forEach(sound => {
+        if (sound) {
+            sound.pause();
+            sound.currentTime = 0;
+        }
+    });
+    sounds.length = 0;
     if (world && typeof world.cleanup === 'function') {
         world.cleanup();
     }
+    clearAllIntervals();
     world = null;
-    initLevel();
-    init();
     setTimeout(() => {
-        initMobileControls();
-    }, 100);
+        initLevel();
+        init();
+        resetFromLosingScreen();
+        setTimeout(() => {
+            if (window.innerWidth <= 1024 && window.innerHeight <= window.innerWidth) {
+                document.getElementById('mobile-controls')?.classList.remove('dNone');
+                setupMobileControls();
+            }
+        }, 50);
+    }, 10);
 }
 
 /**
@@ -61,19 +74,22 @@ function restartWinGame() {
         }
     });
     sounds.length = 0;
-    clearAllIntervals();
     if (world && typeof world.cleanup === 'function') {
         world.cleanup();
     }
+    clearAllIntervals();
     world = null;
-    initLevel();
-    init();
-    resetFromWinningScreen();
     setTimeout(() => {
-        if (window.innerWidth <= 1024 && typeof keyboard !== 'undefined') {
-            setupMobileControls();
-        }
-    }, 100);
+        initLevel();
+        init();
+        resetFromWinningScreen();
+        setTimeout(() => {
+            if (window.innerWidth <= 1024 && window.innerHeight <= window.innerWidth) {
+                document.getElementById('mobile-controls')?.classList.remove('dNone');
+                setupMobileControls();
+            }
+        }, 50);
+    }, 10);
 }
 
 function restartLoseGame() {
@@ -89,19 +105,22 @@ function restartLoseGame() {
         }
     });
     sounds.length = 0;
-    clearAllIntervals();
     if (world && typeof world.cleanup === 'function') {
         world.cleanup();
     }
+    clearAllIntervals();
     world = null;
-    initLevel();
-    init();
-    resetFromLosingScreen();
     setTimeout(() => {
-        if (window.innerWidth <= 1024 && typeof keyboard !== 'undefined') {
-            setupMobileControls();
-        }
-    }, 100);
+        initLevel();
+        init();
+        resetFromLosingScreen();
+        setTimeout(() => {
+            if (window.innerWidth <= 1024 && window.innerHeight <= window.innerWidth) {
+                document.getElementById('mobile-controls')?.classList.remove('dNone');
+                setupMobileControls();
+            }
+        }, 50);
+    }, 10);
 }
 
 function resetFromWinningScreen() {
@@ -164,7 +183,20 @@ function toggleEndScreen(endbossIsDead, characterIsDead) {
  * @returns {number} The interval ID
  */
 function startInterval(callback, delay) {
-    let id = setInterval(callback, delay);
+    if (typeof callback !== 'function') {
+        console.error('startInterval: callback must be a function');
+        return null;
+    }
+
+    let id = setInterval(() => {
+        try {
+            callback();
+        } catch (error) {
+            console.error('Interval error:', error);
+            clearInterval(id);
+        }
+    }, delay);
+
     intervalIds.push(id);
     return id;
 }
@@ -228,6 +260,9 @@ function turnOnMusic() {
  */
 function initMobileControls() {
     if (window.innerWidth <= 1024 && typeof keyboard !== 'undefined') {
+        if (window.innerHeight <= window.innerWidth) {
+            document.getElementById('mobile-controls')?.classList.remove('dNone');
+        }
         setupMobileControls();
     }
 }
@@ -307,7 +342,6 @@ function setupMobileControls() {
 }
 
 function resetMobileControls() {
-    // Event-Listener entfernen
     mobileEventListeners.forEach(({ element, event, handler }) => {
         element.removeEventListener(event, handler);
     });
@@ -333,7 +367,7 @@ function checkOrientation() {
         } else {
             rotateOverlay?.classList.add('dNone');
             mobileControls?.classList.remove('dNone');
-            initMobileControls();
+            setupMobileControls();
         }
     } else {
         rotateOverlay?.classList.add('dNone');

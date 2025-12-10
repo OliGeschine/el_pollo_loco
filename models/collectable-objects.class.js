@@ -45,7 +45,6 @@ class CollectableObject extends MovableObject {
             world.currentBottleCount++;
             world.bottleBar.setPercentageBottle(world.currentBottleCount);
         }
-        console.log('number of Bottles=', world.currentBottleCount);
     }
 
 }

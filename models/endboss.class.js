@@ -63,7 +63,7 @@ class Endboss extends MovableObject {
         this.loadImages(this.IMAGES_HURT);
         this.loadImages(this.IMAGES_DEAD);
         this.x = 3800;
-        this.speed = 0.9;
+        this.speed = 1.8;
         this.animate();
     }
 
@@ -75,6 +75,9 @@ class Endboss extends MovableObject {
      */
     animate() {
         this.walkInterval = startInterval(() => {
+            if (!this.world || !this.world.character || this.world === null) {
+                return;
+            }
             let playerX = this.world.character.x;
             let endbossX = this.x;
             let distance = playerX - endbossX;
@@ -127,5 +130,20 @@ class Endboss extends MovableObject {
         }, 200);
     }
 
+    /**
+     * Cleans up endboss intervals when endboss is destroyed
+     * @function
+     * @returns {void}
+     */
+    cleanup() {
+        if (this.walkInterval) {
+            clearInterval(this.walkInterval);
+            this.walkInterval = null;
+        }
+        if (this.animationInterval) {
+            clearInterval(this.animationInterval);
+            this.animationInterval = null;
+        }
+    }
 
 }

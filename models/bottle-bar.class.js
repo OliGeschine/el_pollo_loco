@@ -27,11 +27,10 @@ class Bottlebar extends DrawableObject {
     }
 
     /**
- * Applies custom gravity physics to small chicken
- * Handles falling and ground collision for jumping chickens
- * @function
- * @returns {void}
- */
+     * Updates bottle bar display based on collected bottles
+     * @function
+     * @returns {void}
+     */
     setPercentageBottle(percentageBottle) {
         this.percentageBottle = percentageBottle;
         let path = this.IMAGES_BOTTLE[this.addCollectedBottle()];

@@ -15,7 +15,7 @@ class Character extends MovableObject {
         left: 15,
         right: 30,
     };
-    speed = 8;
+    speed = 5;
     world;
     coins = 0;
     energy = 50;
@@ -115,6 +115,9 @@ class Character extends MovableObject {
  */
     moveCharacter() {
         this.movingInterval = startInterval(() => {
+            if (!this.world || !this.world.keyboard || !this.world.level || this.world === null) {
+                return;
+            }
             if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
                 this.moveRight();
                 this.otherDirection = false;
@@ -138,10 +141,15 @@ class Character extends MovableObject {
    */
     animateCharacter() {
         startInterval(() => {
+            if (!this.world || !this.world.keyboard) {
+                return;
+            }
             if (this.isDead()) {
                 clearInterval(this.movingInterval);
                 this.playAnimation(this.IMAGES_DEAD);
-                this.world.characterIsDead = true;
+                if (this.world) {
+                    this.world.characterIsDead = true;
+                }
             } else if (this.isHurt()) {
                 this.playAnimation(this.IMAGES_HURT);
             } else if (this.isAboveGround()) {
@@ -156,7 +164,9 @@ class Character extends MovableObject {
             } else if (this.getSleepTime()) {
                 this.playAnimation(this.IMAGES_SLEEPING)
             } else {
-                this.world.walking.pause();
+                if (this.world && this.world.walking) {
+                    this.world.walking.pause();
+                }
                 this.playAnimation(this.IMAGES_IDLE);
             }
         }, 100);
@@ -175,12 +185,28 @@ class Character extends MovableObject {
 
     /**
  * Determines if character should show sleep animation
- * Returns true if no movement for more than 5 seconds
+ * Returns true if no movement for more than 8 seconds
  * @function
  * @returns {boolean} True if character should sleep
  */
     getSleepTime() {
         let lastTimeMoved = new Date().getTime() - this.lastMove;
-        return lastTimeMoved > 5000;
+        return lastTimeMoved > 8000;
+    }
+
+    /**
+ * Cleans up character intervals when character is destroyed
+ * @function
+ * @returns {void}
+ */
+    cleanup() {
+        if (this.movingInterval) {
+            clearInterval(this.movingInterval);
+            this.movingInterval = null;
+        }
+        if (this.animationInterval) {
+            clearInterval(this.animationInterval);
+            this.animationInterval = null;
+        }
     }
 }
