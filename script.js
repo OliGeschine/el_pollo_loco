@@ -56,7 +56,7 @@ function restartGame() {
 }
 
 /**
- * Restarts the game from end screens (winning/losing overlay)
+ * Restarts the game from end screen after winning
  * Clears intervals, stops all sounds, hides overlays, and reinitializes game
  * @function
  * @returns {void}
@@ -92,6 +92,12 @@ function restartWinGame() {
     }, 10);
 }
 
+/**
+ * Restarts the game from losing screen after defeat
+ * Clears intervals, stops all sounds, hides losing overlay, and reinitializes game
+ * @function
+ * @returns {void}
+ */
 function restartLoseGame() {
     resetMobileControls();
     if (world && world.loseSound) {
@@ -123,6 +129,12 @@ function restartLoseGame() {
     }, 10);
 }
 
+/**
+ * Resets UI elements after winning the game
+ * Shows canvas and icon bar, hides winning overlay and related elements
+ * @function
+ * @returns {void}
+ */
 function resetFromWinningScreen() {
     document.getElementById('canvas').classList.remove('dNone');
     document.getElementById('iconBar').classList.remove('dNone');
@@ -131,6 +143,12 @@ function resetFromWinningScreen() {
     document.getElementById('winningScreenIconBar').classList.add('dNone');
 }
 
+/**
+ * Resets UI elements after losing the game
+ * Shows canvas and icon bar, hides losing overlay and related elements
+ * @function
+ * @returns {void}
+ */
 function resetFromLosingScreen() {
     document.getElementById('canvas').classList.remove('dNone');
     document.getElementById('iconBar').classList.remove('dNone');
@@ -341,6 +359,13 @@ function setupMobileControls() {
     }
 }
 
+/**
+ * Removes all mobile control event listeners and resets setup state
+ * Called when restarting game or cleaning up mobile controls
+ * Prevents duplicate event listeners on multiple setups
+ * @function
+ * @returns {void}
+ */
 function resetMobileControls() {
     mobileEventListeners.forEach(({ element, event, handler }) => {
         element.removeEventListener(event, handler);
