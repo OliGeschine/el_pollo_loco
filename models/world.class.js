@@ -172,6 +172,11 @@ class World {
         if (this.collision && typeof this.collision.cleanup === 'function') {
             this.collision.cleanup();
         }
+        this.throwableObjects.forEach(bottle => {
+            if (bottle && typeof bottle.cleanup === 'function') {
+                bottle.cleanup();
+            }
+        });
     }
 
     /**
@@ -185,6 +190,7 @@ class World {
         if (this.keyboard.SPACE && this.currentBottleCount > 0 && currentThrowTime - this.lastThrowTime >= 750 && !this.character.isDead()) {
             let bottle = new ThrowableObject(this.character.x + 50, this.character.y + 100);
             bottle.world = this;
+            bottle.setThrowDirection(this.character.otherDirection);
             this.throwableObjects.push(bottle);
             this.currentBottleCount--;
             this.bottleBar.setPercentageBottle(this.currentBottleCount);

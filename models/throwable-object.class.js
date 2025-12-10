@@ -12,6 +12,7 @@ class ThrowableObject extends MovableObject {
         left: 10,
         right: 10
     };
+    throwDirection;
 
     IMAGES_THROWING = ['img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png',
         'img/6_salsa_bottle/bottle_rotation/2_bottle_rotation.png',
@@ -40,6 +41,17 @@ class ThrowableObject extends MovableObject {
     }
 
     /**
+ * Sets the throw direction for the bottle
+ * Called immediately after construction
+ * @function
+ * @param {boolean} direction - True for left, false for right
+ * @returns {void}
+ */
+    setThrowDirection(direction) {
+        this.throwDirection = direction;
+    }
+
+    /**
      * Initiates the bottle throwing physics and animation
      * Sets upward velocity, applies gravity, plays sound, and starts movement loop
      * @method
@@ -51,62 +63,27 @@ class ThrowableObject extends MovableObject {
         if (isMuted === false) {
             this.throwBottle.play();
         };
-        this.getThrowDirection();
-    }
-
-    /**
-     * Determines throwing direction based on character orientation
-     * Starts continuous movement loop checking both left and right directions
-     * @method
-     * @returns {void}
-     */
-    getThrowDirection() {
-        this.throwIntervall = startInterval(() => {
-            this.throwRight();
-            this.throwLeft();
+        this.throwInterval = startInterval(() => {
+            if (this.throwDirection !== undefined) {
+                this.playAnimation(this.IMAGES_THROWING);
+                if (this.throwDirection) {
+                    this.x -= 10;
+                } else {
+                    this.x += 10;
+                }
+                if (this.y >= 355) {
+                    this.hitGround();
+                }
+            }
         }, 25);
     }
 
     /**
-     * Moves bottle to the right when character faces right
-     * Animates bottle rotation and checks for ground collision
-     * @method
-     * @returns {void}
-     */
-    throwRight() {
-        if (!this.splashed && !this.world.character.otherDirection) {
-            this.playAnimation(this.IMAGES_THROWING);
-            this.x += 10;
-            if (this.y >= 355) {
-                this.hitGround();
-                this.world.bottleBreaking.play();
-            }
-        }
-    }
-
-    /**
-     * Moves bottle to the left when character faces left
-     * Animates bottle rotation and checks for ground collision
-     * @method
-     * @returns {void}
-     */
-    throwLeft() {
-        if (!this.splashed && this.world.character.otherDirection) {
-            this.playAnimation(this.IMAGES_THROWING);
-            this.x -= 10;
-            if (this.y >= 355) {
-                this.hitGround();
-                this.world.bottleBreaking.play();
-            }
-        }
-    }
-
-    /**
- * Handles bottle collision with ground
- * Stops bottle movement and triggers splash animation
- * @function
- * @returns {void}
- */
+    * Handles bottle collision with ground
+    * Stops bottle movement and triggers splash animation
+    * @function
+    * @returns {void}
+    */
     hitGround() {
         if (this.splashed) return;
         this.y = 380;
@@ -114,17 +91,17 @@ class ThrowableObject extends MovableObject {
     }
 
     /**
- * Plays bottle splash animation and removes bottle from world
- * Shows splash effects for 600ms then removes bottle from game
- * @function
- * @returns {void}
- */
+    * Plays bottle splash animation and removes bottle from world
+    * Shows splash effects for 600ms then removes bottle from game
+    * @function
+    * @returns {void}
+    */
     splash() {
         if (this.splashed) return;
         this.splashed = true;
         this.speedY = 0;
         this.acceleration = 0;
-        clearInterval(this.throwIntervall);
+        clearInterval(this.throwInterval);
         this.splashingIntervall = startInterval(() => {
             this.playAnimation(this.IMAGES_SPLASHING);
         }, 100);

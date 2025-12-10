@@ -20,6 +20,7 @@ class Character extends MovableObject {
     coins = 0;
     energy = 50;
     justStomped = false;
+    groundLevel = 200;
 
     IMAGES_IDLE = [
         'img/2_character_pepe/1_idle/idle/I-1.png',
@@ -129,6 +130,7 @@ class Character extends MovableObject {
             if (this.world.keyboard.UP && !this.isAboveGround()) {
                 this.jump();
             }
+            this.stayOnGround();
             this.world.cameraX = -this.x + 50;
         }, 1000 / 60);
     }
@@ -173,32 +175,53 @@ class Character extends MovableObject {
     }
 
     /**
- * Records the current time as last movement time
- * Used for sleep animation timing
+ * Ensures character stays on ground level
  * @function
  * @returns {void}
  */
+    stayOnGround() {
+        if (this.y > this.groundLevel) {
+            this.y = this.groundLevel;
+            this.speedY = 0;
+        }
+    }
+
+    /**
+ * Checks if character is above ground level
+ * @function
+ * @returns {boolean}
+ */
+    isAboveGround() {
+        return this.y < this.groundLevel;
+    }
+
+    /**
+    * Records the current time as last movement time
+    * Used for sleep animation timing
+    * @function
+    * @returns {void}
+    */
     getMoveTime() {
         let currentTime = new Date().getTime();
         this.lastMove = currentTime;
     }
 
     /**
- * Determines if character should show sleep animation
- * Returns true if no movement for more than 8 seconds
- * @function
- * @returns {boolean} True if character should sleep
- */
+    * Determines if character should show sleep animation
+    * Returns true if no movement for more than 8 seconds
+    * @function
+    * @returns {boolean} True if character should sleep
+    */
     getSleepTime() {
         let lastTimeMoved = new Date().getTime() - this.lastMove;
         return lastTimeMoved > 8000;
     }
 
     /**
- * Cleans up character intervals when character is destroyed
- * @function
- * @returns {void}
- */
+    * Cleans up character intervals when character is destroyed
+    * @function
+    * @returns {void}
+    */
     cleanup() {
         if (this.movingInterval) {
             clearInterval(this.movingInterval);
