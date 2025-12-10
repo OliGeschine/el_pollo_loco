@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: World</title>
+    <title>JSDoc: Class: Collision</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: World</h1>
+    <h1 class="page-title">Class: Collision</h1>
 
     
 
@@ -28,7 +28,7 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature"></span></span>World<span class="signature">()</span><span class="type-signature"></span></h2>
+        <h2><span class="attribs"><span class="type-signature"></span></span>Collision<span class="signature">()</span><span class="type-signature"></span></h2>
         
     
 </header>
@@ -41,7 +41,7 @@
     
 
     
-    <h4 class="name" id="World"><span class="type-signature"></span>new World<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Collision"><span class="type-signature"></span>new Collision<span class="signature">()</span><span class="type-signature"></span></h4>
     
 
     
@@ -49,8 +49,8 @@
 
 
 <div class="description">
-    Main World class that manages the entire game state and logic
-Handles rendering, collision detection, audio, and game object interactions
+    Handles all collision detection and responses in the game
+Manages character-enemy collisions, projectile hits, and damage systems
 </div>
 
 
@@ -94,7 +94,7 @@ Handles rendering, collision detection, audio, and game object interactions
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="models_world.class.js.html">models/world.class.js</a>, <a href="models_world.class.js.html#line1">line 1</a>
+        <a href="models_collisions.class.js.html">models/collisions.class.js</a>, <a href="models_collisions.class.js.html#line1">line 1</a>
     </li></ul></dd>
     
 
@@ -150,7 +150,7 @@ Handles rendering, collision detection, audio, and game object interactions
     
 
     
-    <h4 class="name" id="addEndbossBarToMap"><span class="type-signature"></span>addEndbossBarToMap<span class="signature">()</span><span class="type-signature"> &rarr; {void}</span></h4>
+    <h4 class="name" id="checkBottleHitsEndboss"><span class="type-signature"></span>checkBottleHitsEndboss<span class="signature">()</span><span class="type-signature"> &rarr; {void}</span></h4>
     
 
     
@@ -158,7 +158,8 @@ Handles rendering, collision detection, audio, and game object interactions
 
 
 <div class="description">
-    Shows endboss health bar when character approaches
+    Checks if thrown bottles hit the endboss
+Triggers bottle splash and endboss damage
 </div>
 
 
@@ -202,7 +203,7 @@ Handles rendering, collision detection, audio, and game object interactions
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="models_world.class.js.html">models/world.class.js</a>, <a href="models_world.class.js.html#line258">line 258</a>
+        <a href="models_collisions.class.js.html">models/collisions.class.js</a>, <a href="models_collisions.class.js.html#line181">line 181</a>
     </li></ul></dd>
     
 
@@ -256,7 +257,7 @@ Handles rendering, collision detection, audio, and game object interactions
     
 
     
-    <h4 class="name" id="addEndbossToMap"><span class="type-signature"></span>addEndbossToMap<span class="signature">()</span><span class="type-signature"> &rarr; {void}</span></h4>
+    <h4 class="name" id="checkBottleHitsEnemies"><span class="type-signature"></span>checkBottleHitsEnemies<span class="signature">()</span><span class="type-signature"> &rarr; {void}</span></h4>
     
 
     
@@ -264,7 +265,8 @@ Handles rendering, collision detection, audio, and game object interactions
 
 
 <div class="description">
-    Conditionally renders the endboss if alive
+    Checks if thrown bottles hit any enemies
+Triggers bottle splash animation and enemy damage
 </div>
 
 
@@ -308,7 +310,7 @@ Handles rendering, collision detection, audio, and game object interactions
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="models_world.class.js.html">models/world.class.js</a>, <a href="models_world.class.js.html#line247">line 247</a>
+        <a href="models_collisions.class.js.html">models/collisions.class.js</a>, <a href="models_collisions.class.js.html#line152">line 152</a>
     </li></ul></dd>
     
 
@@ -362,7 +364,7 @@ Handles rendering, collision detection, audio, and game object interactions
     
 
     
-    <h4 class="name" id="addObjectsToMap"><span class="type-signature"></span>addObjectsToMap<span class="signature">(objects)</span><span class="type-signature"> &rarr; {void}</span></h4>
+    <h4 class="name" id="checkCharacterEndbossInteractions"><span class="type-signature"></span>checkCharacterEndbossInteractions<span class="signature">()</span><span class="type-signature"> &rarr; {void}</span></h4>
     
 
     
@@ -370,7 +372,650 @@ Handles rendering, collision detection, audio, and game object interactions
 
 
 <div class="description">
-    Renders an array of game objects to the canvas
+    Checks character interactions specifically with the endboss
+Handles jumping attacks and collision damage with endboss
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="models_collisions.class.js.html">models/collisions.class.js</a>, <a href="models_collisions.class.js.html#line48">line 48</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">void</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="checkCharacterEnemyInteractions"><span class="type-signature"></span>checkCharacterEnemyInteractions<span class="signature">()</span><span class="type-signature"> &rarr; {void}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Checks all character interactions with regular enemies
+Handles jumping on enemies and collision damage
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="models_collisions.class.js.html">models/collisions.class.js</a>, <a href="models_collisions.class.js.html#line33">line 33</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">void</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="checkCollectableCollisions"><span class="type-signature"></span>checkCollectableCollisions<span class="signature">()</span><span class="type-signature"> &rarr; {void}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Runs all collectable object collision checks
+Handles coins and bottles collection
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="models_collisions.class.js.html">models/collisions.class.js</a>, <a href="models_collisions.class.js.html#line225">line 225</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">void</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="checkCollectedBottles"><span class="type-signature"></span>checkCollectedBottles<span class="signature">()</span><span class="type-signature"> &rarr; {void}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Checks collection of bottle collectables
+Updates bottle count and removes collected bottles
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="models_collisions.class.js.html">models/collisions.class.js</a>, <a href="models_collisions.class.js.html#line205">line 205</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">void</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="checkCollectedCoins"><span class="type-signature"></span>checkCollectedCoins<span class="signature">()</span><span class="type-signature"> &rarr; {void}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Checks collection of coin collectables
+Updates coin count and removes collected coins
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="models_collisions.class.js.html">models/collisions.class.js</a>, <a href="models_collisions.class.js.html#line236">line 236</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">void</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="checkEndbossCollisions"><span class="type-signature"></span>checkEndbossCollisions<span class="signature">()</span><span class="type-signature"> &rarr; {void}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Handles character collision damage from endboss
+Causes stronger damage than regular enemies
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="models_collisions.class.js.html">models/collisions.class.js</a>, <a href="models_collisions.class.js.html#line135">line 135</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">void</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="checkEnemyCollisions"><span class="type-signature"></span>checkEnemyCollisions<span class="signature">(enemy)</span><span class="type-signature"> &rarr; {void}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Handles character collision damage from regular enemies
+Reduces character health and plays hurt sound
 </div>
 
 
@@ -406,162 +1051,7 @@ Handles rendering, collision detection, audio, and game object interactions
 
         <tr>
             
-                <td class="name"><code>objects</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;Object></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Array of drawable objects</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="models_world.class.js.html">models/world.class.js</a>, <a href="models_world.class.js.html#line273">line 273</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">void</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="addToMap"><span class="type-signature"></span>addToMap<span class="signature">(mo)</span><span class="type-signature"> &rarr; {void}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Renders a single movable object with direction handling
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>mo</code></td>
+                <td class="name"><code>enemy</code></td>
             
 
             <td class="type">
@@ -577,7 +1067,7 @@ Handles rendering, collision detection, audio, and game object interactions
 
             
 
-            <td class="description last">The movable object to render</td>
+            <td class="description last">The enemy causing damage</td>
         </tr>
 
     
@@ -618,7 +1108,7 @@ Handles rendering, collision detection, audio, and game object interactions
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="models_world.class.js.html">models/world.class.js</a>, <a href="models_world.class.js.html#line285">line 285</a>
+        <a href="models_collisions.class.js.html">models/collisions.class.js</a>, <a href="models_collisions.class.js.html#line118">line 118</a>
     </li></ul></dd>
     
 
@@ -672,7 +1162,7 @@ Handles rendering, collision detection, audio, and game object interactions
     
 
     
-    <h4 class="name" id="checkDeath"><span class="type-signature"></span>checkDeath<span class="signature">()</span><span class="type-signature"> &rarr; {void}</span></h4>
+    <h4 class="name" id="checkJumpCollisions"><span class="type-signature"></span>checkJumpCollisions<span class="signature">(enemy, enemyIndex)</span><span class="type-signature"> &rarr; {void}</span></h4>
     
 
     
@@ -680,8 +1170,8 @@ Handles rendering, collision detection, audio, and game object interactions
 
 
 <div class="description">
-    Checks and handles character and endboss death states
-Triggers appropriate death animations and screen transitions
+    Handles character jumping on enemies (stomp attacks)
+Damages enemy, plays sound, and removes dead enemies
 </div>
 
 
@@ -690,6 +1180,78 @@ Triggers appropriate death animations and screen transitions
 
 
 
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>enemy</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="MovableObject.html">MovableObject</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The enemy being stomped</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>enemyIndex</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Index of enemy in enemies array</td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -725,7 +1287,7 @@ Triggers appropriate death animations and screen transitions
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="models_world.class.js.html">models/world.class.js</a>, <a href="models_world.class.js.html#line101">line 101</a>
+        <a href="models_collisions.class.js.html">models/collisions.class.js</a>, <a href="models_collisions.class.js.html#line63">line 63</a>
     </li></ul></dd>
     
 
@@ -779,7 +1341,7 @@ Triggers appropriate death animations and screen transitions
     
 
     
-    <h4 class="name" id="checkThrowObjects"><span class="type-signature"></span>checkThrowObjects<span class="signature">()</span><span class="type-signature"> &rarr; {void}</span></h4>
+    <h4 class="name" id="checkJumpEndbossCollision"><span class="type-signature"></span>checkJumpEndbossCollision<span class="signature">()</span><span class="type-signature"> &rarr; {void}</span></h4>
     
 
     
@@ -787,8 +1349,8 @@ Triggers appropriate death animations and screen transitions
 
 
 <div class="description">
-    Handles throwing bottle objects when space key is pressed
-Checks cooldown, bottle count, and character state
+    Handles character jumping on the endboss
+Damages endboss, updates health bar, and triggers death sequence
 </div>
 
 
@@ -832,7 +1394,7 @@ Checks cooldown, bottle count, and character state
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="models_world.class.js.html">models/world.class.js</a>, <a href="models_world.class.js.html#line189">line 189</a>
+        <a href="models_collisions.class.js.html">models/collisions.class.js</a>, <a href="models_collisions.class.js.html#line87">line 87</a>
     </li></ul></dd>
     
 
@@ -894,8 +1456,7 @@ Checks cooldown, bottle count, and character state
 
 
 <div class="description">
-    Cleans up all pending timeouts and resets death states
-Called before destroying world instance
+    Cleans up collision intervals when collision system is destroyed
 </div>
 
 
@@ -939,7 +1500,7 @@ Called before destroying world instance
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="models_world.class.js.html">models/world.class.js</a>, <a href="models_world.class.js.html#line157">line 157</a>
+        <a href="models_collisions.class.js.html">models/collisions.class.js</a>, <a href="models_collisions.class.js.html#line255">line 255</a>
     </li></ul></dd>
     
 
@@ -993,7 +1554,7 @@ Called before destroying world instance
     
 
     
-    <h4 class="name" id="draw"><span class="type-signature"></span>draw<span class="signature">()</span><span class="type-signature"> &rarr; {void}</span></h4>
+    <h4 class="name" id="collisions"><span class="type-signature"></span>collisions<span class="signature">()</span><span class="type-signature"> &rarr; {void}</span></h4>
     
 
     
@@ -1001,8 +1562,8 @@ Called before destroying world instance
 
 
 <div class="description">
-    Main rendering function that draws all game objects
-Handles camera movement and layer ordering
+    Starts collision detection loop for all interactive objects
+Runs at 10ms intervals for precise collision detection
 </div>
 
 
@@ -1046,745 +1607,7 @@ Handles camera movement and layer ordering
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="models_world.class.js.html">models/world.class.js</a>, <a href="models_world.class.js.html#line208">line 208</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">void</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="flipImage"><span class="type-signature"></span>flipImage<span class="signature">(mo)</span><span class="type-signature"> &rarr; {void}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Flips image horizontally for objects facing left
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>mo</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="MovableObject.html">MovableObject</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Object to flip</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="models_world.class.js.html">models/world.class.js</a>, <a href="models_world.class.js.html#line304">line 304</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">void</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="flipImageBack"><span class="type-signature"></span>flipImageBack<span class="signature">(mo)</span><span class="type-signature"> &rarr; {void}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Restores normal image orientation after flipping
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>mo</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="MovableObject.html">MovableObject</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Object to restore</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="models_world.class.js.html">models/world.class.js</a>, <a href="models_world.class.js.html#line317">line 317</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">void</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="handleCharacterIsDeadAnimation"><span class="type-signature"></span>handleCharacterIsDeadAnimation<span class="signature">()</span><span class="type-signature"> &rarr; {void}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Handles character death animation and game over sequence
-Plays death sound and triggers losing screen
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="models_world.class.js.html">models/world.class.js</a>, <a href="models_world.class.js.html#line134">line 134</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">void</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="handleEndbossIsDeadAnimation"><span class="type-signature"></span>handleEndbossIsDeadAnimation<span class="signature">()</span><span class="type-signature"> &rarr; {void}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Handles endboss death animation and victory sequence
-Plays death sound and triggers winning screen
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="models_world.class.js.html">models/world.class.js</a>, <a href="models_world.class.js.html#line112">line 112</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">void</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="run"><span class="type-signature"></span>run<span class="signature">()</span><span class="type-signature"> &rarr; {void}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Starts the main game loop for throwing objects and collectables
-Runs collision checks and updates at 200ms intervals
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="models_world.class.js.html">models/world.class.js</a>, <a href="models_world.class.js.html#line88">line 88</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">void</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="setWorld"><span class="type-signature"></span>setWorld<span class="signature">()</span><span class="type-signature"> &rarr; {void}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Sets world reference for character, endboss, and enemies
-Allows game objects to access world methods and properties
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="models_world.class.js.html">models/world.class.js</a>, <a href="models_world.class.js.html#line76">line 76</a>
+        <a href="models_collisions.class.js.html">models/collisions.class.js</a>, <a href="models_collisions.class.js.html#line18">line 18</a>
     </li></ul></dd>
     
 

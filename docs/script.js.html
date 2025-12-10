@@ -27,6 +27,8 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>let intervalIds = [];
+let mobileControlsSetup = false;
+let mobileEventListeners = [];
 
 /**
  * Starts the game by hiding overlay and initializing game components
@@ -40,9 +42,9 @@ function startGame() {
     document.getElementById('iconBar').classList.remove('dNone');
     initLevel();
     init();
-
     setTimeout(() => {
-        if (window.innerWidth &lt;= 1024 &amp;&amp; typeof keyboard !== 'undefined') {
+        if (window.innerWidth &lt;= 1024 &amp;&amp; window.innerHeight &lt;= window.innerWidth) {
+            document.getElementById('mobile-controls')?.classList.remove('dNone');
             setupMobileControls();
         }
     }, 100);
@@ -55,59 +57,166 @@ function startGame() {
  * @returns {void}
  */
 function restartGame() {
+    resetMobileControls();
+    sounds.forEach(sound => {
+        if (sound) {
+            sound.pause();
+            sound.currentTime = 0;
+        }
+    });
+    sounds.length = 0;
+    if (world &amp;&amp; typeof world.cleanup === 'function') {
+        world.cleanup();
+    }
     clearAllIntervals();
+    world = null;
+    setTimeout(() => {
+        initLevel();
+        init();
+        resetFromLosingScreen();
+        setTimeout(() => {
+            if (window.innerWidth &lt;= 1024 &amp;&amp; window.innerHeight &lt;= window.innerWidth) {
+                document.getElementById('mobile-controls')?.classList.remove('dNone');
+                setupMobileControls();
+            }
+        }, 50);
+    }, 10);
+}
+
+/**
+ * Restarts the game from end screen after winning
+ * Clears intervals, stops all sounds, hides overlays, and reinitializes game
+ * @function
+ * @returns {void}
+ */
+function restartWinGame() {
+    resetMobileControls();
+    if (world &amp;&amp; world.victorySound) {
+        world.victorySound.pause();
+        world.victorySound.currentTime = 0;
+    }
+    sounds.forEach(sound => {
+        if (sound) {
+            sound.pause();
+            sound.currentTime = 0;
+        }
+    });
+    sounds.length = 0;
+    if (world &amp;&amp; typeof world.cleanup === 'function') {
+        world.cleanup();
+    }
+    clearAllIntervals();
+    world = null;
+    setTimeout(() => {
+        initLevel();
+        init();
+        resetFromWinningScreen();
+        setTimeout(() => {
+            if (window.innerWidth &lt;= 1024 &amp;&amp; window.innerHeight &lt;= window.innerWidth) {
+                document.getElementById('mobile-controls')?.classList.remove('dNone');
+                setupMobileControls();
+            }
+        }, 50);
+    }, 10);
+}
+
+/**
+ * Restarts the game from losing screen after defeat
+ * Clears intervals, stops all sounds, hides losing overlay, and reinitializes game
+ * @function
+ * @returns {void}
+ */
+function restartLoseGame() {
+    resetMobileControls();
+    if (world &amp;&amp; world.loseSound) {
+        world.loseSound.pause();
+        world.loseSound.currentTime = 0;
+    }
+    sounds.forEach(sound => {
+        if (sound) {
+            sound.pause();
+            sound.currentTime = 0;
+        }
+    });
+    sounds.length = 0;
+    if (world &amp;&amp; typeof world.cleanup === 'function') {
+        world.cleanup();
+    }
+    clearAllIntervals();
+    world = null;
+    setTimeout(() => {
+        initLevel();
+        init();
+        resetFromLosingScreen();
+        setTimeout(() => {
+            if (window.innerWidth &lt;= 1024 &amp;&amp; window.innerHeight &lt;= window.innerWidth) {
+                document.getElementById('mobile-controls')?.classList.remove('dNone');
+                setupMobileControls();
+            }
+        }, 50);
+    }, 10);
+}
+
+/**
+ * Resets UI elements after winning the game
+ * Shows canvas and icon bar, hides winning overlay and related elements
+ * @function
+ * @returns {void}
+ */
+function resetFromWinningScreen() {
     document.getElementById('canvas').classList.remove('dNone');
     document.getElementById('iconBar').classList.remove('dNone');
     document.getElementById('overlay').classList.add('dNone');
     document.getElementById('winning_overlay').classList.add('dNone');
-    document.getElementById('losing_overlay').classList.add('dNone');
     document.getElementById('winningScreenIconBar').classList.add('dNone');
+}
+
+/**
+ * Resets UI elements after losing the game
+ * Shows canvas and icon bar, hides losing overlay and related elements
+ * @function
+ * @returns {void}
+ */
+function resetFromLosingScreen() {
+    document.getElementById('canvas').classList.remove('dNone');
+    document.getElementById('iconBar').classList.remove('dNone');
+    document.getElementById('overlay').classList.add('dNone');
+    document.getElementById('losing_overlay').classList.add('dNone');
     document.getElementById('losingScreenIconBar').classList.add('dNone');
-    backgroundSound.pause();
-    backgroundSound.currentTime = 0;
-    world = null;
-    initLevel();
-    init();
-    setTimeout(() => {
-        if (window.innerWidth &lt;= 1024 &amp;&amp; typeof keyboard !== 'undefined') {
-            setupMobileControls();
-        }
-    }, 100);
 }
 
 /**
- * Displays the winning screen when player completes the game
- * Hides canvas, shows victory overlay, stops all intervals and plays victory sound
+ * Toggles between winning and losing screens based on game outcome
+ * Shows appropriate overlay, plays victory/defeat sound, and updates UI
  * @function
+ * @param {boolean} endbossIsDead - Whether the endboss has been defeated
+ * @param {boolean} characterIsDead - Whether the character has died
  * @returns {void}
  */
-function showWinningScreen() {
+function toggleEndScreen(endbossIsDead, characterIsDead) {
     document.getElementById('canvas').classList.add('dNone');
-    document.getElementById('winning_overlay').classList.remove('dNone');
     document.getElementById('iconBar').classList.add('dNone');
-    document.getElementById('winningScreenIconBar').classList.remove('dNone');
-    clearAllIntervals();
-    backgroundSound.pause();
-    if (!isMuted) {
-        this.victorySound.play();
+    if (backgroundSound) {
+        backgroundSound.pause();
+        backgroundSound.currentTime = 0;
     }
-}
-
-/**
- * Displays the losing screen when player fails the game
- * Hides canvas, shows game over overlay, stops all intervals and plays lose sound
- * @function
- * @returns {void}
- */
-function showLosingScreen() {
-    document.getElementById('canvas').classList.add('dNone');
-    document.getElementById('losing_overlay').classList.remove('dNone');
-    document.getElementById('iconBar').classList.add('dNone');
-    document.getElementById('losingScreenIconBar').classList.remove('dNone');
-    clearAllIntervals();
-    backgroundSound.pause();
-    if (!isMuted) {
-        this.loseSound.play();
+    if (endbossIsDead) {
+        document.getElementById('winning_overlay').classList.remove('dNone');
+        document.getElementById('winningScreenIconBar').classList.remove('dNone');
+        let winScreen = document.getElementById('winningScreenImg');
+        winScreen.src = 'img/You won, you lost/You won A.png';
+        if (!isMuted &amp;&amp; world &amp;&amp; world.victorySound) {
+            world.victorySound.play().catch(console.error);
+        }
+    }
+    if (characterIsDead) {
+        document.getElementById('losing_overlay').classList.remove('dNone');
+        document.getElementById('losingScreenIconBar').classList.remove('dNone');
+        let loseScreen = document.getElementById('losingScreenImg');
+        loseScreen.src = 'img/You won, you lost/You lost.png';
+        if (!isMuted &amp;&amp; world &amp;&amp; world.loseSound) {
+            world.loseSound.play().catch(console.error);
+        }
     }
 }
 
@@ -120,7 +229,20 @@ function showLosingScreen() {
  * @returns {number} The interval ID
  */
 function startInterval(callback, delay) {
-    let id = setInterval(callback, delay);
+    if (typeof callback !== 'function') {
+        console.error('startInterval: callback must be a function');
+        return null;
+    }
+
+    let id = setInterval(() => {
+        try {
+            callback();
+        } catch (error) {
+            console.error('Interval error:', error);
+            clearInterval(id);
+        }
+    }, delay);
+
     intervalIds.push(id);
     return id;
 }
@@ -132,18 +254,8 @@ function startInterval(callback, delay) {
  * @returns {void}
  */
 function clearAllIntervals() {
-    intervalIds.forEach(clearInterval);
-    intervalIds.length = 0;
-}
-
-/**
- * Toggles fullscreen mode for the game overlay
- * Requests fullscreen API on the overlay element
- * @function
- * @returns {void}
- */
-function fullscreen() {
-    overlay.requestFullscreen();
+    intervalIds.forEach(id => clearInterval(id));
+    intervalIds = [];
 }
 
 /**
@@ -194,6 +306,9 @@ function turnOnMusic() {
  */
 function initMobileControls() {
     if (window.innerWidth &lt;= 1024 &amp;&amp; typeof keyboard !== 'undefined') {
+        if (window.innerHeight &lt;= window.innerWidth) {
+            document.getElementById('mobile-controls')?.classList.remove('dNone');
+        }
         setupMobileControls();
     }
 }
@@ -206,90 +321,85 @@ function initMobileControls() {
  * @returns {void}
  */
 function setupMobileControls() {
-    if (typeof keyboard === 'undefined') {
-        setTimeout(setupMobileControls, 100);
+    if (typeof keyboard === 'undefined' || mobileControlsSetup) {
         return;
     }
+    mobileControlsSetup = true;
+
     const btnLeft = document.getElementById('btn-left');
-    const btnRight = document.getElementById('btn-right');
-    const btnJump = document.getElementById('btn-jump');
-    const btnThrow = document.getElementById('btn-throw');
-
     if (btnLeft) {
-        btnLeft.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            keyboard.LEFT = true;
-        });
-        btnLeft.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            keyboard.LEFT = false;
-        });
-        btnLeft.addEventListener('mousedown', (e) => {
-            e.preventDefault();
-            keyboard.LEFT = true;
-        });
-        btnLeft.addEventListener('mouseup', (e) => {
-            e.preventDefault();
-            keyboard.LEFT = false;
+        const handlers = {
+            touchstart: (e) => { e.preventDefault(); keyboard.LEFT = true; },
+            touchend: (e) => { e.preventDefault(); keyboard.LEFT = false; },
+            mousedown: (e) => { e.preventDefault(); keyboard.LEFT = true; },
+            mouseup: (e) => { e.preventDefault(); keyboard.LEFT = false; }
+        };
+
+        Object.entries(handlers).forEach(([event, handler]) => {
+            btnLeft.addEventListener(event, handler);
+            mobileEventListeners.push({ element: btnLeft, event, handler });
         });
     }
 
+    const btnRight = document.getElementById('btn-right');
     if (btnRight) {
-        btnRight.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            keyboard.RIGHT = true;
-        });
-        btnRight.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            keyboard.RIGHT = false;
-        });
-        btnRight.addEventListener('mousedown', (e) => {
-            e.preventDefault();
-            keyboard.RIGHT = true;
-        });
-        btnRight.addEventListener('mouseup', (e) => {
-            e.preventDefault();
-            keyboard.RIGHT = false;
+        const handlers = {
+            touchstart: (e) => { e.preventDefault(); keyboard.RIGHT = true; },
+            touchend: (e) => { e.preventDefault(); keyboard.RIGHT = false; },
+            mousedown: (e) => { e.preventDefault(); keyboard.RIGHT = true; },
+            mouseup: (e) => { e.preventDefault(); keyboard.RIGHT = false; }
+        };
+
+        Object.entries(handlers).forEach(([event, handler]) => {
+            btnRight.addEventListener(event, handler);
+            mobileEventListeners.push({ element: btnRight, event, handler });
         });
     }
 
+    const btnJump = document.getElementById('btn-jump');
     if (btnJump) {
-        btnJump.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            keyboard.UP = true;
-        });
-        btnJump.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            keyboard.UP = false;
-        });
-        btnJump.addEventListener('mousedown', (e) => {
-            e.preventDefault();
-            keyboard.UP = true;
-        });
-        btnJump.addEventListener('mouseup', (e) => {
-            e.preventDefault();
-            keyboard.UP = false;
+        const handlers = {
+            touchstart: (e) => { e.preventDefault(); keyboard.UP = true; },
+            touchend: (e) => { e.preventDefault(); keyboard.UP = false; },
+            mousedown: (e) => { e.preventDefault(); keyboard.UP = true; },
+            mouseup: (e) => { e.preventDefault(); keyboard.UP = false; }
+        };
+
+        Object.entries(handlers).forEach(([event, handler]) => {
+            btnJump.addEventListener(event, handler);
+            mobileEventListeners.push({ element: btnJump, event, handler });
         });
     }
 
+    const btnThrow = document.getElementById('btn-throw');
     if (btnThrow) {
-        btnThrow.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            keyboard.SPACE = true;
-        });
-        btnThrow.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            keyboard.SPACE = false;
-        });
-        btnThrow.addEventListener('mousedown', (e) => {
-            e.preventDefault();
-            keyboard.SPACE = true;
-        });
-        btnThrow.addEventListener('mouseup', (e) => {
-            e.preventDefault();
-            keyboard.SPACE = false;
+        const handlers = {
+            touchstart: (e) => { e.preventDefault(); keyboard.SPACE = true; },
+            touchend: (e) => { e.preventDefault(); keyboard.SPACE = false; },
+            mousedown: (e) => { e.preventDefault(); keyboard.SPACE = true; },
+            mouseup: (e) => { e.preventDefault(); keyboard.SPACE = false; }
+        };
+
+        Object.entries(handlers).forEach(([event, handler]) => {
+            btnThrow.addEventListener(event, handler);
+            mobileEventListeners.push({ element: btnThrow, event, handler });
         });
     }
+}
+
+/**
+ * Removes all mobile control event listeners and resets setup state
+ * Called when restarting game or cleaning up mobile controls
+ * Prevents duplicate event listeners on multiple setups
+ * @function
+ * @returns {void}
+ */
+function resetMobileControls() {
+    mobileEventListeners.forEach(({ element, event, handler }) => {
+        element.removeEventListener(event, handler);
+    });
+    mobileEventListeners = [];
+    mobileControlsSetup = false;
 }
 
 /**
@@ -310,7 +420,7 @@ function checkOrientation() {
         } else {
             rotateOverlay?.classList.add('dNone');
             mobileControls?.classList.remove('dNone');
-            initMobileControls();
+            setupMobileControls();
         }
     } else {
         rotateOverlay?.classList.add('dNone');
@@ -334,13 +444,13 @@ checkOrientation();</code></pre>
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Bottle.html">Bottle</a></li><li><a href="Bottlebar.html">Bottlebar</a></li><li><a href="Character.html">Character</a></li><li><a href="Chicken.html">Chicken</a></li><li><a href="Clouds.html">Clouds</a></li><li><a href="Coin.html">Coin</a></li><li><a href="Coinbar.html">Coinbar</a></li><li><a href="CollectableObject.html">CollectableObject</a></li><li><a href="DrawableObject.html">DrawableObject</a></li><li><a href="Endboss.html">Endboss</a></li><li><a href="EndbossHealth.html">EndbossHealth</a></li><li><a href="MovableObject.html">MovableObject</a></li><li><a href="Statusbar.html">Statusbar</a></li><li><a href="ThrowableObject.html">ThrowableObject</a></li><li><a href="World.html">World</a></li><li><a href="smallChicken.html">smallChicken</a></li></ul><h3>Global</h3><ul><li><a href="global.html#checkOrientation">checkOrientation</a></li><li><a href="global.html#clearAllIntervals">clearAllIntervals</a></li><li><a href="global.html#fullscreen">fullscreen</a></li><li><a href="global.html#handleKeyDown">handleKeyDown</a></li><li><a href="global.html#handleKeyUp">handleKeyUp</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initLevel">initLevel</a></li><li><a href="global.html#initMobileControls">initMobileControls</a></li><li><a href="global.html#restartGame">restartGame</a></li><li><a href="global.html#setupMobileControls">setupMobileControls</a></li><li><a href="global.html#showLosingScreen">showLosingScreen</a></li><li><a href="global.html#showWinningScreen">showWinningScreen</a></li><li><a href="global.html#startGame">startGame</a></li><li><a href="global.html#startInterval">startInterval</a></li><li><a href="global.html#turnOffMusic">turnOffMusic</a></li><li><a href="global.html#turnOnMusic">turnOnMusic</a></li><li><a href="global.html#updateSoundUI">updateSoundUI</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Bottle.html">Bottle</a></li><li><a href="Bottlebar.html">Bottlebar</a></li><li><a href="Character.html">Character</a></li><li><a href="Chicken.html">Chicken</a></li><li><a href="Clouds.html">Clouds</a></li><li><a href="Coin.html">Coin</a></li><li><a href="Coinbar.html">Coinbar</a></li><li><a href="CollectableObject.html">CollectableObject</a></li><li><a href="Collision.html">Collision</a></li><li><a href="DrawableObject.html">DrawableObject</a></li><li><a href="Endboss.html">Endboss</a></li><li><a href="EndbossHealth.html">EndbossHealth</a></li><li><a href="MovableObject.html">MovableObject</a></li><li><a href="Statusbar.html">Statusbar</a></li><li><a href="ThrowableObject.html">ThrowableObject</a></li><li><a href="World.html">World</a></li><li><a href="smallChicken.html">smallChicken</a></li></ul><h3>Global</h3><ul><li><a href="global.html#checkOrientation">checkOrientation</a></li><li><a href="global.html#clearAllIntervals">clearAllIntervals</a></li><li><a href="global.html#handleKeyDown">handleKeyDown</a></li><li><a href="global.html#handleKeyUp">handleKeyUp</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initLevel">initLevel</a></li><li><a href="global.html#initMobileControls">initMobileControls</a></li><li><a href="global.html#resetFromLosingScreen">resetFromLosingScreen</a></li><li><a href="global.html#resetFromWinningScreen">resetFromWinningScreen</a></li><li><a href="global.html#resetMobileControls">resetMobileControls</a></li><li><a href="global.html#restartGame">restartGame</a></li><li><a href="global.html#restartLoseGame">restartLoseGame</a></li><li><a href="global.html#restartWinGame">restartWinGame</a></li><li><a href="global.html#setupMobileControls">setupMobileControls</a></li><li><a href="global.html#startGame">startGame</a></li><li><a href="global.html#startInterval">startInterval</a></li><li><a href="global.html#toggleEndScreen">toggleEndScreen</a></li><li><a href="global.html#turnOffMusic">turnOffMusic</a></li><li><a href="global.html#turnOnMusic">turnOnMusic</a></li><li><a href="global.html#updateSoundUI">updateSoundUI</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Tue Dec 02 2025 10:44:12 GMT+0100 (Mitteleuropäische Normalzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Wed Dec 10 2025 21:24:38 GMT+0100 (Mitteleuropäische Normalzeit)
 </footer>
 
 <script> prettyPrint(); </script>

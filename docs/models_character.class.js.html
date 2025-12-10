@@ -35,7 +35,7 @@
 class Character extends MovableObject {
     height = 230;
     width = 100;
-    x = 50;
+    x = 200;
     y = 200;
     offset = {
         top: 100,
@@ -43,12 +43,12 @@ class Character extends MovableObject {
         left: 15,
         right: 30,
     };
-    speed = 8;
+    speed = 5;
     world;
     coins = 0;
     energy = 50;
     justStomped = false;
-    walking = new Audio('audio/walking.mp3');
+    groundLevel = 200;
 
     IMAGES_IDLE = [
         'img/2_character_pepe/1_idle/idle/I-1.png',
@@ -120,7 +120,6 @@ class Character extends MovableObject {
         this.loadImages(this.IMAGES_JUMPING);
         this.loadImages(this.IMAGES_DEAD);
         this.loadImages(this.IMAGES_HURT);
-        sounds.push(this.walking);
         this.applyGravity();
         this.animate();
         this.lastHit = 0;
@@ -145,18 +144,22 @@ class Character extends MovableObject {
  */
     moveCharacter() {
         this.movingInterval = startInterval(() => {
+            if (!this.world || !this.world.keyboard || !this.world.level || this.world === null) {
+                return;
+            }
             if (this.world.keyboard.RIGHT &amp;&amp; this.x &lt; this.world.level.level_end_x) {
                 this.moveRight();
                 this.otherDirection = false;
             }
-            if (this.world.keyboard.LEFT &amp;&amp; this.x > 50) {
+            if (this.world.keyboard.LEFT &amp;&amp; this.x > 35) {
                 this.moveLeft();
                 this.otherDirection = true;
             }
             if (this.world.keyboard.UP &amp;&amp; !this.isAboveGround()) {
                 this.jump();
             }
-            this.world.cameraX = -this.x + 50;
+            this.stayOnGround();
+            this.world.cameraX = -this.x + 200;
         }, 1000 / 60);
     }
 
@@ -168,9 +171,15 @@ class Character extends MovableObject {
    */
     animateCharacter() {
         startInterval(() => {
+            if (!this.world || !this.world.keyboard) {
+                return;
+            }
             if (this.isDead()) {
                 clearInterval(this.movingInterval);
                 this.playAnimation(this.IMAGES_DEAD);
+                if (this.world) {
+                    this.world.characterIsDead = true;
+                }
             } else if (this.isHurt()) {
                 this.playAnimation(this.IMAGES_HURT);
             } else if (this.isAboveGround()) {
@@ -179,38 +188,77 @@ class Character extends MovableObject {
             } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
                 this.getMoveTime();
                 this.playAnimation(this.IMAGES_WALKING);
-                if (isMuted === false &amp;&amp; this.walking.paused) {
-                    this.walking.play();
+                if (isMuted === false &amp;&amp; this.world.walking.paused) {
+                    this.world.walking.play();
                 }
             } else if (this.getSleepTime()) {
                 this.playAnimation(this.IMAGES_SLEEPING)
             } else {
-                this.walking.pause();
+                if (this.world &amp;&amp; this.world.walking) {
+                    this.world.walking.pause();
+                }
                 this.playAnimation(this.IMAGES_IDLE);
             }
         }, 100);
     }
 
     /**
- * Records the current time as last movement time
- * Used for sleep animation timing
+ * Ensures character stays on ground level
  * @function
  * @returns {void}
  */
+    stayOnGround() {
+        if (this.y > this.groundLevel) {
+            this.y = this.groundLevel;
+            this.speedY = 0;
+        }
+    }
+
+    /**
+ * Checks if character is above ground level
+ * @function
+ * @returns {boolean}
+ */
+    isAboveGround() {
+        return this.y &lt; this.groundLevel;
+    }
+
+    /**
+    * Records the current time as last movement time
+    * Used for sleep animation timing
+    * @function
+    * @returns {void}
+    */
     getMoveTime() {
         let currentTime = new Date().getTime();
         this.lastMove = currentTime;
     }
 
     /**
- * Determines if character should show sleep animation
- * Returns true if no movement for more than 5 seconds
- * @function
- * @returns {boolean} True if character should sleep
- */
+    * Determines if character should show sleep animation
+    * Returns true if no movement for more than 8 seconds
+    * @function
+    * @returns {boolean} True if character should sleep
+    */
     getSleepTime() {
         let lastTimeMoved = new Date().getTime() - this.lastMove;
-        return lastTimeMoved > 5000;
+        return lastTimeMoved > 8000;
+    }
+
+    /**
+    * Cleans up character intervals when character is destroyed
+    * @function
+    * @returns {void}
+    */
+    cleanup() {
+        if (this.movingInterval) {
+            clearInterval(this.movingInterval);
+            this.movingInterval = null;
+        }
+        if (this.animationInterval) {
+            clearInterval(this.animationInterval);
+            this.animationInterval = null;
+        }
     }
 }</code></pre>
         </article>
@@ -222,13 +270,13 @@ class Character extends MovableObject {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Bottle.html">Bottle</a></li><li><a href="Bottlebar.html">Bottlebar</a></li><li><a href="Character.html">Character</a></li><li><a href="Chicken.html">Chicken</a></li><li><a href="Clouds.html">Clouds</a></li><li><a href="Coin.html">Coin</a></li><li><a href="Coinbar.html">Coinbar</a></li><li><a href="CollectableObject.html">CollectableObject</a></li><li><a href="DrawableObject.html">DrawableObject</a></li><li><a href="Endboss.html">Endboss</a></li><li><a href="EndbossHealth.html">EndbossHealth</a></li><li><a href="MovableObject.html">MovableObject</a></li><li><a href="Statusbar.html">Statusbar</a></li><li><a href="ThrowableObject.html">ThrowableObject</a></li><li><a href="World.html">World</a></li><li><a href="smallChicken.html">smallChicken</a></li></ul><h3>Global</h3><ul><li><a href="global.html#checkOrientation">checkOrientation</a></li><li><a href="global.html#clearAllIntervals">clearAllIntervals</a></li><li><a href="global.html#fullscreen">fullscreen</a></li><li><a href="global.html#handleKeyDown">handleKeyDown</a></li><li><a href="global.html#handleKeyUp">handleKeyUp</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initLevel">initLevel</a></li><li><a href="global.html#initMobileControls">initMobileControls</a></li><li><a href="global.html#restartGame">restartGame</a></li><li><a href="global.html#setupMobileControls">setupMobileControls</a></li><li><a href="global.html#showLosingScreen">showLosingScreen</a></li><li><a href="global.html#showWinningScreen">showWinningScreen</a></li><li><a href="global.html#startGame">startGame</a></li><li><a href="global.html#startInterval">startInterval</a></li><li><a href="global.html#turnOffMusic">turnOffMusic</a></li><li><a href="global.html#turnOnMusic">turnOnMusic</a></li><li><a href="global.html#updateSoundUI">updateSoundUI</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Bottle.html">Bottle</a></li><li><a href="Bottlebar.html">Bottlebar</a></li><li><a href="Character.html">Character</a></li><li><a href="Chicken.html">Chicken</a></li><li><a href="Clouds.html">Clouds</a></li><li><a href="Coin.html">Coin</a></li><li><a href="Coinbar.html">Coinbar</a></li><li><a href="CollectableObject.html">CollectableObject</a></li><li><a href="Collision.html">Collision</a></li><li><a href="DrawableObject.html">DrawableObject</a></li><li><a href="Endboss.html">Endboss</a></li><li><a href="EndbossHealth.html">EndbossHealth</a></li><li><a href="MovableObject.html">MovableObject</a></li><li><a href="Statusbar.html">Statusbar</a></li><li><a href="ThrowableObject.html">ThrowableObject</a></li><li><a href="World.html">World</a></li><li><a href="smallChicken.html">smallChicken</a></li></ul><h3>Global</h3><ul><li><a href="global.html#checkOrientation">checkOrientation</a></li><li><a href="global.html#clearAllIntervals">clearAllIntervals</a></li><li><a href="global.html#handleKeyDown">handleKeyDown</a></li><li><a href="global.html#handleKeyUp">handleKeyUp</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initLevel">initLevel</a></li><li><a href="global.html#initMobileControls">initMobileControls</a></li><li><a href="global.html#resetFromLosingScreen">resetFromLosingScreen</a></li><li><a href="global.html#resetFromWinningScreen">resetFromWinningScreen</a></li><li><a href="global.html#resetMobileControls">resetMobileControls</a></li><li><a href="global.html#restartGame">restartGame</a></li><li><a href="global.html#restartLoseGame">restartLoseGame</a></li><li><a href="global.html#restartWinGame">restartWinGame</a></li><li><a href="global.html#setupMobileControls">setupMobileControls</a></li><li><a href="global.html#startGame">startGame</a></li><li><a href="global.html#startInterval">startInterval</a></li><li><a href="global.html#toggleEndScreen">toggleEndScreen</a></li><li><a href="global.html#turnOffMusic">turnOffMusic</a></li><li><a href="global.html#turnOnMusic">turnOnMusic</a></li><li><a href="global.html#updateSoundUI">updateSoundUI</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Tue Dec 02 2025 10:44:12 GMT+0100 (Mitteleuropäische Normalzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Wed Dec 10 2025 21:24:38 GMT+0100 (Mitteleuropäische Normalzeit)
 </footer>
 
 <script> prettyPrint(); </script>

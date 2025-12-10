@@ -40,6 +40,7 @@ class ThrowableObject extends MovableObject {
         left: 10,
         right: 10
     };
+    throwDirection;
 
     IMAGES_THROWING = ['img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png',
         'img/6_salsa_bottle/bottle_rotation/2_bottle_rotation.png',
@@ -68,35 +69,52 @@ class ThrowableObject extends MovableObject {
     }
 
     /**
- * Initiates the bottle throwing physics and animation
- * Sets upward velocity, applies gravity, plays sound, and starts movement loop
+ * Sets the throw direction for the bottle
+ * Called immediately after construction
  * @function
+ * @param {boolean} direction - True for left, false for right
  * @returns {void}
  */
+    setThrowDirection(direction) {
+        this.throwDirection = direction;
+    }
+
+    /**
+     * Initiates the bottle throwing physics and animation
+     * Sets upward velocity, applies gravity, plays sound, and starts movement loop
+     * @method
+     * @returns {void}
+     */
     throw() {
         this.speedY = 15;
         this.applyGravity();
         if (isMuted === false) {
             this.throwBottle.play();
         };
-        this.throwIntervall = startInterval(() => {
-            if (!this.splashed) {
+        this.throwInterval = startInterval(() => {
+            if (this.throwDirection !== undefined) {
                 this.playAnimation(this.IMAGES_THROWING);
-                this.x += 10;
+                if (this.throwDirection) {
+                    this.x -= 10;
+                } else {
+                    this.x += 10;
+                }
                 if (this.y >= 355) {
                     this.hitGround();
+                    if (!isMuted) {
+                        this.world.bottleBreaking.play();
+                    }
                 }
             }
-
         }, 25);
     }
 
     /**
- * Handles bottle collision with ground
- * Stops bottle movement and triggers splash animation
- * @function
- * @returns {void}
- */
+    * Handles bottle collision with ground
+    * Stops bottle movement and triggers splash animation
+    * @function
+    * @returns {void}
+    */
     hitGround() {
         if (this.splashed) return;
         this.y = 380;
@@ -104,17 +122,17 @@ class ThrowableObject extends MovableObject {
     }
 
     /**
- * Plays bottle splash animation and removes bottle from world
- * Shows splash effects for 600ms then removes bottle from game
- * @function
- * @returns {void}
- */
+    * Plays bottle splash animation and removes bottle from world
+    * Shows splash effects for 600ms then removes bottle from game
+    * @function
+    * @returns {void}
+    */
     splash() {
         if (this.splashed) return;
         this.splashed = true;
         this.speedY = 0;
         this.acceleration = 0;
-        clearInterval(this.throwIntervall);
+        clearInterval(this.throwInterval);
         this.splashingIntervall = startInterval(() => {
             this.playAnimation(this.IMAGES_SPLASHING);
         }, 100);
@@ -127,6 +145,22 @@ class ThrowableObject extends MovableObject {
         }, 600);
     }
 
+    /**
+ * Cleans up throwable object intervals
+ * @function
+ * @returns {void}
+ */
+    cleanup() {
+        if (this.throwInterval) {
+            clearInterval(this.throwInterval);
+            this.throwInterval = null;
+        }
+        if (this.splashingInterval) {
+            clearInterval(this.splashingInterval);
+            this.splashingInterval = null;
+        }
+    }
+
 }</code></pre>
         </article>
     </section>
@@ -137,13 +171,13 @@ class ThrowableObject extends MovableObject {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Bottle.html">Bottle</a></li><li><a href="Bottlebar.html">Bottlebar</a></li><li><a href="Character.html">Character</a></li><li><a href="Chicken.html">Chicken</a></li><li><a href="Clouds.html">Clouds</a></li><li><a href="Coin.html">Coin</a></li><li><a href="Coinbar.html">Coinbar</a></li><li><a href="CollectableObject.html">CollectableObject</a></li><li><a href="DrawableObject.html">DrawableObject</a></li><li><a href="Endboss.html">Endboss</a></li><li><a href="EndbossHealth.html">EndbossHealth</a></li><li><a href="MovableObject.html">MovableObject</a></li><li><a href="Statusbar.html">Statusbar</a></li><li><a href="ThrowableObject.html">ThrowableObject</a></li><li><a href="World.html">World</a></li><li><a href="smallChicken.html">smallChicken</a></li></ul><h3>Global</h3><ul><li><a href="global.html#checkOrientation">checkOrientation</a></li><li><a href="global.html#clearAllIntervals">clearAllIntervals</a></li><li><a href="global.html#fullscreen">fullscreen</a></li><li><a href="global.html#handleKeyDown">handleKeyDown</a></li><li><a href="global.html#handleKeyUp">handleKeyUp</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initLevel">initLevel</a></li><li><a href="global.html#initMobileControls">initMobileControls</a></li><li><a href="global.html#restartGame">restartGame</a></li><li><a href="global.html#setupMobileControls">setupMobileControls</a></li><li><a href="global.html#showLosingScreen">showLosingScreen</a></li><li><a href="global.html#showWinningScreen">showWinningScreen</a></li><li><a href="global.html#startGame">startGame</a></li><li><a href="global.html#startInterval">startInterval</a></li><li><a href="global.html#turnOffMusic">turnOffMusic</a></li><li><a href="global.html#turnOnMusic">turnOnMusic</a></li><li><a href="global.html#updateSoundUI">updateSoundUI</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Bottle.html">Bottle</a></li><li><a href="Bottlebar.html">Bottlebar</a></li><li><a href="Character.html">Character</a></li><li><a href="Chicken.html">Chicken</a></li><li><a href="Clouds.html">Clouds</a></li><li><a href="Coin.html">Coin</a></li><li><a href="Coinbar.html">Coinbar</a></li><li><a href="CollectableObject.html">CollectableObject</a></li><li><a href="Collision.html">Collision</a></li><li><a href="DrawableObject.html">DrawableObject</a></li><li><a href="Endboss.html">Endboss</a></li><li><a href="EndbossHealth.html">EndbossHealth</a></li><li><a href="MovableObject.html">MovableObject</a></li><li><a href="Statusbar.html">Statusbar</a></li><li><a href="ThrowableObject.html">ThrowableObject</a></li><li><a href="World.html">World</a></li><li><a href="smallChicken.html">smallChicken</a></li></ul><h3>Global</h3><ul><li><a href="global.html#checkOrientation">checkOrientation</a></li><li><a href="global.html#clearAllIntervals">clearAllIntervals</a></li><li><a href="global.html#handleKeyDown">handleKeyDown</a></li><li><a href="global.html#handleKeyUp">handleKeyUp</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initLevel">initLevel</a></li><li><a href="global.html#initMobileControls">initMobileControls</a></li><li><a href="global.html#resetFromLosingScreen">resetFromLosingScreen</a></li><li><a href="global.html#resetFromWinningScreen">resetFromWinningScreen</a></li><li><a href="global.html#resetMobileControls">resetMobileControls</a></li><li><a href="global.html#restartGame">restartGame</a></li><li><a href="global.html#restartLoseGame">restartLoseGame</a></li><li><a href="global.html#restartWinGame">restartWinGame</a></li><li><a href="global.html#setupMobileControls">setupMobileControls</a></li><li><a href="global.html#startGame">startGame</a></li><li><a href="global.html#startInterval">startInterval</a></li><li><a href="global.html#toggleEndScreen">toggleEndScreen</a></li><li><a href="global.html#turnOffMusic">turnOffMusic</a></li><li><a href="global.html#turnOnMusic">turnOnMusic</a></li><li><a href="global.html#updateSoundUI">updateSoundUI</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Tue Dec 02 2025 10:44:12 GMT+0100 (Mitteleuropäische Normalzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Wed Dec 10 2025 21:24:38 GMT+0100 (Mitteleuropäische Normalzeit)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: models/collisions.class.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: models/collisions.class.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Handles all collision detection and responses in the game
+ * Manages character-enemy collisions, projectile hits, and damage systems
+ * @class Collision
+ */
+class Collision {
+
+    constructor(world) {
+        this.world = world;
+    }
+
+    /**
+ * Starts collision detection loop for all interactive objects
+ * Runs at 10ms intervals for precise collision detection
+ * @function
+ * @returns {void}
+ */
+    collisions() {
+        startInterval(() => {
+            this.checkBottleHitsEnemies();
+            this.checkBottleHitsEndboss();
+            this.checkCharacterEnemyInteractions();
+            this.checkCharacterEndbossInteractions();
+        }, 10);
+    }
+
+    /**
+        * Checks all character interactions with regular enemies
+        * Handles jumping on enemies and collision damage
+        * @function
+        * @returns {void}
+        */
+    checkCharacterEnemyInteractions() {
+        for (let i = 0; i &lt; this.world.level.enemies.length; i++) {
+            const enemy = this.world.level.enemies[i];
+            if (enemy.isDead()) continue;
+            this.checkJumpCollisions(enemy, i);
+            this.checkEnemyCollisions(enemy);
+        }
+    }
+
+    /**
+     * Checks character interactions specifically with the endboss
+     * Handles jumping attacks and collision damage with endboss
+     * @function
+     * @returns {void}
+     */
+    checkCharacterEndbossInteractions() {
+        if (!this.world.endboss.isDead()) {
+            this.checkJumpEndbossCollision(this.world.endboss);
+            this.checkEndbossCollisions(this.world.endboss);
+        }
+    }
+
+    /**
+     * Handles character jumping on enemies (stomp attacks)
+     * Damages enemy, plays sound, and removes dead enemies
+     * @function
+     * @param {MovableObject} enemy - The enemy being stomped
+     * @param {number} enemyIndex - Index of enemy in enemies array
+     * @returns {void}
+     */
+    checkJumpCollisions(enemy, enemyIndex) {
+        if (this.world.character.isStomping(enemy, enemyIndex)) {
+            enemy.hitWeak();
+            this.world.stompedEnemies.push(enemy);
+            if (!isMuted) {
+                this.world.killedChicken.play();
+            }
+            setTimeout(() => {
+                if (enemy.energy &lt;= 0) {
+                    this.world.level.enemies.splice(enemyIndex, 1);
+                }
+            }, 500)
+            this.world.character.speedY = 15;
+            this.world.character.justStomped = true;
+            setTimeout(() => (this.world.character.justStomped = false), 500);
+        }
+    }
+
+    /**
+     * Handles character jumping on the endboss
+     * Damages endboss, updates health bar, and triggers death sequence
+     * @function
+     * @returns {void}
+     */
+    checkJumpEndbossCollision() {
+        if (this.world.character.isStomping(this.world.endboss)) {
+            this.world.endboss.hitWeak();
+            this.world.endbossHealthBar.setPercentageHealthEndboss(this.world.endboss.energy);
+            if (!isMuted) {
+                this.world.killedChicken.play();
+            }
+            setTimeout(() => {
+                if (this.world.endboss.energy &lt;= 0) {
+                    if (!isMuted) {
+                        this.world.killedEndboss.play();
+                    }
+                    setTimeout(() => {
+                        this.world.endbossIsDead = true;
+                    }, 3000);
+                }
+            })
+            this.world.character.speedY = 15;
+            this.world.character.justStomped = true;
+            setTimeout(() => (this.world.character.justStomped = false), 500);
+        }
+        this.world.checkDeath();
+    }
+
+    /**
+     * Handles character collision damage from regular enemies
+     * Reduces character health and plays hurt sound
+     * @function
+     * @param {MovableObject} enemy - The enemy causing damage
+     * @returns {void}
+     */
+    checkEnemyCollisions(enemy) {
+        if (!this.world.character.justStomped &amp;&amp; this.world.character.isColliding(enemy)) {
+            this.world.character.hitWeak();
+            if (!isMuted) {
+                this.world.getHurt.play();
+            }
+            this.world.statusBar.setPercentageHealth(this.world.character.energy);
+        }
+        this.world.checkDeath();
+    }
+
+    /**
+     * Handles character collision damage from endboss
+     * Causes stronger damage than regular enemies
+     * @function
+     * @returns {void}
+     */
+    checkEndbossCollisions() {
+        if (!this.world.character.justStomped &amp;&amp; this.world.character.isColliding(this.world.endboss)) {
+            this.world.character.hitStrong();
+            if (!isMuted) {
+                this.world.getHurt.play();
+            }
+            this.world.statusBar.setPercentageHealth(this.world.character.energy);
+        }
+        this.world.checkDeath();
+    }
+
+    /**
+     * Checks if thrown bottles hit any enemies
+     * Triggers bottle splash animation and enemy damage
+     * @function
+     * @returns {void}
+     */
+    checkBottleHitsEnemies() {
+        this.world.throwableObjects.forEach((bottle, bottleIndex) => {
+            if (bottle.splashed) return;
+            this.world.level.enemies.forEach((enemy, enemyIndex) => {
+                if (!enemy.isDead() &amp;&amp; bottle.isColliding(enemy)) {
+                    bottle.splash();
+                    if (!isMuted) {
+                        this.world.bottleBreaking.play();
+                    }
+                    enemy.hitWeak();
+                    if (!isMuted) {
+                        this.world.killedChicken.play();
+                    }
+                    setTimeout(() => {
+                        if (enemy.energy &lt;= 0) {
+                            this.world.level.enemies.splice(enemyIndex, 1);
+                        }
+                    }, 200)
+                }
+            });
+        });
+    }
+
+    /**
+     * Checks if thrown bottles hit the endboss
+     * Triggers bottle splash and endboss damage
+     * @function
+     * @returns {void}
+     */
+    checkBottleHitsEndboss() {
+        this.world.throwableObjects.forEach((bottle, bottleIndex) => {
+            if (bottle.splashed) return;
+            if (!this.world.endboss.isDead() &amp;&amp; bottle.isColliding(this.world.endboss) &amp;&amp; !bottle.splashed) {
+                bottle.splash();
+                if (!isMuted) {
+                    this.world.bottleBreaking.play();
+                }
+                this.world.endboss.bottleHitEndboss();
+                this.world.endbossHealthBar.setPercentageHealthEndboss(this.world.endboss.energy);
+                if (!isMuted) {
+                    this.world.killedChicken.play();
+                }
+                this.world.checkDeath();
+            }
+        })
+    }
+
+    /**
+     * Checks collection of bottle collectables
+     * Updates bottle count and removes collected bottles
+     * @function
+     * @returns {void}
+     */
+    checkCollectedBottles() {
+        this.world.level.bottles.forEach((bottle, index) => {
+            if (!bottle.collected &amp;&amp; this.world.character.isColliding(bottle)) {
+                bottle.collected = true;
+                if (!isMuted) {
+                    this.world.collectBottle.play();
+                }
+                this.world.level.bottles.splice(index, 1);
+                this.world.currentBottleCount++;
+                this.world.bottleBar.setPercentageBottle(this.world.currentBottleCount);
+            }
+        });
+    }
+
+    /**
+     * Runs all collectable object collision checks
+     * Handles coins and bottles collection
+     * @function
+     * @returns {void}
+     */
+    checkCollectableCollisions() {
+        this.checkCollectedCoins();
+        this.checkCollectedBottles();
+    }
+
+    /**
+     * Checks collection of coin collectables
+     * Updates coin count and removes collected coins
+     * @function
+     * @returns {void}
+     */
+    checkCollectedCoins() {
+        this.world.level.coins.forEach((coin, index) => {
+            if (!coin.collected &amp;&amp; this.world.character.isColliding(coin)) {
+                coin.collected = true;
+                if (!isMuted) {
+                    this.world.collectCoin.play();
+                }
+                this.world.character.coins++;
+                this.world.coinBar.setPercentageCoin(this.world.character.coins);
+                this.world.level.coins.splice(index, 1);
+            }
+        });
+    }
+
+    /**
+     * Cleans up collision intervals when collision system is destroyed
+     * @function
+     * @returns {void}
+     */
+    cleanup() {
+        if (this.collisionInterval) {
+            clearInterval(this.collisionInterval);
+            this.collisionInterval = null;
+        }
+    }
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Bottle.html">Bottle</a></li><li><a href="Bottlebar.html">Bottlebar</a></li><li><a href="Character.html">Character</a></li><li><a href="Chicken.html">Chicken</a></li><li><a href="Clouds.html">Clouds</a></li><li><a href="Coin.html">Coin</a></li><li><a href="Coinbar.html">Coinbar</a></li><li><a href="CollectableObject.html">CollectableObject</a></li><li><a href="Collision.html">Collision</a></li><li><a href="DrawableObject.html">DrawableObject</a></li><li><a href="Endboss.html">Endboss</a></li><li><a href="EndbossHealth.html">EndbossHealth</a></li><li><a href="MovableObject.html">MovableObject</a></li><li><a href="Statusbar.html">Statusbar</a></li><li><a href="ThrowableObject.html">ThrowableObject</a></li><li><a href="World.html">World</a></li><li><a href="smallChicken.html">smallChicken</a></li></ul><h3>Global</h3><ul><li><a href="global.html#checkOrientation">checkOrientation</a></li><li><a href="global.html#clearAllIntervals">clearAllIntervals</a></li><li><a href="global.html#handleKeyDown">handleKeyDown</a></li><li><a href="global.html#handleKeyUp">handleKeyUp</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initLevel">initLevel</a></li><li><a href="global.html#initMobileControls">initMobileControls</a></li><li><a href="global.html#resetFromLosingScreen">resetFromLosingScreen</a></li><li><a href="global.html#resetFromWinningScreen">resetFromWinningScreen</a></li><li><a href="global.html#resetMobileControls">resetMobileControls</a></li><li><a href="global.html#restartGame">restartGame</a></li><li><a href="global.html#restartLoseGame">restartLoseGame</a></li><li><a href="global.html#restartWinGame">restartWinGame</a></li><li><a href="global.html#setupMobileControls">setupMobileControls</a></li><li><a href="global.html#startGame">startGame</a></li><li><a href="global.html#startInterval">startInterval</a></li><li><a href="global.html#toggleEndScreen">toggleEndScreen</a></li><li><a href="global.html#turnOffMusic">turnOffMusic</a></li><li><a href="global.html#turnOnMusic">turnOnMusic</a></li><li><a href="global.html#updateSoundUI">updateSoundUI</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Wed Dec 10 2025 21:24:38 GMT+0100 (Mitteleuropäische Normalzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

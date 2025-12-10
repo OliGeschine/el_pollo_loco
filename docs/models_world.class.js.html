@@ -35,26 +35,28 @@ class World {
     character = new Character();
     endboss = new Endboss();
     level = level1;
-    enemies = level1.enemies;
-    clouds = level1.clouds;
-    backgroundObjects = level1.backgroundObjects;
     canvas;
-    ctx; // kurzform für context
+    ctx;
     keyboard;
+    collision;
     cameraX = 0;
     endbossHealthBar = new EndbossHealth();
     statusBar = new Statusbar();
     coinBar = new Coinbar();
     bottleBar = new Bottlebar();
     chickenHouse = new chickenHouse();
+    // saloon = new Saloon();
     throwableObjects = [];
-    collectedCoins = [];
-    collectedBottles = [];
     stompedEnemies = [];
-    maxBottles = 5;
     currentBottleCount = 0;
     endbossIsDead = false;
+    characterIsDead = false;
     lastThrowTime = 0;
+    deathTimeouts = [];
+    endbossDeathHandled = false;
+    characterDeathHandled = false;
+    animatonId = null;
+    isDestroyed = false;
 
     characterDies = new Audio('audio/character_fainting.mp3');
     killedEndboss = new Audio('audio/endboss_fainting.mp3');
@@ -64,23 +66,33 @@ class World {
     collectCoin = new Audio('audio/collect_coin.mp3');
     collectBottle = new Audio('audio/collect_bottle.mp3');
     bottleBreaking = new Audio('audio/bottle_breaking.mp3');
+    victorySound = new Audio('audio/victory.mp3');
+    loseSound = new Audio('audio/game_over.mp3');
+    walking = new Audio('audio/walking.mp3');
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
-        sounds.push(this.characterDies);
-        sounds.push(this.killedEndboss);
-        sounds.push(this.killedChicken);
-        sounds.push(this.killedSmallChicken);
-        sounds.push(this.getHurt);
-        sounds.push(this.collectCoin);
-        sounds.push(this.collectBottle);
-        sounds.push(this.bottleBreaking);
-        this.draw();
-        this.setWorld();
-        this.run();
-        this.collisions();
+        this.collision = new Collision(this);
+        if (sounds.length === 0) {
+            sounds.push(this.characterDies,
+                this.killedEndboss,
+                this.killedChicken,
+                this.killedSmallChicken,
+                this.getHurt,
+                this.collectCoin,
+                this.collectBottle,
+                this.bottleBreaking,
+                this.victorySound,
+                this.loseSound,
+                this.walking);
+            this.animationId = 0;
+            this.draw();
+            this.setWorld();
+            this.run();
+            this.collision.collisions();
+        }
     }
 
     /**
@@ -104,198 +116,19 @@ class World {
     run() {
         startInterval(() => {
             this.checkThrowObjects();
-            this.checkCollectableCollisions();
+            this.collision.checkCollectableCollisions();
         }, 200);
     }
 
     /**
-     * Starts collision detection loop for all interactive objects
-     * Runs at 10ms intervals for precise collision detection
-     * @function
-     * @returns {void}
-     */
-    collisions() {
-        startInterval(() => {
-            this.checkBottleHitsEnemies();
-            this.checkBottleHitsEndboss();
-            this.checkCharacterEnemyInteractions();
-            this.checkCharacterEndbossInteractions();
-        }, 10);
-    }
-
-    /**
-     * Checks all character interactions with regular enemies
-     * Handles jumping on enemies and collision damage
-     * @function
-     * @returns {void}
-     */
-    checkCharacterEnemyInteractions() {
-        for (let i = 0; i &lt; this.level.enemies.length; i++) {
-            const enemy = this.level.enemies[i];
-            if (enemy.isDead()) continue;
-            this.checkJumpCollisions(enemy, i);
-            this.checkEnemyCollisions(enemy);
-        }
-    }
-
-    /**
-     * Checks character interactions specifically with the endboss
-     * Handles jumping attacks and collision damage with endboss
-     * @function
-     * @returns {void}
-     */
-    checkCharacterEndbossInteractions() {
-        if (!this.endboss.isDead()) {
-            this.checkJumpEndbossCollision(this.endboss);
-            this.checkEndbossCollisions(this.endboss);
-        }
-    }
-
-    /**
-     * Handles character jumping on enemies (stomp attacks)
-     * Damages enemy, plays sound, and removes dead enemies
-     * @function
-     * @param {MovableObject} enemy - The enemy being stomped
-     * @param {number} enemyIndex - Index of enemy in enemies array
-     * @returns {void}
-     */
-    checkJumpCollisions(enemy, enemyIndex) {
-        if (this.character.isStomping(enemy, enemyIndex)) {
-            enemy.hitWeak();
-            this.stompedEnemies.push(enemy);
-            if (!isMuted) {
-                this.killedChicken.play();
-            }
-            setTimeout(() => {
-                if (enemy.energy &lt;= 0) {
-                    this.level.enemies.splice(enemyIndex, 1);
-                }
-            }, 500)
-            this.character.speedY = 15;
-            this.character.justStomped = true;
-            setTimeout(() => (this.character.justStomped = false), 500);
-        }
-    }
-
-    /**
-     * Handles character jumping on the endboss
-     * Damages endboss, updates health bar, and triggers death sequence
-     * @function
-     * @returns {void}
-     */
-    checkJumpEndbossCollision() {
-        if (this.character.isStomping(this.endboss)) {
-            this.endboss.hitWeak();
-            this.endbossHealthBar.setPercentageHealthEndboss(this.endboss.energy);
-            if (!isMuted) {
-                this.killedChicken.play();
-            }
-            setTimeout(() => {
-                if (this.endboss.energy &lt;= 0) {
-                    if (!isMuted) {
-                        this.killedEndboss.play();
-                    }
-                    setTimeout(() => {
-                        this.endbossIsDead = true;
-                    }, 3000);
-                }
-            })
-            this.character.speedY = 15;
-            this.character.justStomped = true;
-            setTimeout(() => (this.character.justStomped = false), 500);
-        }
+ * Checks and handles character and endboss death states
+ * Triggers appropriate death animations and screen transitions
+ * @method
+ * @returns {void}
+ */
+    checkDeath() {
         this.handleEndbossIsDeadAnimation();
-    }
-
-    /**
-     * Handles character collision damage from regular enemies
-     * Reduces character health and plays hurt sound
-     * @function
-     * @param {MovableObject} enemy - The enemy causing damage
-     * @returns {void}
-     */
-    checkEnemyCollisions(enemy) {
-        if (!this.character.justStomped &amp;&amp; this.character.isColliding(enemy)) {
-            this.character.hitWeak();
-            if (!isMuted) {
-                this.getHurt.play();
-            }
-            this.statusBar.setPercentageHealth(this.character.energy);
-            console.log('energy:', this.character.energy);
-
-        }
         this.handleCharacterIsDeadAnimation();
-    }
-
-    /**
-     * Handles character collision damage from endboss
-     * Causes stronger damage than regular enemies
-     * @function
-     * @returns {void}
-     */
-    checkEndbossCollisions() {
-        if (!this.character.justStomped &amp;&amp; this.character.isColliding(this.endboss)) {
-            this.character.hitStrong();
-            if (!isMuted) {
-                this.getHurt.play();
-            }
-            this.statusBar.setPercentageHealth(this.character.energy);
-            console.log('energy:', this.character.energy);
-        }
-        this.handleCharacterIsDeadAnimation();
-    }
-
-    /**
-     * Checks if thrown bottles hit any enemies
-     * Triggers bottle splash animation and enemy damage
-     * @function
-     * @returns {void}
-     */
-    checkBottleHitsEnemies() {
-        this.throwableObjects.forEach((bottle, bottleIndex) => {
-            if (bottle.splashed) return;
-            this.level.enemies.forEach((enemy, enemyIndex) => {
-                if (!enemy.isDead() &amp;&amp; bottle.isColliding(enemy)) {
-                    bottle.splash();
-                    if (!isMuted) {
-                        this.bottleBreaking.play();
-                    }
-                    enemy.hitWeak();
-                    if (!isMuted) {
-                        this.killedChicken.play();
-                    }
-                    setTimeout(() => {
-                        if (enemy.energy &lt;= 0) {
-                            this.level.enemies.splice(enemyIndex, 1);
-                        }
-                    }, 200)
-                }
-            });
-        });
-    }
-
-    /**
-     * Checks if thrown bottles hit the endboss
-     * Triggers bottle splash and endboss damage
-     * @function
-     * @returns {void}
-     */
-    checkBottleHitsEndboss() {
-        this.throwableObjects.forEach((bottle, bottleIndex) => {
-            if (bottle.splashed) return;
-            if (!this.endboss.isDead() &amp;&amp; bottle.isColliding(this.endboss) &amp;&amp; !bottle.splashed) {
-                bottle.splash();
-                if (!isMuted) {
-                    this.bottleBreaking.play();
-                }
-                this.endboss.bottleHitEndboss();
-                this.endbossHealthBar.setPercentageHealthEndboss(this.endboss.energy);
-                if (!isMuted) {
-                    this.killedChicken.play();
-                }
-                this.handleEndbossIsDeadAnimation();
-            }
-        })
     }
 
     /**
@@ -305,19 +138,19 @@ class World {
      * @returns {void}
      */
     handleEndbossIsDeadAnimation() {
-        setTimeout(() => {
-            if (this.endboss.energy &lt;= 0) {
-                if (!isMuted) {
-                    this.killedEndboss.play();
-                }
-                setTimeout(() => {
-                    this.endbossIsDead = true;
-                }, 3000);
-                setTimeout(() => {
-                    showWinningScreen();
-                }, 3000);
+        if (this.endboss.energy &lt;= 0 &amp;&amp; !this.endbossDeathHandled) {
+            this.endbossDeathHandled = true;
+            if (!isMuted) {
+                this.killedEndboss.play();
             }
-        })
+            const timeoutId = setTimeout(() => {
+                if (this &amp;&amp; !this.characterIsDead) {
+                    this.endbossIsDead = true;
+                    toggleEndScreen(this.endbossIsDead, this.characterIsDead);
+                }
+            }, 2000);
+            this.deathTimeouts.push(timeoutId);
+        }
     }
 
     /**
@@ -327,19 +160,52 @@ class World {
      * @returns {void}
      */
     handleCharacterIsDeadAnimation() {
-        setTimeout(() => {
-            if (this.character.energy &lt;= 0) {
-                this.getHurt.muted = true;
-                if (!isMuted) {
-                    this.characterDies.play();
-                }
-                setTimeout(() => {
-                }, 3000);
-                setTimeout(() => {
-                    showLosingScreen();
-                }, 3000);
+        if (this.character.energy &lt;= 0 &amp;&amp; !this.characterDeathHandled) {
+            this.characterDeathHandled = true;
+            this.getHurt.muted = true;
+            if (!isMuted) {
+                this.characterDies.play();
             }
-        })
+            const timeoutId = setTimeout(() => {
+                if (this &amp;&amp; !this.endbossIsDead) {
+                    this.characterIsDead = true;
+                    toggleEndScreen(this.endbossIsDead, this.characterIsDead);
+                }
+            }, 3000);
+            this.deathTimeouts.push(timeoutId);
+        }
+    }
+
+    /**
+ * Cleans up all pending timeouts and resets death states
+ * Called before destroying world instance
+ * @function
+ * @returns {void}
+ */
+    cleanup() {
+        this.isDestroyed = true;
+        if (this.animationId) {
+            cancelAnimationFrame(this.animationId);
+            this.animationId = null;
+        }
+        this.deathTimeouts.forEach(timeoutId => clearTimeout(timeoutId));
+        this.deathTimeouts = [];
+        this.endbossDeathHandled = false;
+        this.characterDeathHandled = false;
+        if (this.character &amp;&amp; typeof this.character.cleanup === 'function') {
+            this.character.cleanup();
+        }
+        if (this.endboss &amp;&amp; typeof this.endboss.cleanup === 'function') {
+            this.endboss.cleanup();
+        }
+        if (this.collision &amp;&amp; typeof this.collision.cleanup === 'function') {
+            this.collision.cleanup();
+        }
+        this.throwableObjects.forEach(bottle => {
+            if (bottle &amp;&amp; typeof bottle.cleanup === 'function') {
+                bottle.cleanup();
+            }
+        });
     }
 
     /**
@@ -353,62 +219,12 @@ class World {
         if (this.keyboard.SPACE &amp;&amp; this.currentBottleCount > 0 &amp;&amp; currentThrowTime - this.lastThrowTime >= 750 &amp;&amp; !this.character.isDead()) {
             let bottle = new ThrowableObject(this.character.x + 50, this.character.y + 100);
             bottle.world = this;
+            bottle.setThrowDirection(this.character.otherDirection);
             this.throwableObjects.push(bottle);
             this.currentBottleCount--;
             this.bottleBar.setPercentageBottle(this.currentBottleCount);
             this.lastThrowTime = currentThrowTime;
         }
-    }
-
-    /**
-     * Checks collection of bottle collectables
-     * Updates bottle count and removes collected bottles
-     * @function
-     * @returns {void}
-     */
-    checkCollectedBottles() {
-        this.level.bottles.forEach((bottle, index) => {
-            if (!bottle.collected &amp;&amp; this.character.isColliding(bottle)) {
-                bottle.collected = true;
-                if (!isMuted) {
-                    this.collectBottle.play();
-                }
-                this.level.bottles.splice(index, 1);
-                this.currentBottleCount++;
-                this.bottleBar.setPercentageBottle(this.currentBottleCount);
-            }
-        });
-    }
-
-    /**
-     * Runs all collectable object collision checks
-     * Handles coins and bottles collection
-     * @function
-     * @returns {void}
-     */
-    checkCollectableCollisions() {
-        this.checkCollectedCoins();
-        this.checkCollectedBottles();
-    }
-
-    /**
-     * Checks collection of coin collectables
-     * Updates coin count and removes collected coins
-     * @function
-     * @returns {void}
-     */
-    checkCollectedCoins() {
-        this.level.coins.forEach((coin, index) => {
-            if (!coin.collected &amp;&amp; this.character.isColliding(coin)) {
-                coin.collected = true;
-                if (!isMuted) {
-                    this.collectCoin.play();
-                }
-                this.character.coins++;
-                this.coinBar.setPercentageCoin(this.character.coins);
-                this.level.coins.splice(index, 1);
-            }
-        });
     }
 
     /**
@@ -422,6 +238,7 @@ class World {
         this.ctx.translate(this.cameraX, 0);
         this.addObjectsToMap(this.level.backgroundObjects);
         this.addObjectsToMap(this.level.clouds);
+        this.addObjectsToMap(this.level.saloons);
 
         this.ctx.translate(-this.cameraX, 0); // Back
         // ----- space for fixed objects ----- //
@@ -437,15 +254,17 @@ class World {
         this.addObjectsToMap(this.level.bottles);
         this.addObjectsToMap(this.level.coins);
         this.addObjectsToMap(this.throwableObjects);
-        this.addObjectsToMap(this.collectedCoins);
-        this.addObjectsToMap(this.collectedBottles);
         this.addToMap(this.chickenHouse);
         this.ctx.translate(-this.cameraX, 0);
 
-        let self = this
-        requestAnimationFrame(function () {
-            self.draw();
-        });
+        if (this.animationId !== null) {
+            let self = this;
+            this.animationId = requestAnimationFrame(function () {
+                if (self &amp;&amp; self.animationId !== null &amp;&amp; !self.isDestroyed) {
+                    self.draw();
+                }
+            });
+        }
     }
 
     /**
@@ -497,12 +316,11 @@ class World {
         }
 
         mo.draw(this.ctx);
-        mo.drawFrame(this.ctx);
+        // mo.drawFrame(this.ctx);
 
         if (mo.otherDirection) {
             this.flipImageBack(mo);
         }
-
     }
 
     /**
@@ -539,13 +357,13 @@ class World {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Bottle.html">Bottle</a></li><li><a href="Bottlebar.html">Bottlebar</a></li><li><a href="Character.html">Character</a></li><li><a href="Chicken.html">Chicken</a></li><li><a href="Clouds.html">Clouds</a></li><li><a href="Coin.html">Coin</a></li><li><a href="Coinbar.html">Coinbar</a></li><li><a href="CollectableObject.html">CollectableObject</a></li><li><a href="DrawableObject.html">DrawableObject</a></li><li><a href="Endboss.html">Endboss</a></li><li><a href="EndbossHealth.html">EndbossHealth</a></li><li><a href="MovableObject.html">MovableObject</a></li><li><a href="Statusbar.html">Statusbar</a></li><li><a href="ThrowableObject.html">ThrowableObject</a></li><li><a href="World.html">World</a></li><li><a href="smallChicken.html">smallChicken</a></li></ul><h3>Global</h3><ul><li><a href="global.html#checkOrientation">checkOrientation</a></li><li><a href="global.html#clearAllIntervals">clearAllIntervals</a></li><li><a href="global.html#fullscreen">fullscreen</a></li><li><a href="global.html#handleKeyDown">handleKeyDown</a></li><li><a href="global.html#handleKeyUp">handleKeyUp</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initLevel">initLevel</a></li><li><a href="global.html#initMobileControls">initMobileControls</a></li><li><a href="global.html#restartGame">restartGame</a></li><li><a href="global.html#setupMobileControls">setupMobileControls</a></li><li><a href="global.html#showLosingScreen">showLosingScreen</a></li><li><a href="global.html#showWinningScreen">showWinningScreen</a></li><li><a href="global.html#startGame">startGame</a></li><li><a href="global.html#startInterval">startInterval</a></li><li><a href="global.html#turnOffMusic">turnOffMusic</a></li><li><a href="global.html#turnOnMusic">turnOnMusic</a></li><li><a href="global.html#updateSoundUI">updateSoundUI</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Bottle.html">Bottle</a></li><li><a href="Bottlebar.html">Bottlebar</a></li><li><a href="Character.html">Character</a></li><li><a href="Chicken.html">Chicken</a></li><li><a href="Clouds.html">Clouds</a></li><li><a href="Coin.html">Coin</a></li><li><a href="Coinbar.html">Coinbar</a></li><li><a href="CollectableObject.html">CollectableObject</a></li><li><a href="Collision.html">Collision</a></li><li><a href="DrawableObject.html">DrawableObject</a></li><li><a href="Endboss.html">Endboss</a></li><li><a href="EndbossHealth.html">EndbossHealth</a></li><li><a href="MovableObject.html">MovableObject</a></li><li><a href="Statusbar.html">Statusbar</a></li><li><a href="ThrowableObject.html">ThrowableObject</a></li><li><a href="World.html">World</a></li><li><a href="smallChicken.html">smallChicken</a></li></ul><h3>Global</h3><ul><li><a href="global.html#checkOrientation">checkOrientation</a></li><li><a href="global.html#clearAllIntervals">clearAllIntervals</a></li><li><a href="global.html#handleKeyDown">handleKeyDown</a></li><li><a href="global.html#handleKeyUp">handleKeyUp</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initLevel">initLevel</a></li><li><a href="global.html#initMobileControls">initMobileControls</a></li><li><a href="global.html#resetFromLosingScreen">resetFromLosingScreen</a></li><li><a href="global.html#resetFromWinningScreen">resetFromWinningScreen</a></li><li><a href="global.html#resetMobileControls">resetMobileControls</a></li><li><a href="global.html#restartGame">restartGame</a></li><li><a href="global.html#restartLoseGame">restartLoseGame</a></li><li><a href="global.html#restartWinGame">restartWinGame</a></li><li><a href="global.html#setupMobileControls">setupMobileControls</a></li><li><a href="global.html#startGame">startGame</a></li><li><a href="global.html#startInterval">startInterval</a></li><li><a href="global.html#toggleEndScreen">toggleEndScreen</a></li><li><a href="global.html#turnOffMusic">turnOffMusic</a></li><li><a href="global.html#turnOnMusic">turnOnMusic</a></li><li><a href="global.html#updateSoundUI">updateSoundUI</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Tue Dec 02 2025 10:44:12 GMT+0100 (Mitteleuropäische Normalzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Wed Dec 10 2025 21:24:38 GMT+0100 (Mitteleuropäische Normalzeit)
 </footer>
 
 <script> prettyPrint(); </script>

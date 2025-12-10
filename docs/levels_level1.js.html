@@ -54,10 +54,22 @@ function initLevel() {
             new smallChicken(),
         ],
         [
-            new Clouds('img/5_background/layers/4_clouds/1.png'),
-            new Clouds('img/5_background/layers/4_clouds/2.png'),
+            new Clouds('img/5_background/layers/4_clouds/1.png', 300),
+            new Clouds('img/5_background/layers/4_clouds/2.png', 700),
+            new Clouds('img/5_background/layers/4_clouds/1.png', 1200),
+            new Clouds('img/5_background/layers/4_clouds/2.png', 1600),
+            new Clouds('img/5_background/layers/4_clouds/1.png', 2100),
+            new Clouds('img/5_background/layers/4_clouds/2.png', 2500),
+            new Clouds('img/5_background/layers/4_clouds/1.png', 2900),
+            new Clouds('img/5_background/layers/4_clouds/2.png', 3400),
+            new Clouds('img/5_background/layers/4_clouds/2.png', 3700),
+            new Clouds('img/5_background/layers/4_clouds/2.png', 4100),
         ],
         [
+            new BackgroundObject('img/5_background/layers/air.png', -720),
+            new BackgroundObject('img/5_background/layers/3_third_layer/2.png', -720),
+            new BackgroundObject('img/5_background/layers/2_second_layer/2.png', -720),
+            new BackgroundObject('img/5_background/layers/1_first_layer/2.png', -720),
             new BackgroundObject('img/5_background/layers/air.png', 0),
             new BackgroundObject('img/5_background/layers/3_third_layer/1.png', 0),
             new BackgroundObject('img/5_background/layers/2_second_layer/1.png', 0),
@@ -87,6 +99,9 @@ function initLevel() {
             new BackgroundObject('img/5_background/layers/2_second_layer/1.png', 4320),
             new BackgroundObject('img/5_background/layers/1_first_layer/1.png', 4320),
 
+        ],
+        [
+            new Saloon('img/icons/saloon.png', -200),
         ],
         [
             new Coin(700),
@@ -119,13 +134,13 @@ function initLevel() {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Bottle.html">Bottle</a></li><li><a href="Bottlebar.html">Bottlebar</a></li><li><a href="Character.html">Character</a></li><li><a href="Chicken.html">Chicken</a></li><li><a href="Clouds.html">Clouds</a></li><li><a href="Coin.html">Coin</a></li><li><a href="Coinbar.html">Coinbar</a></li><li><a href="CollectableObject.html">CollectableObject</a></li><li><a href="DrawableObject.html">DrawableObject</a></li><li><a href="Endboss.html">Endboss</a></li><li><a href="EndbossHealth.html">EndbossHealth</a></li><li><a href="MovableObject.html">MovableObject</a></li><li><a href="Statusbar.html">Statusbar</a></li><li><a href="ThrowableObject.html">ThrowableObject</a></li><li><a href="World.html">World</a></li><li><a href="smallChicken.html">smallChicken</a></li></ul><h3>Global</h3><ul><li><a href="global.html#checkOrientation">checkOrientation</a></li><li><a href="global.html#clearAllIntervals">clearAllIntervals</a></li><li><a href="global.html#fullscreen">fullscreen</a></li><li><a href="global.html#handleKeyDown">handleKeyDown</a></li><li><a href="global.html#handleKeyUp">handleKeyUp</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initLevel">initLevel</a></li><li><a href="global.html#initMobileControls">initMobileControls</a></li><li><a href="global.html#restartGame">restartGame</a></li><li><a href="global.html#setupMobileControls">setupMobileControls</a></li><li><a href="global.html#showLosingScreen">showLosingScreen</a></li><li><a href="global.html#showWinningScreen">showWinningScreen</a></li><li><a href="global.html#startGame">startGame</a></li><li><a href="global.html#startInterval">startInterval</a></li><li><a href="global.html#turnOffMusic">turnOffMusic</a></li><li><a href="global.html#turnOnMusic">turnOnMusic</a></li><li><a href="global.html#updateSoundUI">updateSoundUI</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Bottle.html">Bottle</a></li><li><a href="Bottlebar.html">Bottlebar</a></li><li><a href="Character.html">Character</a></li><li><a href="Chicken.html">Chicken</a></li><li><a href="Clouds.html">Clouds</a></li><li><a href="Coin.html">Coin</a></li><li><a href="Coinbar.html">Coinbar</a></li><li><a href="CollectableObject.html">CollectableObject</a></li><li><a href="Collision.html">Collision</a></li><li><a href="DrawableObject.html">DrawableObject</a></li><li><a href="Endboss.html">Endboss</a></li><li><a href="EndbossHealth.html">EndbossHealth</a></li><li><a href="MovableObject.html">MovableObject</a></li><li><a href="Statusbar.html">Statusbar</a></li><li><a href="ThrowableObject.html">ThrowableObject</a></li><li><a href="World.html">World</a></li><li><a href="smallChicken.html">smallChicken</a></li></ul><h3>Global</h3><ul><li><a href="global.html#checkOrientation">checkOrientation</a></li><li><a href="global.html#clearAllIntervals">clearAllIntervals</a></li><li><a href="global.html#handleKeyDown">handleKeyDown</a></li><li><a href="global.html#handleKeyUp">handleKeyUp</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initLevel">initLevel</a></li><li><a href="global.html#initMobileControls">initMobileControls</a></li><li><a href="global.html#resetFromLosingScreen">resetFromLosingScreen</a></li><li><a href="global.html#resetFromWinningScreen">resetFromWinningScreen</a></li><li><a href="global.html#resetMobileControls">resetMobileControls</a></li><li><a href="global.html#restartGame">restartGame</a></li><li><a href="global.html#restartLoseGame">restartLoseGame</a></li><li><a href="global.html#restartWinGame">restartWinGame</a></li><li><a href="global.html#setupMobileControls">setupMobileControls</a></li><li><a href="global.html#startGame">startGame</a></li><li><a href="global.html#startInterval">startInterval</a></li><li><a href="global.html#toggleEndScreen">toggleEndScreen</a></li><li><a href="global.html#turnOffMusic">turnOffMusic</a></li><li><a href="global.html#turnOnMusic">turnOnMusic</a></li><li><a href="global.html#updateSoundUI">updateSoundUI</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Tue Dec 02 2025 10:44:12 GMT+0100 (Mitteleuropäische Normalzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Wed Dec 10 2025 21:24:38 GMT+0100 (Mitteleuropäische Normalzeit)
 </footer>
 
 <script> prettyPrint(); </script>
