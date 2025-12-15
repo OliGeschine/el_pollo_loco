@@ -13,14 +13,16 @@ class Character extends MovableObject {
         top: 100,
         bottom: 10,
         left: 15,
-        right: 30,
+        right: 20,
     };
-    speed = 5;
+    speed = 4;
     world;
     coins = 0;
     energy = 50;
     justStomped = false;
     groundLevel = 200;
+    jumpAnimationIndex = 0;
+    isJumping = false;
 
     IMAGES_IDLE = [
         'img/2_character_pepe/1_idle/idle/I-1.png',
@@ -154,9 +156,10 @@ class Character extends MovableObject {
                 }
             } else if (this.isHurt()) {
                 this.playAnimation(this.IMAGES_HURT);
+                this.getMoveTime();
             } else if (this.isAboveGround()) {
                 this.getMoveTime();
-                this.playAnimation(this.IMAGES_JUMPING);
+                this.playJumpAnimation();
             } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
                 this.getMoveTime();
                 this.playAnimation(this.IMAGES_WALKING);
@@ -183,6 +186,7 @@ class Character extends MovableObject {
         if (this.y > this.groundLevel) {
             this.y = this.groundLevel;
             this.speedY = 0;
+            this.isJumping = false;
         }
     }
 
@@ -215,6 +219,36 @@ class Character extends MovableObject {
     getSleepTime() {
         let lastTimeMoved = new Date().getTime() - this.lastMove;
         return lastTimeMoved > 8000;
+    }
+
+    /**
+     * Makes character jump and initializes controlled jump animation
+     * Resets jump animation to start from first frame
+     * @function
+     * @returns {void}
+     */
+    jump() {
+        this.speedY = 22;
+        this.jumpAnimationIndex = 0;
+        this.isJumping = true;
+    }
+
+    /**
+     * Plays controlled jump animation from first to last frame
+     * Each jump cycle shows complete animation sequence
+     * @function
+     * @returns {void}
+     */
+    playJumpAnimation() {
+        if (this.isJumping && this.jumpAnimationIndex < this.IMAGES_JUMPING.length) {
+            let path = this.IMAGES_JUMPING[this.jumpAnimationIndex];
+            this.img = this.imageCache[path];
+            this.jumpAnimationIndex++;
+            if (this.jumpAnimationIndex >= this.IMAGES_JUMPING.length || !this.isAboveGround()) {
+                this.isJumping = false;
+                this.jumpAnimationIndex = 0;
+            }
+        }
     }
 
     /**

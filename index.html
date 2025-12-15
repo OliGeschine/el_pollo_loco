@@ -88,7 +88,7 @@
     <div id="content" class="main_content" width="720" height="480">
         <div id="iconBar" class="icon_bar dNone">
             <div>
-                <img src="img/icons/home.png" alt="frontPage" onclick="window.location.reload()">
+                <img src="img/icons/home.png" alt="frontPage" onclick="backToStartScreen()">
             </div>
             <div id="soundOn" onclick="turnOffMusic()">
                 <img src="img/icons/sound-on.png" alt="sound-on">
@@ -104,7 +104,7 @@
         <div id="winning_overlay" class="winning_screen dNone">
             <div id="winningScreenIconBar" class="game_buttons dNone">
                 <div id="frontPage">
-                    <img src="img/icons/return-to-home.png" alt="frontPage" onclick="window.location.reload()">
+                    <img src="img/icons/return-to-home.png" alt="frontPage" onclick="backToStartScreen()">
                 </div>
                 <div onclick="restartWinGame()">
                     <img src="img/icons/restart-game-white.png" alt="restart">
@@ -116,7 +116,7 @@
         <div id="losing_overlay" class="losing_screen dNone">
             <div id="losingScreenIconBar" class="game_buttons dNone">
                 <div id="frontPage">
-                    <img src="img/icons/return-to-home.png" alt="frontPage" onclick="window.location.reload()">
+                    <img src="img/icons/return-to-home.png" alt="frontPage" onclick="backToStartScreen()">
                 </div>
                 <div onclick="restartLoseGame()">
                     <img src="img/icons/restart-game-white.png" alt="restart">
@@ -164,7 +164,6 @@
 
         <footer>
             <a href="./impressum.html">Impressum</a>
-            <a href="./privacy_policy.html">Privacy Police</a>
         </footer>
 
 </body>

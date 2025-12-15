@@ -4,8 +4,11 @@ let keyboard = new Keyboard();
 let sounds = [];
 let isMuted = localStorage.getItem('isMuted') === 'true';
 
-backgroundSound = new Audio('audio/background_music.mp3');
-backgroundSound.loop = true;
+/**
+ * Global audio cache for reusing audio instances
+ * Prevents recreating audio objects on every game restart
+ */
+window.audioCache = window.audioCache || {};
 
 /**
  * Initializes the game by setting up canvas, world, and audio
@@ -18,12 +21,12 @@ function init() {
     world = new World(canvas, keyboard);
     setTimeout(() => {
         if (isMuted) {
-            backgroundSound.muted = true;
+            world.backgroundSound.muted = true;
         } else {
-            backgroundSound.play().catch(console.error);
+            world.backgroundSound.play();
+            world.backgroundSound.loop = true;
         }
-    }, 100);
-    sounds.push(backgroundSound);
+    }, 10);
     updateSoundUI();
 }
 
@@ -78,3 +81,47 @@ function handleKeyUp(e) {
 
 window.addEventListener("keydown", handleKeyDown);
 window.addEventListener("keyup", handleKeyUp);
+
+/**
+ * Gets cached audio instance or creates new one
+ * Reuses existing audio objects for better performance
+ * @function
+ * @param {string} src - Audio file path
+ * @returns {Audio} Cached or new audio instance
+ */
+function getCachedAudio(src) {
+    if (!window.audioCache[src]) {
+        window.audioCache[src] = new Audio(src);
+        // Preload für bessere Performance
+        window.audioCache[src].preload = 'auto';
+    }
+    return window.audioCache[src];
+}
+
+/**
+ * Preloads all game audio files into cache
+ * Call this on page load for better performance
+ * @function
+ * @returns {void}
+ */
+function preloadGameAudio() {
+    const audioFiles = [
+        'audio/background_music.mp3',
+        'audio/character_fainting.mp3',
+        'audio/endboss_fainting.mp3',
+        'audio/chicken_fainting.mp3',
+        'audio/small_chicken_fainting.mp3',
+        'audio/get_hurt.mp3',
+        'audio/collect_coin.mp3',
+        'audio/collect_bottle.mp3',
+        'audio/bottle_breaking.mp3',
+        'audio/victory.mp3',
+        'audio/game_over.mp3',
+        'audio/walking.mp3'
+    ];
+
+    audioFiles.forEach(src => getCachedAudio(src));
+}
+
+// Audio beim Laden der Seite vorladen
+document.addEventListener('DOMContentLoaded', preloadGameAudio);

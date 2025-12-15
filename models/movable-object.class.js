@@ -73,10 +73,8 @@ class MovableObject extends DrawableObject {
         let characterBottom = (this.y + this.offset.top) + (this.height - this.offset.top - this.offset.bottom);
         let enemyTop = mo.y + mo.offset.top;
         let enemyStompZone = enemyTop + ((mo.height - mo.offset.top - mo.offset.bottom) * 0.5);
-
         let fromAbove = characterBottom >= enemyTop && characterBottom <= enemyStompZone;
         let fallingDown = this.speedY <= 0;
-
         return isColliding && fromAbove && fallingDown;
     }
 
@@ -89,9 +87,8 @@ class MovableObject extends DrawableObject {
     hitWeak() {
         const now = new Date().getTime();
         const timeSinceLastHit = now - this.lastHit;
-
         if (timeSinceLastHit > 1000) {
-            this.energy -= 2;
+            this.energy -= 10;
             if (this.energy < 0) {
                 this.energy = 0;
             }
@@ -108,9 +105,8 @@ class MovableObject extends DrawableObject {
     hitStrong() {
         const now = new Date().getTime();
         const timeSinceLastHit = now - this.lastHit;
-
         if (timeSinceLastHit > 500) {
-            this.energy -= 10;
+            this.energy -= 20;
             if (this.energy < 0) {
                 this.energy = 0;
             }
@@ -127,7 +123,6 @@ class MovableObject extends DrawableObject {
     bottleHitEndboss() {
         const now = new Date().getTime();
         const timeSinceLastHit = now - this.lastHit;
-
         if (timeSinceLastHit > 500) {
             this.energy -= 2;
             if (this.energy < 0) {

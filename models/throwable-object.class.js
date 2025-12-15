@@ -63,6 +63,10 @@ class ThrowableObject extends MovableObject {
         if (isMuted === false) {
             this.throwBottle.play();
         };
+        this.getThrowInterval(this.throwInterval);
+    }
+
+    getThrowInterval(throwInterval) {
         this.throwInterval = startInterval(() => {
             if (this.throwDirection !== undefined) {
                 this.playAnimation(this.IMAGES_THROWING);

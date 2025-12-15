@@ -16,10 +16,23 @@ function startGame() {
     init();
     setTimeout(() => {
         if (window.innerWidth <= 1024 && window.innerHeight <= window.innerWidth) {
-            document.getElementById('mobile-controls')?.classList.remove('dNone');
+            // document.getElementById('mobile-controls')?.classList.remove('dNone');
             setupMobileControls();
         }
     }, 100);
+}
+
+function backToStartScreen() {
+    document.getElementById('overlay').classList.remove('dNone');
+    document.getElementById('canvas').classList.add('dNone');
+    document.getElementById('iconBar').classList.add('dNone');
+    document.getElementById('winning_overlay').classList.add('dNone');
+    document.getElementById('winningScreenIconBar').classList.add('dNone');
+    document.getElementById('losing_overlay').classList.add('dNone');
+    document.getElementById('losingScreenIconBar').classList.add('dNone');
+    clearAllIntervals();
+    world = null;
+    resetSounds();
 }
 
 /**
@@ -30,25 +43,22 @@ function startGame() {
  */
 function restartGame() {
     resetMobileControls();
-    sounds.forEach(sound => {
-        if (sound) {
-            sound.pause();
-            sound.currentTime = 0;
-        }
-    });
-    sounds.length = 0;
+    resetSounds();
     if (world && typeof world.cleanup === 'function') {
         world.cleanup();
     }
     clearAllIntervals();
     world = null;
+    initResetGame();
+}
+
+function initResetGame() {
     setTimeout(() => {
         initLevel();
         init();
-        resetFromLosingScreen();
         setTimeout(() => {
             if (window.innerWidth <= 1024 && window.innerHeight <= window.innerWidth) {
-                document.getElementById('mobile-controls')?.classList.remove('dNone');
+                // document.getElementById('mobile-controls')?.classList.remove('dNone');
                 setupMobileControls();
             }
         }, 50);
@@ -67,25 +77,22 @@ function restartWinGame() {
         world.victorySound.pause();
         world.victorySound.currentTime = 0;
     }
-    sounds.forEach(sound => {
-        if (sound) {
-            sound.pause();
-            sound.currentTime = 0;
-        }
-    });
-    sounds.length = 0;
+    resetSounds();
     if (world && typeof world.cleanup === 'function') {
         world.cleanup();
     }
-    clearAllIntervals();
     world = null;
+    initFromWinGame();
+}
+
+function initFromWinGame() {
     setTimeout(() => {
         initLevel();
         init();
         resetFromWinningScreen();
         setTimeout(() => {
             if (window.innerWidth <= 1024 && window.innerHeight <= window.innerWidth) {
-                document.getElementById('mobile-controls')?.classList.remove('dNone');
+                // document.getElementById('mobile-controls')?.classList.remove('dNone');
                 setupMobileControls();
             }
         }, 50);
@@ -104,25 +111,22 @@ function restartLoseGame() {
         world.loseSound.pause();
         world.loseSound.currentTime = 0;
     }
-    sounds.forEach(sound => {
-        if (sound) {
-            sound.pause();
-            sound.currentTime = 0;
-        }
-    });
-    sounds.length = 0;
+    resetSounds();
     if (world && typeof world.cleanup === 'function') {
         world.cleanup();
     }
-    clearAllIntervals();
     world = null;
+    initFromLoseGame();
+}
+
+function initFromLoseGame() {
     setTimeout(() => {
         initLevel();
         init();
         resetFromLosingScreen();
         setTimeout(() => {
             if (window.innerWidth <= 1024 && window.innerHeight <= window.innerWidth) {
-                document.getElementById('mobile-controls')?.classList.remove('dNone');
+                // document.getElementById('mobile-controls')?.classList.remove('dNone');
                 setupMobileControls();
             }
         }, 50);
@@ -168,28 +172,48 @@ function resetFromLosingScreen() {
 function toggleEndScreen(endbossIsDead, characterIsDead) {
     document.getElementById('canvas').classList.add('dNone');
     document.getElementById('iconBar').classList.add('dNone');
-    if (backgroundSound) {
-        backgroundSound.pause();
-        backgroundSound.currentTime = 0;
+    if (world.backgroundSound) {
+        world.backgroundSound.pause();
+        world.backgroundSound.currentTime = 0;
     }
+    getEndbossIsDeadLogic(endbossIsDead);
+    getCharacterIsDeadLogic(characterIsDead);
+}
+
+function getEndbossIsDeadLogic(endbossIsDead) {
     if (endbossIsDead) {
         document.getElementById('winning_overlay').classList.remove('dNone');
         document.getElementById('winningScreenIconBar').classList.remove('dNone');
         let winScreen = document.getElementById('winningScreenImg');
         winScreen.src = 'img/You won, you lost/You won A.png';
         if (!isMuted && world && world.victorySound) {
-            world.victorySound.play().catch(console.error);
+            world.victorySound.play();
         }
+        clearAllIntervals();
     }
+}
+
+function getCharacterIsDeadLogic(characterIsDead) {
     if (characterIsDead) {
         document.getElementById('losing_overlay').classList.remove('dNone');
         document.getElementById('losingScreenIconBar').classList.remove('dNone');
         let loseScreen = document.getElementById('losingScreenImg');
         loseScreen.src = 'img/You won, you lost/You lost.png';
         if (!isMuted && world && world.loseSound) {
-            world.loseSound.play().catch(console.error);
+            world.loseSound.play();
         }
+        clearAllIntervals();
     }
+}
+
+function resetSounds() {
+    sounds.forEach(sound => {
+        if (sound) {
+            sound.pause();
+            sound.currentTime = 0;
+        }
+    });
+    sounds.length = 0;
 }
 
 /**
@@ -205,7 +229,6 @@ function startInterval(callback, delay) {
         console.error('startInterval: callback must be a function');
         return null;
     }
-
     let id = setInterval(() => {
         try {
             callback();
@@ -214,7 +237,6 @@ function startInterval(callback, delay) {
             clearInterval(id);
         }
     }, delay);
-
     intervalIds.push(id);
     return id;
 }
@@ -241,7 +263,7 @@ function turnOffMusic() {
     localStorage.setItem('isMuted', 'true');
     document.getElementById('soundOn')?.classList.add('dNone');
     document.getElementById('soundOff')?.classList.remove('dNone');
-    backgroundSound.pause();
+    world.backgroundSound.pause();
     sounds.forEach(sound => {
         if (sound) {
             sound.muted = true;
@@ -266,7 +288,7 @@ function turnOnMusic() {
         }
     });
     if (!document.getElementById('canvas').classList.contains('dNone')) {
-        backgroundSound.play().catch(() => { });
+        world.backgroundSound.play();
     }
 }
 
@@ -279,7 +301,7 @@ function turnOnMusic() {
 function initMobileControls() {
     if (window.innerWidth <= 1024 && typeof keyboard !== 'undefined') {
         if (window.innerHeight <= window.innerWidth) {
-            document.getElementById('mobile-controls')?.classList.remove('dNone');
+            // document.getElementById('mobile-controls')?.classList.remove('dNone');
         }
         setupMobileControls();
     }
@@ -297,7 +319,13 @@ function setupMobileControls() {
         return;
     }
     mobileControlsSetup = true;
+    getButtonLeft();
+    getButtonRight();
+    getButtonJump();
+    getButtonThrow();
+}
 
+function getButtonLeft() {
     const btnLeft = document.getElementById('btn-left');
     if (btnLeft) {
         const handlers = {
@@ -306,13 +334,14 @@ function setupMobileControls() {
             mousedown: (e) => { e.preventDefault(); keyboard.LEFT = true; },
             mouseup: (e) => { e.preventDefault(); keyboard.LEFT = false; }
         };
-
         Object.entries(handlers).forEach(([event, handler]) => {
             btnLeft.addEventListener(event, handler);
             mobileEventListeners.push({ element: btnLeft, event, handler });
         });
     }
+}
 
+function getButtonRight() {
     const btnRight = document.getElementById('btn-right');
     if (btnRight) {
         const handlers = {
@@ -321,13 +350,14 @@ function setupMobileControls() {
             mousedown: (e) => { e.preventDefault(); keyboard.RIGHT = true; },
             mouseup: (e) => { e.preventDefault(); keyboard.RIGHT = false; }
         };
-
         Object.entries(handlers).forEach(([event, handler]) => {
             btnRight.addEventListener(event, handler);
             mobileEventListeners.push({ element: btnRight, event, handler });
         });
     }
+}
 
+function getButtonJump() {
     const btnJump = document.getElementById('btn-jump');
     if (btnJump) {
         const handlers = {
@@ -336,13 +366,14 @@ function setupMobileControls() {
             mousedown: (e) => { e.preventDefault(); keyboard.UP = true; },
             mouseup: (e) => { e.preventDefault(); keyboard.UP = false; }
         };
-
         Object.entries(handlers).forEach(([event, handler]) => {
             btnJump.addEventListener(event, handler);
             mobileEventListeners.push({ element: btnJump, event, handler });
         });
     }
+}
 
+function getButtonThrow() {
     const btnThrow = document.getElementById('btn-throw');
     if (btnThrow) {
         const handlers = {
@@ -351,7 +382,6 @@ function setupMobileControls() {
             mousedown: (e) => { e.preventDefault(); keyboard.SPACE = true; },
             mouseup: (e) => { e.preventDefault(); keyboard.SPACE = false; }
         };
-
         Object.entries(handlers).forEach(([event, handler]) => {
             btnThrow.addEventListener(event, handler);
             mobileEventListeners.push({ element: btnThrow, event, handler });
@@ -387,15 +417,15 @@ function checkOrientation() {
 
     if (window.innerWidth <= 1024) {
         if (window.innerHeight > window.innerWidth) {
-            rotateOverlay?.classList.remove('dNone');
+            // rotateOverlay?.classList.remove('dNone');
             mobileControls?.classList.add('dNone');
         } else {
-            rotateOverlay?.classList.add('dNone');
-            mobileControls?.classList.remove('dNone');
+            // rotateOverlay?.classList.add('dNone');
+            // mobileControls?.classList.remove('dNone');
             setupMobileControls();
         }
     } else {
-        rotateOverlay?.classList.add('dNone');
+        // rotateOverlay?.classList.add('dNone');
         mobileControls?.classList.add('dNone');
     }
 }

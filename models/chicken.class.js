@@ -47,7 +47,6 @@ class Chicken extends MovableObject {
                 this.moveLeft();
             }
         }, 1000 / 60)
-
         startInterval(() => {
             if (this.isDead()) {
                 this.playAnimation(this.IMAGES_DEAD);
@@ -57,6 +56,5 @@ class Chicken extends MovableObject {
                 this.playAnimation(this.IMAGES_WALKING);
             }
         }, 100);
-
     }
 }

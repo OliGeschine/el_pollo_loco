@@ -17,7 +17,6 @@ class World {
     coinBar = new Coinbar();
     bottleBar = new Bottlebar();
     chickenHouse = new chickenHouse();
-    // saloon = new Saloon();
     throwableObjects = [];
     stompedEnemies = [];
     currentBottleCount = 0;
@@ -30,17 +29,18 @@ class World {
     animatonId = null;
     isDestroyed = false;
 
-    characterDies = new Audio('audio/character_fainting.mp3');
-    killedEndboss = new Audio('audio/endboss_fainting.mp3');
-    killedChicken = new Audio('audio/chicken_fainting.mp3');
-    killedSmallChicken = new Audio('audio/small_chicken_fainting.mp3');
-    getHurt = new Audio('audio/get_hurt.mp3');
-    collectCoin = new Audio('audio/collect_coin.mp3');
-    collectBottle = new Audio('audio/collect_bottle.mp3');
-    bottleBreaking = new Audio('audio/bottle_breaking.mp3');
-    victorySound = new Audio('audio/victory.mp3');
-    loseSound = new Audio('audio/game_over.mp3');
-    walking = new Audio('audio/walking.mp3');
+    backgroundSound = getCachedAudio('audio/background_music.mp3');
+    characterDies = getCachedAudio('audio/character_fainting.mp3');
+    killedEndboss = getCachedAudio('audio/endboss_fainting.mp3');
+    killedChicken = getCachedAudio('audio/chicken_fainting.mp3');
+    killedSmallChicken = getCachedAudio('audio/small_chicken_fainting.mp3');
+    getHurt = getCachedAudio('audio/get_hurt.mp3');
+    collectCoin = getCachedAudio('audio/collect_coin.mp3');
+    collectBottle = getCachedAudio('audio/collect_bottle.mp3');
+    bottleBreaking = getCachedAudio('audio/bottle_breaking.mp3');
+    victorySound = getCachedAudio('audio/victory.mp3');
+    loseSound = getCachedAudio('audio/game_over.mp3');
+    walking = getCachedAudio('audio/walking.mp3');
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -48,7 +48,9 @@ class World {
         this.keyboard = keyboard;
         this.collision = new Collision(this);
         if (sounds.length === 0) {
-            sounds.push(this.characterDies,
+            sounds.push(
+                this.backgroundSound,
+                this.characterDies,
                 this.killedEndboss,
                 this.killedChicken,
                 this.killedSmallChicken,

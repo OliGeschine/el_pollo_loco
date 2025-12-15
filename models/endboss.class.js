@@ -107,11 +107,9 @@ class Endboss extends MovableObject {
     endbossMovingIntervall() {
         this.animationInterval = startInterval(() => {
             if (!this.world || !this.world.character) return;
-
             let playerX = this.world.character.x;
             let endbossX = this.x;
             let distance = endbossX - playerX;
-
             if (this.isDead()) {
                 this.playAnimation(this.IMAGES_DEAD);
                 return;

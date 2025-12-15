@@ -13,7 +13,6 @@ class Clouds extends MovableObject {
 
     constructor(imagePath, x) {
         super().loadImage(imagePath);
-
         this.x = x;
         this.startX = this.x;
         this.speed = 0.3;

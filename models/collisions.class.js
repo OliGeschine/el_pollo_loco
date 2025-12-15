@@ -72,7 +72,7 @@ class Collision {
                     this.world.level.enemies.splice(enemyIndex, 1);
                 }
             }, 500)
-            this.world.character.speedY = 15;
+            this.world.character.jump();
             this.world.character.justStomped = true;
             setTimeout(() => (this.world.character.justStomped = false), 500);
         }
@@ -101,7 +101,7 @@ class Collision {
                     }, 3000);
                 }
             })
-            this.world.character.speedY = 15;
+            this.world.character.jump();
             this.world.character.justStomped = true;
             setTimeout(() => (this.world.character.justStomped = false), 500);
         }
@@ -197,6 +197,19 @@ class Collision {
     }
 
     /**
+ * Runs all collectable object collision checks
+ * Handles coins and bottles collection
+ * @function
+ * @returns {void}
+ */
+    checkCollectableCollisions() {
+        setTimeout(() => {
+            this.checkCollectedCoins();
+            this.checkCollectedBottles();
+        }, 10);
+    }
+
+    /**
      * Checks collection of bottle collectables
      * Updates bottle count and removes collected bottles
      * @function
@@ -214,17 +227,6 @@ class Collision {
                 this.world.bottleBar.setPercentageBottle(this.world.currentBottleCount);
             }
         });
-    }
-
-    /**
-     * Runs all collectable object collision checks
-     * Handles coins and bottles collection
-     * @function
-     * @returns {void}
-     */
-    checkCollectableCollisions() {
-        this.checkCollectedCoins();
-        this.checkCollectedBottles();
     }
 
     /**
