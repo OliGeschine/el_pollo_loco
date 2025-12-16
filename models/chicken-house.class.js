@@ -8,6 +8,4 @@ class chickenHouse extends DrawableObject {
         super().loadImage('img/icons/chicken-house.png');
         this.x = 4000;
     }
-
-
 }

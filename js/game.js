@@ -3,7 +3,7 @@ let world;
 let keyboard = new Keyboard();
 let sounds = [];
 let isMuted = localStorage.getItem('isMuted') === 'true';
-
+window.keyboard = keyboard;
 /**
  * Global audio cache for reusing audio instances
  * Prevents recreating audio objects on every game restart
@@ -19,6 +19,7 @@ window.audioCache = window.audioCache || {};
 function init() {
     canvas = document.getElementById('canvas');
     world = new World(canvas, keyboard);
+    window.keyboard = keyboard;
     setTimeout(() => {
         if (isMuted) {
             world.backgroundSound.muted = true;

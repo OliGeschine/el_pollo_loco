@@ -8,6 +8,7 @@
     <link rel="icon" href="img/favicon/favicon.png">
 
     <link rel="stylesheet" href="style.css">
+    <script src="js/mobile-controls.js"></script>
     <script src="script.js"></script>
     <script src="models/drawable-object.class.js"></script>
     <script src="models/movable-object.class.js"></script>
@@ -81,8 +82,34 @@
     <div id="overlay" class="start_screen">
         <div class="game_buttons">
             <img src="img/icons/start-game.png" onclick="startGame()">
+            <svg width="50" height="50" viewBox="0 0 80 80" class="impressum_button" onclick="showImpressum()">
+                <circle cx="40" cy="40" r="35" fill="#000000" stroke="#000000" stroke-width="2" />
+                <circle cx="40" cy="28" r="3" fill="#ffffff" />
+                <rect x="37" y="36" width="6" height="20" fill="#ffffff" rx="3" />
+                <rect x="35" y="54" width="10" height="3" fill="#ffffff" rx="1" />
+                <circle cx="40" cy="40" r="30" fill="none" stroke="#cccccc" stroke-width="1" />
+            </svg>
         </div>
         <img src="img/9_intro_outro_screens/start/startscreen_1.png" width="720" height="480">
+    </div>
+
+    <div id="impressum" class="impressum dNone">
+        <img src="img/icons/home.png" alt="frontPage" onclick="backToStartScreen()">
+        <h1>Impressum</h1>
+        <p>Angaben gemäß § 5 TMG</p>
+        <p>Oliver Geschine</p>
+        <div>Icons from <a href="https://pixabay.com/" target="_blank">pixabay.com</a>
+        </div>
+        <div>Sounds from <a href="https://pixabay.com/" target="_blank">pixabay.com</a></div>
+
+        <p>Kontakt:<br>
+            Telefon: 01234-789456<br>
+            Fax: 1234-56789<br>
+            E-Mail: <a href='mailto:muster.mail@web.de'>muster.mail@web.de</a>
+        </p>
+        Impressum vom <a href="https://www.impressum-generator.de">Impressum Generator</a> der <a
+            href="https://www.kanzlei-hasselbach.de/standorte/frankfurt/" rel="nofollow">Kanzlei Hasselbach,
+            Frankfurt</a>
     </div>
 
     <div id="content" class="main_content" width="720" height="480">
@@ -129,7 +156,7 @@
         <canvas id="canvas" width="720" height="480" class="dNone">
         </canvas>
 
-        <div class="instructions_box">
+        <div id="instructions" class="instructions_box">
             <div class="instructions_svg">
                 <div class="instruction_item">
                     <svg width="90" height="60" viewBox="0 0 60 35">
@@ -161,10 +188,6 @@
                 </div>
             </div>
         </div>
-
-        <footer>
-            <a href="./impressum.html">Impressum</a>
-        </footer>
 
 </body>
 

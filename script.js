@@ -1,6 +1,4 @@
 let intervalIds = [];
-let mobileControlsSetup = false;
-let mobileEventListeners = [];
 
 /**
  * Starts the game by hiding overlay and initializing game components
@@ -15,13 +13,19 @@ function startGame() {
     initLevel();
     init();
     setTimeout(() => {
-        if (window.innerWidth <= 1024 && window.innerHeight <= window.innerWidth) {
-            // document.getElementById('mobile-controls')?.classList.remove('dNone');
+        if (window.innerWidth <= 1500 && window.innerHeight <= window.innerWidth && isTouchDevice()) {
+            document.getElementById('mobile-controls')?.classList.remove('dNone');
             setupMobileControls();
         }
-    }, 100);
+    }, 200);
 }
 
+/**
+ * Returns to the start screen and resets all game elements
+ * Hides game UI, shows overlay and instructions, cleans up resources
+ * @function
+ * @returns {void}
+ */
 function backToStartScreen() {
     document.getElementById('overlay').classList.remove('dNone');
     document.getElementById('canvas').classList.add('dNone');
@@ -30,6 +34,8 @@ function backToStartScreen() {
     document.getElementById('winningScreenIconBar').classList.add('dNone');
     document.getElementById('losing_overlay').classList.add('dNone');
     document.getElementById('losingScreenIconBar').classList.add('dNone');
+    document.getElementById('impressum').classList.add('dNone');
+    document.getElementById('instructions').classList.remove('dNone');
     clearAllIntervals();
     world = null;
     resetSounds();
@@ -52,12 +58,18 @@ function restartGame() {
     initResetGame();
 }
 
+/**
+ * Initializes game restart sequence with proper timing
+ * Reinitializes level and world, sets up mobile controls after delay
+ * @function
+ * @returns {void}
+ */
 function initResetGame() {
     setTimeout(() => {
         initLevel();
         init();
         setTimeout(() => {
-            if (window.innerWidth <= 1024 && window.innerHeight <= window.innerWidth) {
+            if (window.innerWidth <= 1500 && window.innerHeight <= window.innerWidth) {
                 // document.getElementById('mobile-controls')?.classList.remove('dNone');
                 setupMobileControls();
             }
@@ -85,13 +97,19 @@ function restartWinGame() {
     initFromWinGame();
 }
 
+/**
+ * Initializes game restart from winning screen
+ * Reinitializes game components and resets UI elements after victory
+ * @function
+ * @returns {void}
+ */
 function initFromWinGame() {
     setTimeout(() => {
         initLevel();
         init();
         resetFromWinningScreen();
         setTimeout(() => {
-            if (window.innerWidth <= 1024 && window.innerHeight <= window.innerWidth) {
+            if (window.innerWidth <= 1500 && window.innerHeight <= window.innerWidth) {
                 // document.getElementById('mobile-controls')?.classList.remove('dNone');
                 setupMobileControls();
             }
@@ -119,13 +137,19 @@ function restartLoseGame() {
     initFromLoseGame();
 }
 
+/**
+ * Initializes game restart from losing screen
+ * Reinitializes game components and resets UI elements after defeat
+ * @function
+ * @returns {void}
+ */
 function initFromLoseGame() {
     setTimeout(() => {
         initLevel();
         init();
         resetFromLosingScreen();
         setTimeout(() => {
-            if (window.innerWidth <= 1024 && window.innerHeight <= window.innerWidth) {
+            if (window.innerWidth <= 1500 && window.innerHeight <= window.innerWidth) {
                 // document.getElementById('mobile-controls')?.classList.remove('dNone');
                 setupMobileControls();
             }
@@ -180,6 +204,13 @@ function toggleEndScreen(endbossIsDead, characterIsDead) {
     getCharacterIsDeadLogic(characterIsDead);
 }
 
+/**
+ * Handles game logic when endboss is defeated
+ * Shows victory screen, plays victory sound, and clears intervals
+ * @function
+ * @param {boolean} endbossIsDead - Whether the endboss has been defeated
+ * @returns {void}
+ */
 function getEndbossIsDeadLogic(endbossIsDead) {
     if (endbossIsDead) {
         document.getElementById('winning_overlay').classList.remove('dNone');
@@ -193,6 +224,13 @@ function getEndbossIsDeadLogic(endbossIsDead) {
     }
 }
 
+/**
+ * Handles game logic when character dies
+ * Shows losing screen, plays game over sound, and clears intervals
+ * @function
+ * @param {boolean} characterIsDead - Whether the character has died
+ * @returns {void}
+ */
 function getCharacterIsDeadLogic(characterIsDead) {
     if (characterIsDead) {
         document.getElementById('losing_overlay').classList.remove('dNone');
@@ -206,6 +244,12 @@ function getCharacterIsDeadLogic(characterIsDead) {
     }
 }
 
+/**
+ * Resets all game sounds to initial state
+ * Pauses all active sounds, resets playback position, and clears sound array
+ * @function
+ * @returns {void}
+ */
 function resetSounds() {
     sounds.forEach(sound => {
         if (sound) {
@@ -293,147 +337,15 @@ function turnOnMusic() {
 }
 
 /**
- * Initializes mobile touch controls if device width indicates mobile/tablet
- * Checks screen width and keyboard availability before setting up controls
+ * Shows the impressum (legal notice) page
+ * Hides game elements and instructions, displays impressum content
  * @function
  * @returns {void}
  */
-function initMobileControls() {
-    if (window.innerWidth <= 1024 && typeof keyboard !== 'undefined') {
-        if (window.innerHeight <= window.innerWidth) {
-            // document.getElementById('mobile-controls')?.classList.remove('dNone');
-        }
-        setupMobileControls();
-    }
+function showImpressum() {
+    document.getElementById('overlay').classList.add('dNone');
+    document.getElementById('canvas').classList.add('dNone');
+    document.getElementById('iconBar').classList.add('dNone');
+    document.getElementById('impressum').classList.remove('dNone');
+    document.getElementById('instructions').classList.add('dNone');
 }
-
-/**
- * Sets up event listeners for mobile touch control buttons
- * Handles touch and mouse events for left, right, jump, and throw buttons
- * Waits for keyboard to be defined before proceeding
- * @function
- * @returns {void}
- */
-function setupMobileControls() {
-    if (typeof keyboard === 'undefined' || mobileControlsSetup) {
-        return;
-    }
-    mobileControlsSetup = true;
-    getButtonLeft();
-    getButtonRight();
-    getButtonJump();
-    getButtonThrow();
-}
-
-function getButtonLeft() {
-    const btnLeft = document.getElementById('btn-left');
-    if (btnLeft) {
-        const handlers = {
-            touchstart: (e) => { e.preventDefault(); keyboard.LEFT = true; },
-            touchend: (e) => { e.preventDefault(); keyboard.LEFT = false; },
-            mousedown: (e) => { e.preventDefault(); keyboard.LEFT = true; },
-            mouseup: (e) => { e.preventDefault(); keyboard.LEFT = false; }
-        };
-        Object.entries(handlers).forEach(([event, handler]) => {
-            btnLeft.addEventListener(event, handler);
-            mobileEventListeners.push({ element: btnLeft, event, handler });
-        });
-    }
-}
-
-function getButtonRight() {
-    const btnRight = document.getElementById('btn-right');
-    if (btnRight) {
-        const handlers = {
-            touchstart: (e) => { e.preventDefault(); keyboard.RIGHT = true; },
-            touchend: (e) => { e.preventDefault(); keyboard.RIGHT = false; },
-            mousedown: (e) => { e.preventDefault(); keyboard.RIGHT = true; },
-            mouseup: (e) => { e.preventDefault(); keyboard.RIGHT = false; }
-        };
-        Object.entries(handlers).forEach(([event, handler]) => {
-            btnRight.addEventListener(event, handler);
-            mobileEventListeners.push({ element: btnRight, event, handler });
-        });
-    }
-}
-
-function getButtonJump() {
-    const btnJump = document.getElementById('btn-jump');
-    if (btnJump) {
-        const handlers = {
-            touchstart: (e) => { e.preventDefault(); keyboard.UP = true; },
-            touchend: (e) => { e.preventDefault(); keyboard.UP = false; },
-            mousedown: (e) => { e.preventDefault(); keyboard.UP = true; },
-            mouseup: (e) => { e.preventDefault(); keyboard.UP = false; }
-        };
-        Object.entries(handlers).forEach(([event, handler]) => {
-            btnJump.addEventListener(event, handler);
-            mobileEventListeners.push({ element: btnJump, event, handler });
-        });
-    }
-}
-
-function getButtonThrow() {
-    const btnThrow = document.getElementById('btn-throw');
-    if (btnThrow) {
-        const handlers = {
-            touchstart: (e) => { e.preventDefault(); keyboard.SPACE = true; },
-            touchend: (e) => { e.preventDefault(); keyboard.SPACE = false; },
-            mousedown: (e) => { e.preventDefault(); keyboard.SPACE = true; },
-            mouseup: (e) => { e.preventDefault(); keyboard.SPACE = false; }
-        };
-        Object.entries(handlers).forEach(([event, handler]) => {
-            btnThrow.addEventListener(event, handler);
-            mobileEventListeners.push({ element: btnThrow, event, handler });
-        });
-    }
-}
-
-/**
- * Removes all mobile control event listeners and resets setup state
- * Called when restarting game or cleaning up mobile controls
- * Prevents duplicate event listeners on multiple setups
- * @function
- * @returns {void}
- */
-function resetMobileControls() {
-    mobileEventListeners.forEach(({ element, event, handler }) => {
-        element.removeEventListener(event, handler);
-    });
-    mobileEventListeners = [];
-    mobileControlsSetup = false;
-}
-
-/**
- * Checks device orientation and adjusts UI accordingly
- * Shows/hides rotation overlay and mobile controls based on orientation and screen size
- * Initializes mobile controls when switching to landscape on mobile devices
- * @function
- * @returns {void}
- */
-function checkOrientation() {
-    const rotateOverlay = document.getElementById('rotate-device-overlay');
-    const mobileControls = document.getElementById('mobile-controls');
-
-    if (window.innerWidth <= 1024) {
-        if (window.innerHeight > window.innerWidth) {
-            // rotateOverlay?.classList.remove('dNone');
-            mobileControls?.classList.add('dNone');
-        } else {
-            // rotateOverlay?.classList.add('dNone');
-            // mobileControls?.classList.remove('dNone');
-            setupMobileControls();
-        }
-    } else {
-        // rotateOverlay?.classList.add('dNone');
-        mobileControls?.classList.add('dNone');
-    }
-}
-
-// Orientation Change Detection
-window.addEventListener('orientationchange', function () {
-    setTimeout(checkOrientation, 100);
-});
-window.addEventListener('resize', checkOrientation);
-
-checkOrientation();
