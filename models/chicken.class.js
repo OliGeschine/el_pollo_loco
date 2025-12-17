@@ -26,6 +26,10 @@ class Chicken extends MovableObject {
         'img/3_enemies_chicken/chicken_normal/2_dead/dead.png',
     ]
 
+    /**
+     * Creates a new chicken enemy with AI behavior and animations
+     * @constructor
+     */
     constructor() {
         super().loadImage('img/3_enemies_chicken/chicken_normal/1_walk/1_w.png');
         this.loadImages(this.IMAGES_WALKING);

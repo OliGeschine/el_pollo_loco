@@ -42,6 +42,12 @@ class World {
     loseSound = getCachedAudio('audio/game_over.mp3');
     walking = getCachedAudio('audio/walking.mp3');
 
+    /**
+     * Creates the main game world with all systems and components
+     * @constructor
+     * @param {HTMLCanvasElement} canvas - The HTML canvas element for rendering
+     * @param {Keyboard} keyboard - The keyboard input handler object
+     */
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
@@ -91,7 +97,7 @@ class World {
         startInterval(() => {
             this.checkThrowObjects();
             this.collision.checkCollectableCollisions();
-        }, 200);
+        }, 100);
     }
 
     /**
@@ -157,6 +163,17 @@ class World {
  * @returns {void}
  */
     cleanup() {
+        this.cleanupWorldState();
+        this.cleanupGameObjects();
+    }
+
+    /**
+     * Cleans up world state, animations, and timeouts
+     * Handles destruction flag, animation frames, and death timeouts
+     * @function
+     * @returns {void}
+     */
+    cleanupWorldState() {
         this.isDestroyed = true;
         if (this.animationId) {
             cancelAnimationFrame(this.animationId);
@@ -166,6 +183,15 @@ class World {
         this.deathTimeouts = [];
         this.endbossDeathHandled = false;
         this.characterDeathHandled = false;
+    }
+
+    /**
+     * Cleans up all game objects and their intervals
+     * Handles character, endboss, collision system, and throwable objects
+     * @function
+     * @returns {void}
+     */
+    cleanupGameObjects() {
         if (this.character && typeof this.character.cleanup === 'function') {
             this.character.cleanup();
         }
@@ -208,20 +234,28 @@ class World {
      * @returns {void}
      */
     draw() {
+        this.renderGameWorld();
+        this.scheduleNextFrame();
+    }
+
+    /**
+     * Renders all game objects in proper layering order
+     * Handles background, UI elements, characters, and foreground objects
+     * @function
+     * @returns {void}
+     */
+    renderGameWorld() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.translate(this.cameraX, 0);
         this.addObjectsToMap(this.level.backgroundObjects);
         this.addObjectsToMap(this.level.clouds);
         this.addObjectsToMap(this.level.saloons);
-
         this.ctx.translate(-this.cameraX, 0); // Back
-        // ----- space for fixed objects ----- //
         this.addToMap(this.coinBar);
         this.addToMap(this.statusBar);
         this.addToMap(this.bottleBar);
         this.addEndbossBarToMap();
         this.ctx.translate(this.cameraX, 0); // Forwards
-
         this.addToMap(this.character);
         this.addEndbossToMap();
         this.addObjectsToMap(this.level.enemies);
@@ -230,7 +264,15 @@ class World {
         this.addObjectsToMap(this.throwableObjects);
         this.addToMap(this.chickenHouse);
         this.ctx.translate(-this.cameraX, 0);
+    }
 
+    /**
+     * Schedules the next animation frame for continuous rendering
+     * Handles animation loop control and destruction checks
+     * @function
+     * @returns {void}
+     */
+    scheduleNextFrame() {
         if (this.animationId !== null) {
             let self = this;
             this.animationId = requestAnimationFrame(function () {
@@ -288,10 +330,7 @@ class World {
         if (mo.otherDirection) {
             this.flipImage(mo);
         }
-
         mo.draw(this.ctx);
-        // mo.drawFrame(this.ctx);
-
         if (mo.otherDirection) {
             this.flipImageBack(mo);
         }

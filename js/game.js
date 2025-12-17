@@ -40,7 +40,6 @@ function init() {
 function updateSoundUI() {
     const soundOnIcon = document.getElementById('soundOn');
     const soundOffIcon = document.getElementById('soundOff');
-
     if (isMuted) {
         soundOnIcon?.classList.add('dNone');
         soundOffIcon?.classList.remove('dNone');
@@ -120,9 +119,7 @@ function preloadGameAudio() {
         'audio/game_over.mp3',
         'audio/walking.mp3'
     ];
-
     audioFiles.forEach(src => getCachedAudio(src));
 }
 
-// Audio beim Laden der Seite vorladen
 document.addEventListener('DOMContentLoaded', preloadGameAudio);

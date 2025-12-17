@@ -13,9 +13,9 @@ function startGame() {
     initLevel();
     init();
     setTimeout(() => {
-        if (window.innerWidth <= 1500 && window.innerHeight <= window.innerWidth && isTouchDevice()) {
+        if (window.innerWidth <= 1500 && window.innerHeight <= window.innerWidth && isTablet()) {
             document.getElementById('mobile-controls')?.classList.remove('dNone');
-            setupMobileControls();
+            setTimeout(() => setupMobileControls(), 300);
         }
     }, 200);
 }
@@ -70,7 +70,6 @@ function initResetGame() {
         init();
         setTimeout(() => {
             if (window.innerWidth <= 1500 && window.innerHeight <= window.innerWidth) {
-                // document.getElementById('mobile-controls')?.classList.remove('dNone');
                 setupMobileControls();
             }
         }, 50);
@@ -110,7 +109,6 @@ function initFromWinGame() {
         resetFromWinningScreen();
         setTimeout(() => {
             if (window.innerWidth <= 1500 && window.innerHeight <= window.innerWidth) {
-                // document.getElementById('mobile-controls')?.classList.remove('dNone');
                 setupMobileControls();
             }
         }, 50);
@@ -150,7 +148,6 @@ function initFromLoseGame() {
         resetFromLosingScreen();
         setTimeout(() => {
             if (window.innerWidth <= 1500 && window.innerHeight <= window.innerWidth) {
-                // document.getElementById('mobile-controls')?.classList.remove('dNone');
                 setupMobileControls();
             }
         }, 50);

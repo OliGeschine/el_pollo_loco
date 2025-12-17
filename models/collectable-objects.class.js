@@ -13,6 +13,10 @@ class CollectableObject extends MovableObject {
         right: 0
     };
 
+    /**
+     * Creates a new base collectable object
+     * @constructor
+     */
     constructor() {
         super();
 

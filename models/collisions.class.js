@@ -5,6 +5,11 @@
  */
 class Collision {
 
+    /**
+     * Creates a new collision detection system for the game world
+     * @constructor
+     * @param {World} world - Reference to the main game world object
+     */
     constructor(world) {
         this.world = world;
     }
@@ -47,7 +52,6 @@ class Collision {
      */
     checkCharacterEndbossInteractions() {
         if (!this.world.endboss.isDead()) {
-            this.checkJumpEndbossCollision(this.world.endboss);
             this.checkEndbossCollisions(this.world.endboss);
         }
     }
@@ -76,36 +80,6 @@ class Collision {
             this.world.character.justStomped = true;
             setTimeout(() => (this.world.character.justStomped = false), 500);
         }
-    }
-
-    /**
-     * Handles character jumping on the endboss
-     * Damages endboss, updates health bar, and triggers death sequence
-     * @function
-     * @returns {void}
-     */
-    checkJumpEndbossCollision() {
-        if (this.world.character.isStomping(this.world.endboss)) {
-            this.world.endboss.hitWeak();
-            this.world.endbossHealthBar.setPercentageHealthEndboss(this.world.endboss.energy);
-            if (!isMuted) {
-                this.world.killedChicken.play();
-            }
-            setTimeout(() => {
-                if (this.world.endboss.energy <= 0) {
-                    if (!isMuted) {
-                        this.world.killedEndboss.play();
-                    }
-                    setTimeout(() => {
-                        this.world.endbossIsDead = true;
-                    }, 3000);
-                }
-            })
-            this.world.character.jump();
-            this.world.character.justStomped = true;
-            setTimeout(() => (this.world.character.justStomped = false), 500);
-        }
-        this.world.checkDeath();
     }
 
     /**
@@ -152,23 +126,34 @@ class Collision {
     checkBottleHitsEnemies() {
         this.world.throwableObjects.forEach((bottle, bottleIndex) => {
             if (bottle.splashed) return;
-            this.world.level.enemies.forEach((enemy, enemyIndex) => {
-                if (!enemy.isDead() && bottle.isColliding(enemy)) {
-                    bottle.splash();
-                    if (!isMuted) {
-                        this.world.bottleBreaking.play();
-                    }
-                    enemy.hitWeak();
-                    if (!isMuted) {
-                        this.world.killedChicken.play();
-                    }
-                    setTimeout(() => {
-                        if (enemy.energy <= 0) {
-                            this.world.level.enemies.splice(enemyIndex, 1);
-                        }
-                    }, 200)
+            this.processBottleEnemyCollisions(bottle);
+        });
+    }
+
+    /**
+     * Processes collisions between a specific bottle and all enemies
+     * Handles damage, sounds, and enemy removal after bottle impact
+     * @function
+     * @param {ThrowableObject} bottle - The bottle to check collisions for
+     * @returns {void}
+     */
+    processBottleEnemyCollisions(bottle) {
+        this.world.level.enemies.forEach((enemy, enemyIndex) => {
+            if (!enemy.isDead() && bottle.isColliding(enemy)) {
+                bottle.splash();
+                if (!isMuted) {
+                    this.world.bottleBreaking.play();
                 }
-            });
+                enemy.hitWeak();
+                if (!isMuted) {
+                    this.world.killedChicken.play();
+                }
+                setTimeout(() => {
+                    if (enemy.energy <= 0) {
+                        this.world.level.enemies.splice(enemyIndex, 1);
+                    }
+                }, 200);
+            }
         });
     }
 
@@ -181,19 +166,30 @@ class Collision {
     checkBottleHitsEndboss() {
         this.world.throwableObjects.forEach((bottle, bottleIndex) => {
             if (bottle.splashed) return;
-            if (!this.world.endboss.isDead() && bottle.isColliding(this.world.endboss) && !bottle.splashed) {
-                bottle.splash();
-                if (!isMuted) {
-                    this.world.bottleBreaking.play();
-                }
-                this.world.endboss.bottleHitEndboss();
-                this.world.endbossHealthBar.setPercentageHealthEndboss(this.world.endboss.energy);
-                if (!isMuted) {
-                    this.world.killedChicken.play();
-                }
-                this.world.checkDeath();
+            this.processBottleEndbossCollision(bottle);
+        });
+    }
+
+    /**
+     * Processes collision between bottle and endboss
+     * Handles damage, health bar update, sounds, and death check
+     * @function
+     * @param {ThrowableObject} bottle - The bottle to check collision for
+     * @returns {void}
+     */
+    processBottleEndbossCollision(bottle) {
+        if (!this.world.endboss.isDead() && bottle.isColliding(this.world.endboss) && !bottle.splashed) {
+            bottle.splash();
+            if (!isMuted) {
+                this.world.bottleBreaking.play();
             }
-        })
+            this.world.endboss.bottleHitEndboss();
+            this.world.endbossHealthBar.setPercentageHealthEndboss(this.world.endboss.energy);
+            if (!isMuted) {
+                this.world.killedChicken.play();
+            }
+            this.world.checkDeath();
+        }
     }
 
     /**

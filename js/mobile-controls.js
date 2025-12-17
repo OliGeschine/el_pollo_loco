@@ -5,15 +5,18 @@
 let mobileControlsSetup = false;
 let mobileEventListeners = [];
 
+
 /**
- * Checks if device has touch capabilities
- * @function
- * @returns {boolean} True if device supports touch
- */
-function isTouchDevice() {
-    return (('ontouchstart' in window) ||
-        (navigator.maxTouchPoints > 0) ||
-        (navigator.msMaxTouchPoints > 0));
+ * Detects if the current device is a tablet based on screen size and touch capability
+ * @returns { boolean } True if device is detected as tablet */
+function isTablet() {
+    const userAgent = navigator.userAgent;
+    const screenWidth = window.innerWidth;
+    const hasTouchScreen = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    const isIPad = /iPad|Macintosh/i.test(userAgent) && hasTouchScreen;
+    const isAndroidTablet = /Android/i.test(userAgent) && !/Mobile/i.test(userAgent);
+    const isTabletSize = (screenWidth >= 768 && screenWidth <= 1024) && hasTouchScreen;
+    return isIPad || isAndroidTablet || isTabletSize;
 }
 
 /**
@@ -37,7 +40,7 @@ function initMobileControls() {
  */
 function setupMobileControls() {
     if (!keyboard || mobileControlsSetup) {
-        console.log('setupMobileControls: keyboard not ready or already setup');
+        setTimeout(() => setupMobileControls(), 100);
         return;
     }
     mobileControlsSetup = true;
@@ -138,7 +141,9 @@ function getButtonThrow() {
  */
 function resetMobileControls() {
     mobileEventListeners.forEach(({ element, event, handler }) => {
-        element.removeEventListener(event, handler);
+        if (element && handler) {
+            element.removeEventListener(event, handler);
+        }
     });
     mobileEventListeners = [];
     mobileControlsSetup = false;
@@ -152,7 +157,7 @@ function resetMobileControls() {
 function checkOrientation() {
     const rotateOverlay = document.getElementById('rotate-device-overlay');
     const mobileControls = document.getElementById('mobile-controls');
-    if (innerWidth <= 1024 && isTouchDevice()) {
+    if (innerWidth <= 1024 && isTablet()) {
         if (innerHeight > innerWidth) {
             rotateOverlay?.classList.remove('dNone');
             mobileControls?.classList.add('dNone');

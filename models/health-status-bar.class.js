@@ -16,6 +16,10 @@ class Statusbar extends DrawableObject {
 
     percentageHealth = 50;
 
+    /**
+     * Creates a new character health status bar with visual indicators
+     * @constructor
+     */
     constructor() {
         super();
         this.loadImages(this.IMAGES_HEALTH);
@@ -60,7 +64,5 @@ class Statusbar extends DrawableObject {
             return 0;
         }
     }
-
-
 
 }

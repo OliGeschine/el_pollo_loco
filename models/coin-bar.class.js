@@ -16,6 +16,10 @@ class Coinbar extends DrawableObject {
 
     percentageCoin = 0;
 
+    /**
+     * Creates a new coin status bar for displaying collected coins
+     * @constructor
+     */
     constructor() {
         super();
         this.loadImages(this.IMAGES_COINS);

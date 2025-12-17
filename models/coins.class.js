@@ -12,13 +12,18 @@ class Coin extends CollectableObject {
         'img/8_coin/coin_2.png',
     ];
     offset = {
-        top: 20,
-        bottom: 20,
-        left: 20,
-        right: 20
+        top: 25,
+        bottom: 25,
+        left: 25,
+        right: 25
     };
 
 
+    /**
+     * Creates a new collectible coin object with animations
+     * @constructor
+     * @param {number} x - X-coordinate position for the coin
+     */
     constructor(x) {
         super().loadImage(this.IMAGES_MOVING[0]);
         this.loadImages(this.IMAGES_MOVING);

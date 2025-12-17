@@ -16,7 +16,10 @@ class EndbossHealth extends DrawableObject {
 
     percentageHealthEndboss = 10;
 
-    constructor() {
+    /**
+     * Creates a new endboss health status bar
+     * @constructor
+     */    constructor() {
         super();
         this.loadImages(this.IMAGES_ENDBOSSHEALTH);
         this.x = 500;
@@ -60,7 +63,5 @@ class EndbossHealth extends DrawableObject {
             return 0;
         }
     }
-
-
 
 }

@@ -4,6 +4,10 @@ class chickenHouse extends DrawableObject {
     y = 50;
     otherDirection = true;
 
+    /**
+     * Creates a new chicken house background object
+     * @constructor
+     */
     constructor() {
         super().loadImage('img/icons/chicken-house.png');
         this.x = 4000;

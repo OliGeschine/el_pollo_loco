@@ -26,6 +26,12 @@ class ThrowableObject extends MovableObject {
         'img/6_salsa_bottle/bottle_rotation/bottle_splash/5_bottle_splash.png',
         'img/6_salsa_bottle/bottle_rotation/bottle_splash/6_bottle_splash.png'];
 
+    /**
+     * Creates a new throwable bottle object with physics and animations
+     * @constructor
+     * @param {number} x - Starting X-coordinate position
+     * @param {number} y - Starting Y-coordinate position
+     */
     constructor(x, y) {
         super().loadImage(this.IMAGES_THROWING[0]);
         this.loadImages(this.IMAGES_THROWING);
@@ -64,8 +70,16 @@ class ThrowableObject extends MovableObject {
             this.throwBottle.play();
         };
         this.getThrowInterval(this.throwInterval);
+        world.character.getMoveTime();
     }
 
+    /**
+     * Creates and manages the throwing animation and movement interval
+     * Handles horizontal movement, rotation animation, and ground collision detection
+     * @function
+     * @param {number} throwInterval - Reference to the throw interval (currently unused)
+     * @returns {void}
+     */
     getThrowInterval(throwInterval) {
         this.throwInterval = startInterval(() => {
             if (this.throwDirection !== undefined) {
@@ -105,6 +119,17 @@ class ThrowableObject extends MovableObject {
     */
     splash() {
         if (this.splashed) return;
+        this.initiateSplashSequence();
+        this.scheduleSplashCleanup();
+    }
+
+    /**
+     * Initializes the splash animation and stops bottle movement
+     * Sets splash state, stops physics, and starts splash animation
+     * @function
+     * @returns {void}
+     */
+    initiateSplashSequence() {
         this.splashed = true;
         this.speedY = 0;
         this.acceleration = 0;
@@ -112,6 +137,15 @@ class ThrowableObject extends MovableObject {
         this.splashingIntervall = startInterval(() => {
             this.playAnimation(this.IMAGES_SPLASHING);
         }, 100);
+    }
+
+    /**
+     * Schedules cleanup and removal of the bottle after splash animation
+     * Clears splash interval and removes bottle from world after delay
+     * @function
+     * @returns {void}
+     */
+    scheduleSplashCleanup() {
         setTimeout(() => {
             clearInterval(this.splashingIntervall);
             const index = this.world?.throwableObjects.indexOf(this);

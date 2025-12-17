@@ -8,10 +8,10 @@ class Bottle extends CollectableObject {
     width = 70;
     height = 70;
     offset = {
-        top: 10,
-        bottom: 5,
-        left: 15,
-        right: 10
+        top: 15,
+        bottom: 10,
+        left: 25,
+        right: 25
     };
 
     IMAGES_MOVING = ['img/6_salsa_bottle/1_salsa_bottle_on_ground.png',
@@ -22,6 +22,11 @@ class Bottle extends CollectableObject {
         'img/6_salsa_bottle/bottle_rotation/3_bottle_rotation.png',
         'img/6_salsa_bottle/bottle_rotation/4_bottle_rotation.png',];
 
+    /**
+     * Creates a new collectible bottle object
+     * @constructor
+     * @param {number} x - X-coordinate position for the bottle
+     */
     constructor(x) {
         super().loadImage(this.IMAGES_MOVING[0]);
         this.loadImages(this.IMAGES_THROWING);

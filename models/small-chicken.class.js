@@ -29,6 +29,10 @@ class smallChicken extends MovableObject {
         'img/3_enemies_chicken/chicken_small/2_dead/dead.png',
     ]
 
+    /**
+     * Creates a new small chicken enemy with AI behavior and animations
+     * @constructor
+     */
     constructor() {
         super().loadImage('img/3_enemies_chicken/chicken_small/1_walk/1_w.png');
         this.loadImages(this.IMAGES_WALKING);
@@ -54,7 +58,6 @@ class smallChicken extends MovableObject {
                 this.stayOnGround();
             }
         }, 1000 / 60)
-
         startInterval(() => {
             if (this.isDead()) {
                 this.playAnimation(this.IMAGES_DEAD);

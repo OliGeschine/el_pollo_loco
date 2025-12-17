@@ -31,6 +31,7 @@ class DrawableObject {
  */
     draw(ctx) {
         ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+        // this.drawFrame(ctx);
     }
 
     /**
@@ -40,7 +41,7 @@ class DrawableObject {
  * @returns {void}
  */
     // drawFrame(ctx) {
-    //     if ( {
+    //     if (this instanceof Character || this instanceof Coin || this instanceof Bottle) {
     //         ctx.beginPath();
     //         ctx.lineWidth = '1';
     //         ctx.strokeStyle = 'red';

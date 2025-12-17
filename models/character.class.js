@@ -10,12 +10,12 @@ class Character extends MovableObject {
     x = 200;
     y = 200;
     offset = {
-        top: 100,
+        top: 95,
         bottom: 10,
-        left: 15,
-        right: 20,
+        left: 20,
+        right: 30,
     };
-    speed = 4;
+    speed = 3;
     world;
     coins = 0;
     energy = 50;
@@ -86,6 +86,10 @@ class Character extends MovableObject {
         'img/2_character_pepe/4_hurt/H-43.png',
     ];
 
+    /**
+     * Creates the main playable character with all animations and physics
+     * @constructor
+     */
     constructor() {
         super().loadImage('img/2_character_pepe/1_idle/idle/I-1.png');
         this.loadImages(this.IMAGES_IDLE);
@@ -121,20 +125,30 @@ class Character extends MovableObject {
             if (!this.world || !this.world.keyboard || !this.world.level || this.world === null) {
                 return;
             }
-            if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
-                this.moveRight();
-                this.otherDirection = false;
-            }
-            if (this.world.keyboard.LEFT && this.x > 35) {
-                this.moveLeft();
-                this.otherDirection = true;
-            }
-            if (this.world.keyboard.UP && !this.isAboveGround()) {
-                this.jump();
-            }
-            this.stayOnGround();
-            this.world.cameraX = -this.x + 200;
+            this.handleCharacterMovement();
         }, 1000 / 60);
+    }
+
+    /**
+     * Processes individual movement inputs and camera positioning
+     * Handles directional movement, jumping, ground collision, and camera updates
+     * @function
+     * @returns {void}
+     */
+    handleCharacterMovement() {
+        if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
+            this.moveRight();
+            this.otherDirection = false;
+        }
+        if (this.world.keyboard.LEFT && this.x > 35) {
+            this.moveLeft();
+            this.otherDirection = true;
+        }
+        if (this.world.keyboard.UP && !this.isAboveGround()) {
+            this.jump();
+        }
+        this.stayOnGround();
+        this.world.cameraX = -this.x + 200;
     }
 
     /**
@@ -148,33 +162,58 @@ class Character extends MovableObject {
             if (!this.world || !this.world.keyboard) {
                 return;
             }
-            if (this.isDead()) {
-                clearInterval(this.movingInterval);
-                this.playAnimation(this.IMAGES_DEAD);
-                if (this.world) {
-                    this.world.characterIsDead = true;
-                }
-            } else if (this.isHurt()) {
-                this.playAnimation(this.IMAGES_HURT);
-                this.getMoveTime();
-            } else if (this.isAboveGround()) {
-                this.getMoveTime();
-                this.playJumpAnimation();
-            } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
-                this.getMoveTime();
-                this.playAnimation(this.IMAGES_WALKING);
-                if (isMuted === false && this.world.walking.paused) {
-                    this.world.walking.play();
-                }
-            } else if (this.getSleepTime()) {
-                this.playAnimation(this.IMAGES_SLEEPING)
-            } else {
-                if (this.world && this.world.walking) {
-                    this.world.walking.pause();
-                }
-                this.playAnimation(this.IMAGES_IDLE);
+            if (this.handleSpecialStates()) {
+                return;
             }
+            this.handleMovementStates();
         }, 100);
+    }
+
+    /**
+     * Handles special character states (dead, hurt, jumping)
+     * @function
+     * @returns {boolean} True if special state was handled
+     */
+    handleSpecialStates() {
+        if (this.isDead()) {
+            clearInterval(this.movingInterval);
+            this.playAnimation(this.IMAGES_DEAD);
+            if (this.world) {
+                this.world.characterIsDead = true;
+            }
+            return true;
+        } else if (this.isHurt()) {
+            this.playAnimation(this.IMAGES_HURT);
+            this.getMoveTime();
+            return true;
+        } else if (this.isAboveGround()) {
+            this.getMoveTime();
+            this.playJumpAnimation();
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Handles movement and idle character states
+     * @function
+     * @returns {void}
+     */
+    handleMovementStates() {
+        if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
+            this.getMoveTime();
+            this.playAnimation(this.IMAGES_WALKING);
+            if (isMuted === false && this.world.walking.paused) {
+                this.world.walking.play();
+            }
+        } else if (this.getSleepTime()) {
+            this.playAnimation(this.IMAGES_SLEEPING);
+        } else {
+            if (this.world && this.world.walking) {
+                this.world.walking.pause();
+            }
+            this.playAnimation(this.IMAGES_IDLE);
+        }
     }
 
     /**

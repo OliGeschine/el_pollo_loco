@@ -11,6 +11,12 @@ class Clouds extends MovableObject {
     startX;
     movingRight = false;
 
+    /**
+     * Creates a new animated cloud object for atmospheric effects
+     * @constructor
+     * @param {string} imagePath - Path to the cloud image
+     * @param {number} x - X-coordinate position for the cloud
+     */
     constructor(imagePath, x) {
         super().loadImage(imagePath);
         this.x = x;
