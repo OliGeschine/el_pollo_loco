@@ -334,7 +334,6 @@ h1 {
 }
 
 .home_button {
-    /* position: absolute; */
     top: 0;
     display: flex;
     justify-content: center;
@@ -462,22 +461,6 @@ h1 {
 }
 
 /* ========== MEDIA QUERIES ========== */
-
-/* Desktop/Laptop: Instructions anzeigen, Mobile Controls verstecken */
-/* @media only screen and (pointer: fine) {
-    .mobile_controls {
-        display: none !important;
-    }
-
-    .rotate_overlay {
-        display: none !important;
-    }
-
-    .instructions_box {
-        display: flex !important;
-    }
-} */
-
 /* Touch-Geräte im Landscape: Mobile Controls anzeigen */
 @media only screen and (max-width: 1500px) and (orientation: landscape) and (pointer: coarse) {
     h1 {
@@ -524,18 +507,10 @@ h1 {
         margin-top: 2px;
     }
 
-    /* .instructions_box {
-        display: none !important;
-    } */
-
     .control_btn {
         width: 50px;
         height: 50px;
     }
-
-    /* .mobile_controls {
-        display: flex !important;
-    } */
 }
 
 /* Kleine Smartphones (Landscape) - nur Touch-Geräte */
@@ -605,8 +580,6 @@ h1 {
         display: none !important;
     }
 }
-
-
 
 /* Responsive Impressum für kleine Bildschirme */
 @media only screen and (max-width: 768px) {
