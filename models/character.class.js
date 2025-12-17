@@ -23,6 +23,7 @@ class Character extends MovableObject {
     groundLevel = 200;
     jumpAnimationIndex = 0;
     isJumping = false;
+    recentlyActive = false;
 
     IMAGES_IDLE = [
         'img/2_character_pepe/1_idle/idle/I-1.png',
@@ -206,7 +207,7 @@ class Character extends MovableObject {
             if (isMuted === false && this.world.walking.paused) {
                 this.world.walking.play();
             }
-        } else if (this.getSleepTime()) {
+        } else if (this.getSleepTime() && !this.recentlyActive) {
             this.playAnimation(this.IMAGES_SLEEPING);
         } else {
             if (this.world && this.world.walking) {
@@ -247,6 +248,10 @@ class Character extends MovableObject {
     getMoveTime() {
         let currentTime = new Date().getTime();
         this.lastMove = currentTime;
+        this.recentlyActive = true;
+        setTimeout(() => {
+            this.recentlyActive = false;
+        }, 2000); // 2 Sekunden aktiv bleiben nach Aktion
     }
 
     /**
