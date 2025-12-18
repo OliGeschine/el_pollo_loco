@@ -5,8 +5,8 @@
  * @extends CollectableObject
  */
 class Bottle extends CollectableObject {
-    width = 70;
-    height = 70;
+    width = 65;
+    height = 65;
     offset = {
         top: 15,
         bottom: 10,
@@ -32,7 +32,7 @@ class Bottle extends CollectableObject {
         this.loadImages(this.IMAGES_THROWING);
         this.loadImages(this.IMAGES_MOVING);
         this.x = x
-        this.y = 355;
+        this.y = 360;
         this.animate();
         this.collected = false;
     }

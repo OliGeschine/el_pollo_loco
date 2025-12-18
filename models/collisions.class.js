@@ -78,7 +78,7 @@ class Collision {
             }, 500)
             this.world.character.jump();
             this.world.character.justStomped = true;
-            setTimeout(() => (this.world.character.justStomped = false), 500);
+            setTimeout(() => (this.world.character.justStomped = false), 10);
         }
     }
 

@@ -251,7 +251,7 @@ class Character extends MovableObject {
         this.recentlyActive = true;
         setTimeout(() => {
             this.recentlyActive = false;
-        }, 2000); // 2 Sekunden aktiv bleiben nach Aktion
+        }, 2000);
     }
 
     /**

@@ -164,7 +164,7 @@ function checkOrientation() {
         } else {
             rotateOverlay?.classList.add('dNone');
             mobileControls?.classList.remove('dNone');
-            if (keyboard && !document.getElementById('canvas').classList.contains('dNone')) {
+            if (typeof keyboard !== 'undefined' && keyboard && !document.getElementById('canvas').classList.contains('dNone')) {
                 setupMobileControls();
             }
         }
@@ -179,4 +179,4 @@ addEventListener('orientationchange', function () {
 });
 addEventListener('resize', checkOrientation);
 
-checkOrientation();
+setTimeout(checkOrientation, 100);

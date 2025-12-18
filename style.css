@@ -34,7 +34,6 @@ canvas {
     height: 480px;
     max-width: 95vw;
     max-height: 75vh;
-    object-fit: contain;
 }
 
 h1 {
