@@ -21,13 +21,15 @@ function init() {
     world = new World(canvas, keyboard);
     window.keyboard = keyboard;
     setTimeout(() => {
-        if (isMuted) {
-            world.backgroundSound.muted = true;
-        } else {
-            world.backgroundSound.play();
-            world.backgroundSound.loop = true;
+        if (world && world.backgroundSound) {
+            if (isMuted) {
+                world.backgroundSound.muted = true;
+            } else {
+                world.backgroundSound.play();
+                world.backgroundSound.loop = true;
+            }
         }
-    }, 10);
+    }, 100);
     updateSoundUI();
 }
 

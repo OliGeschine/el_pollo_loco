@@ -18,6 +18,7 @@ function startGame() {
             setTimeout(() => setupMobileControls(), 300);
         }
     }, 200);
+    restartGame();
 }
 
 /**
