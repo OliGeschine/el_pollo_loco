@@ -30,18 +30,105 @@ class Collision {
     }
 
     /**
-        * Checks all character interactions with regular enemies
-        * Handles jumping on enemies and collision damage
-        * @function
-        * @returns {void}
-        */
+     * Checks all character interactions with regular enemies
+     * Delegates to stomp and damage collision functions
+     * @function
+     * @returns {void}
+     */
     checkCharacterEnemyInteractions() {
+        let hasStomped = this.checkStompCollisions();
+        if (!hasStomped) {
+            this.checkDamageCollisions();
+        }
+    }
+
+    /**
+     * Checks for character stomping on enemies
+     * Handles multiple enemy stomps and returns success status
+     * @function
+     * @returns {boolean} True if any enemies were stomped
+     */
+    checkStompCollisions() {
+        let canStomp = this.world.character.speedY <= 0 && !this.world.character.justStomped;
+        if (!canStomp) return false;
+        let enemiesInStompRange = this.findEnemiesInStompRange();
+        if (enemiesInStompRange.length > 0) {
+            this.handleMultipleEnemyStomps(enemiesInStompRange);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Finds all enemies that can be stomped by the character
+     * Returns array of enemies with their indices
+     * @function
+     * @returns {Array} Array of objects containing enemy and index
+     */
+    findEnemiesInStompRange() {
+        let enemiesInRange = [];
         for (let i = 0; i < this.world.level.enemies.length; i++) {
             const enemy = this.world.level.enemies[i];
-            if (enemy.isDead()) continue;
-            this.checkJumpCollisions(enemy, i);
-            this.checkEnemyCollisions(enemy);
+            if (!enemy.isDead() && this.world.character.isStomping(enemy, i)) {
+                enemiesInRange.push({ enemy: enemy, index: i });
+            }
         }
+        return enemiesInRange;
+    }
+
+    /**
+     * Checks for character damage collisions with enemies
+     * Only runs if character hasn't recently stomped
+     * @function
+     * @returns {void}
+     */
+    checkDamageCollisions() {
+        if (this.world.character.justStomped) return;
+        for (let i = 0; i < this.world.level.enemies.length; i++) {
+            const enemy = this.world.level.enemies[i];
+            if (!enemy.isDead()) {
+                this.checkEnemyCollisions(enemy);
+            }
+        }
+    }
+
+    /**
+     * Handles stomping multiple enemies at once
+     * Damages all enemies in stomp range and triggers effects
+     * @function
+     * @param {Array} enemiesInRange - Array of enemies and their indices
+     * @returns {void}
+     */
+    handleMultipleEnemyStomps(enemiesInRange) {
+        this.world.character.justStomped = true;
+        enemiesInRange.forEach(({ enemy, index }) => {
+            this.damageStompedEnemy(enemy);
+        });
+        this.world.character.jump();
+        setTimeout(() => (this.world.character.justStomped = false), 300);
+    }
+
+    /**
+     * Damages a single stomped enemy and handles cleanup
+     * Plays sound effects and schedules enemy removal
+     * @function
+     * @param {MovableObject} enemy - The enemy being stomped
+     * @returns {void}
+     */
+    damageStompedEnemy(enemy) {
+        enemy.hitWeak();
+        this.world.stompedEnemies.push(enemy);
+        if (!isMuted) {
+            this.world.killedChicken.play();
+        }
+        setTimeout(() => {
+            if (enemy.energy <= 0) {
+                const currentIndex = this.world.level.enemies.indexOf(enemy);
+                if (currentIndex !== -1) {
+                    this.world.level.enemies.splice(currentIndex, 1);
+                }
+            }
+        }, 500);
     }
 
     /**
@@ -78,7 +165,7 @@ class Collision {
             }, 500)
             this.world.character.jump();
             this.world.character.justStomped = true;
-            setTimeout(() => (this.world.character.justStomped = false), 10);
+            setTimeout(() => (this.world.character.justStomped = false), 100);
         }
     }
 
@@ -193,11 +280,11 @@ class Collision {
     }
 
     /**
- * Runs all collectable object collision checks
- * Handles coins and bottles collection
- * @function
- * @returns {void}
- */
+    * Runs all collectable object collision checks
+    * Handles coins and bottles collection
+    * @function
+    * @returns {void}
+    */
     checkCollectableCollisions() {
         setTimeout(() => {
             this.checkCollectedCoins();
