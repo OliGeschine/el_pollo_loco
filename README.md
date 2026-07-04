@@ -73,7 +73,7 @@ el_pollo_loco/
 
 1. **Repository klonen:**
    ```bash
-   git clone https://github.com/DEIN-USERNAME/el_pollo_loco.git
+   git clone https://github.com/OliGeschine/el_pollo_loco.git
    ```
 
 2. **In das Projektverzeichnis wechseln:**
