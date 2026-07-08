@@ -111,7 +111,7 @@ Dieses Projekt wurde zu Bildungszwecken erstellt.
 
 ## 🚀 Live Demo
 
-[Spiel jetzt spielen!](#) <!-- Füge hier deine GitHub Pages URL ein -->
+[Spiel jetzt spielen!](https://oliver-geschine.de/el_pollo_loco/index.html) <!-- Füge hier deine GitHub Pages URL ein -->
 
 ---
 
